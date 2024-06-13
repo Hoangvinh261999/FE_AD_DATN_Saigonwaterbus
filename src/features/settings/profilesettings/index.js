@@ -24,23 +24,17 @@ function ProfileSettings(){
     return(
         <>
             
-            <TitleCard title="Profile Settings" topMargin="mt-2">
+            <TitleCard title="Thông tin cá nhân" topMargin="mt-2">
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputText labelTitle="Name" defaultValue="Alex" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Email Id" defaultValue="alex@dashwind.com" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Title" defaultValue="UI/UX Designer" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Place" defaultValue="California" updateFormValue={updateFormValue}/>
-                    <TextAreaInput labelTitle="About" defaultValue="Doing what I love, part time traveller" updateFormValue={updateFormValue}/>
+                    <InputText labelTitle="Họ" defaultValue="Phạm" updateFormValue={updateFormValue}/>
+                    <InputText labelTitle="Tên" defaultValue="Đức" updateFormValue={updateFormValue}/>
+                    <InputText labelTitle="Email" defaultValue="alex@dashwind.com" updateFormValue={updateFormValue}/>
+                    <InputText labelTitle="Username" defaultValue="alex" updateFormValue={updateFormValue}/>
+                    <InputText labelTitle="Password" defaultValue="******" updateFormValue={updateFormValue}/>
+                    <InputText labelTitle="Ngày tạo" defaultValue="2022-12-12" updateFormValue={updateFormValue}/>
                 </div>
                 <div className="divider" ></div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputText labelTitle="Language" defaultValue="English" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Timezone" defaultValue="IST" updateFormValue={updateFormValue}/>
-                    <ToogleInput updateType="syncData" labelTitle="Sync Data" defaultValue={true} updateFormValue={updateFormValue}/>
-                </div>
-
                 <div className="mt-16"><button className="btn btn-primary float-right" onClick={() => updateProfile()}>Update</button></div>
             </TitleCard>
         </>

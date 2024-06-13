@@ -27,32 +27,55 @@ const routes = [
   {
     path: '/app/dashboard',
     icon: <Squares2X2Icon className={iconClasses}/>, 
-    name: 'Trang chủ',
+    name: 'Trang Chủ',
   },
+  {
+    path: '', //no url needed as this has submenu
+    icon: <DocumentTextIcon className={`${iconClasses} inline` }/>, // icon component
+    name: 'Nhân Viên', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/app/getting-started', // url
+        icon: <DocumentTextIcon className={submenuIconClasses}/>, // icon component
+        name: 'Nhân Viên', // name that appear in Sidebar
+      },
+      {
+        path: '/app/features',
+        icon: <TableCellsIcon className={submenuIconClasses}/>,
+        name: 'Thuyền trưởng',
+      }
+    ]
+  },
+
   {
     path: '/app/leads', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
-    name: 'Tuyến', // name that appear in Sidebar
+    name: 'Tuyến tàu', // name that appear in Sidebar
+
   },
   {
     path: '/app/transactions', // url
     icon: <CurrencyDollarIcon className={iconClasses}/>, // icon component
-    name: 'Chuyến', // name that appear in Sidebar
+    name: 'Chuyến tàu', // name that appear in Sidebar
+
   },
   {
     path: '/app/charts', // url
     icon: <ChartBarIcon className={iconClasses}/>, // icon component
-    name: 'Bến', // name that appear in Sidebar
+    name: 'Tàu', // name that appear in Sidebar
+
   },
   {
     path: '/app/integration', // url
     icon: <BoltIcon className={iconClasses}/>, // icon component
-    name: 'Vé', // name that appear in Sidebar
+    name: 'Ghế tàu', // name that appear in Sidebar
+
   },
   {
     path: '/app/calendar', // url
     icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
-    name: 'Ghế', // name that appear in Sidebar
+    name: 'Vé tàu', // name that appear in Sidebar
+
   },
 
 
@@ -74,7 +97,8 @@ const routes = [
       {
         path: '/app/settings-team', // url
         icon: <UsersIcon className={submenuIconClasses}/>, // icon component
-        name: 'Team Members', // name that appear in Sidebar
+        name: 'Giới thiệu', // name that appear in Sidebar
+
       },
     ]
   },
@@ -93,13 +117,9 @@ const routes = [
         icon: <TableCellsIcon className={submenuIconClasses}/>, 
         name: 'Nhân viên trong bến',
       },
-      {
-        path: '/app/components',
-        icon: <CodeBracketSquareIcon className={submenuIconClasses}/>, 
-        name: 'Components',
-      }
     ]
   },
+
   
   {
     path: '', //no url needed as this has submenu

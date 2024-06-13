@@ -15,7 +15,7 @@ function DocComponents(){
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setPageTitle({ title : "Documentation"}))
+        dispatch(setPageTitle({ title : "Nhân Viên"}))
       }, [])
 
 
