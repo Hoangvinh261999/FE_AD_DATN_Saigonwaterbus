@@ -68,11 +68,22 @@ const routes = [
     name: 'Ghế tàu', // name that appear in Sidebar
   },
   {
-    path: '/app/calendar', // url
-    icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
+    path: '', //no url needed as this has submenu
+    icon: <DocumentDuplicateIcon className={`${iconClasses} inline` }/>, // icon component
     name: 'Vé tàu', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/hoadon',
+        icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
+        name: 'Hóa Đơn',
+      },
+      {
+        path: '/app/calendar', //url
+        icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
+        name: 'Vé', // name that appear in Sidebar
+      },
+    ]
   },
-
   {
     path: '', //no url needed as this has submenu
     icon: <DocumentDuplicateIcon className={`${iconClasses} inline` }/>, // icon component

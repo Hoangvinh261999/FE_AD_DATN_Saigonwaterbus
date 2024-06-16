@@ -30,3 +30,12 @@
     height: 120px;
     animation: spin 2s linear infinite;
 }
+.buttonTuyenThem{
+    margin-top: 2%;
+}
+.textth{
+    text-align: left;
+}
+.tbodyTicket{
+    text-align: center;
+}
