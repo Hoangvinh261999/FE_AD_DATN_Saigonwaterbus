@@ -18,7 +18,8 @@ const GettingStarted = lazy(() => import('../pages/GettingStarted'))
 const DocFeatures = lazy(() => import('../pages/DocFeatures'))
 const DocComponents = lazy(() => import('../pages/DocComponents'))
 const StaffCreate = lazy(() => import('../pages/AddEmployee'))
-
+const RouteForm = lazy(() => import('../pages/AddRoute'))
+const TicketManagement = lazy(() => import('../features/calendar/index'))
 
 
 const routes = [
@@ -85,6 +86,14 @@ const routes = [
   {
     path: '/staff/create',
     component: StaffCreate,
+  },
+  {
+    path: '/route/create',
+    component: RouteForm,
+  },
+  {
+    path: '/ticket-management', // thêm đường dẫn mới cho quản lý vé tàu
+    component: TicketManagement,
   },
 ]
 

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch} from "react-redux";
+import {setPageTitle} from "../features/common/headerSlice";
 
 function AddEmployee() {
     const [lastName, setLastName] = useState('');
@@ -13,7 +15,11 @@ function AddEmployee() {
         // Thêm logic thêm nhân viên ở đây
         console.log({ lastName, firstName, username, password, phone, role });
     };
+    const dispatch = useDispatch()
 
+    useEffect(() => {
+        dispatch(setPageTitle({ title : "Thêm Nhân Viên"}))
+    }, [])
     return (
         <div className="container mx-auto px-4 py-6">
             <h2 className="text-2xl font-bold mb-4">Thêm Nhân Viên Mới</h2>

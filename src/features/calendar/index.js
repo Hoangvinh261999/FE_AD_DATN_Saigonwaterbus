@@ -1,45 +1,137 @@
-import { useState } from 'react'
-import CalendarView from '../../components/CalendarView'
-import moment from 'moment'
-import { CALENDAR_INITIAL_EVENTS } from '../../utils/dummyData'
-import { useDispatch } from 'react-redux'
-import { openRightDrawer } from '../common/rightDrawerSlice'
-import { RIGHT_DRAWER_TYPES } from '../../utils/globalConstantUtil'
-import { showNotification } from '../common/headerSlice'
+import React, { useState } from 'react';
+import TicketList from '../../features/calendar/component/TicketList';
 
-
-
-const INITIAL_EVENTS = CALENDAR_INITIAL_EVENTS
-
-function Calendar(){
-
-    const dispatch = useDispatch()
-
-    const [events, setEvents] = useState(INITIAL_EVENTS)
-
-    // Add your own Add Event handler, like opening modal or random event addition
-    // Format - {title :"", theme: "", startTime : "", endTime : ""}, typescript version comming soon :)
-    const addNewEvent = (date) => {
-        let randomEvent = INITIAL_EVENTS[Math.floor(Math.random() * 10)]
-        let newEventObj = {title : randomEvent.title, theme : randomEvent.theme, startTime : moment(date).startOf('day'), endTime : moment(date).endOf('day')}
-        setEvents([...events, newEventObj])
-        dispatch(showNotification({message : "New Event Added!", status : 1}))
+const generateTickets = (num) => {
+    const tickets = [];
+    for (let i = 1; i <= num; i++) {
+        const trainId = ['A123', 'B456', 'C789'][Math.floor(Math.random() * 3)];
+        const status = ['Booked', 'Cancelled', 'Pending'][Math.floor(Math.random() * 3)];
+        const price = Math.floor(Math.random() * 100) + 50;
+        const dateCreated = new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0];
+        tickets.push({ id: i.toString(), trainId, status, price, dateCreated });
     }
+    return tickets;
+};
 
-    // Open all events of current day in sidebar 
-    const openDayDetail = ({filteredEvents, title}) => {
-        dispatch(openRightDrawer({header : title, bodyType : RIGHT_DRAWER_TYPES.CALENDAR_EVENTS, extraObject : {filteredEvents}}))
-    }
+const initialTickets = generateTickets(1000);
 
-    return(
-        <>
-           <CalendarView 
-                calendarEvents={events}
-                addNewEvent={addNewEvent}
-                openDayDetail={openDayDetail}
-           />
-        </>
-    )
-}
+const TicketManagement = () => {
+    const [tickets, setTickets] = useState(initialTickets);
+    const [searchTrainId, setSearchTrainId] = useState('');
+    const [searchMonth, setSearchMonth] = useState('');
+    const [searchYear, setSearchYear] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const ticketsPerPage = 6;
 
-export default Calendar
+    const updateTicket = (updatedTicket) => {
+        setTickets(tickets.map(ticket => ticket.id === updatedTicket.id ? updatedTicket : ticket));
+    };
+
+    const deleteTicket = (id) => {
+        setTickets(tickets.filter(ticket => ticket.id !== id));
+    };
+
+    const handleSearchTrainIdChange = (e) => {
+        setSearchTrainId(e.target.value);
+    };
+
+    const handleSearchMonthChange = (e) => {
+        setSearchMonth(e.target.value);
+    };
+
+    const handleSearchYearChange = (e) => {
+        setSearchYear(e.target.value);
+    };
+
+    const filteredTickets = tickets.filter(ticket => {
+        const ticketDate = new Date(ticket.dateCreated);
+        const ticketMonth = (ticketDate.getMonth() + 1).toString().padStart(2, '0');
+        const ticketYear = ticketDate.getFullYear().toString();
+
+        return (!searchTrainId || ticket.trainId === searchTrainId) &&
+            (!searchMonth || ticketMonth === searchMonth) &&
+            (!searchYear || ticketYear === searchYear);
+    });
+
+    const uniqueTrainIds = [...new Set(tickets.map(ticket => ticket.trainId))];
+    const uniqueMonths = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+    const uniqueYears = [...new Set(tickets.map(ticket => new Date(ticket.dateCreated).getFullYear()))];
+
+    const indexOfLastTicket = currentPage * ticketsPerPage;
+    const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+    const currentTickets = filteredTickets.slice(indexOfFirstTicket, indexOfLastTicket);
+
+    const totalPageNumbers = Math.ceil(filteredTickets.length / ticketsPerPage);
+
+    const handleClick = (event) => {
+        setCurrentPage(Number(event.target.id));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => (prevPage < totalPageNumbers ? prevPage + 1 : prevPage));
+    };
+
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
+    };
+
+    const handleFirstPage = () => {
+        setCurrentPage(1);
+    };
+
+    const handleLastPage = () => {
+        setCurrentPage(totalPageNumbers);
+    };
+
+    return (
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Quản lý vé tàu</h1>
+            <div className="mb-4 flex justify-between items-center space-x-4">
+                <div>
+                    <label htmlFor="searchTrainId" className="mr-2">Tìm kiếm theo ID tàu:</label>
+                    <select id="searchTrainId" value={searchTrainId} onChange={handleSearchTrainIdChange} className="p-2 border rounded">
+                        <option value="">Tất cả</option>
+                        {uniqueTrainIds.map(trainId => (
+                            <option key={trainId} value={trainId}>{trainId}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="searchMonth" className="mr-2">Chọn tháng:</label>
+                    <select id="searchMonth" value={searchMonth} onChange={handleSearchMonthChange} className="p-2 border rounded">
+                        <option value="">Tất cả</option>
+                        {uniqueMonths.map(month => (
+                            <option key={month} value={month}>{month}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="searchYear" className="mr-2">Chọn năm:</label>
+                    <select id="searchYear" value={searchYear} onChange={handleSearchYearChange} className="p-2 border rounded">
+                        <option value="">Tất cả</option>
+                        {uniqueYears.map(year => (
+                            <option key={year} value={year}>{year}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+            <TicketList tickets={currentTickets} updateTicket={updateTicket} deleteTicket={deleteTicket} />
+            <div className="mt-4 flex justify-center">
+                <button onClick={handleFirstPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                    First
+                </button>
+                <button onClick={handlePrevPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                    Previous
+                </button>
+                <button onClick={handleNextPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                    Next
+                </button>
+                <button onClick={handleLastPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                    Last
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default TicketManagement;
