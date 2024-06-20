@@ -132,7 +132,7 @@ const routes = [
         name: 'Đăng nhập',
       },
             {
-        path: '/login',
+        path: '/logout',
         icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
         name: 'Đăng xuất',
       },
