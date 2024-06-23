@@ -85,20 +85,14 @@ const routes = [
     name: 'Hoá đơn', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/settings-profile', //url
+        path: '/app/booking', //url
         icon: <UserIcon className={submenuIconClasses}/>, // icon component
-        name: 'Profile', // name that appear in Sidebar
+        name: 'Đặt Vé', // name that appear in Sidebar
       },
       {
         path: '/app/settings-billing',
         icon: <WalletIcon className={submenuIconClasses}/>,
-        name: 'Billing',
-      },
-      {
-        path: '/app/settings-team', // url
-        icon: <UsersIcon className={submenuIconClasses}/>, // icon component
-        name: 'Giới thiệu', // name that appear in Sidebar
-
+        name: 'Hóa Đơn',
       },
     ]
   },
