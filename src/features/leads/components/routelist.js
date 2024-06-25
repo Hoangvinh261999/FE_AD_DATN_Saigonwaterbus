@@ -1,92 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import RouteItem from './routeItem';
-import routes from "../../../routes";
 
-const RouteList = ({ routes, onEdit, onDelete }) => {
-    const [search, setSearch] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const routesPerPage = 5;
-
-    const handleSearch = (e) => {
-        setSearch(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const filteredRoutes = routes.filter(route =>
-        route.name.toLowerCase().includes(search.toLowerCase()) ||
-        route.start.toLowerCase().includes(search.toLowerCase()) ||
-        route.from.toLowerCase().includes(search.toLowerCase()) ||
-        route.to.toLowerCase().includes(search.toLowerCase())
-    );
-
-    const indexOfLastRoute = currentPage * routesPerPage;
-    const indexOfFirstRoute = indexOfLastRoute - routesPerPage;
-    const currentRoutes = filteredRoutes.slice(indexOfFirstRoute, indexOfLastRoute);
-
-    const totalPages = Math.ceil(filteredRoutes.length / routesPerPage);
-
-    const onPageChange = (page) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
-    };
-
+const RouteList = ({ routes, onEdit, onDelete,stations }) => {
+    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzYWlnb253YXRlcmJ1cy5jb20udm4iLCJzdWIiOiJwaHVvbmciLCJleHAiOjE3MTg4ODQ0MjUsImlhdCI6MTcxODg4MTQyNSwic2NvcGUiOiJBRE1JTiJ9.xWR3OWd36TFHgp0PS6nIMake7kP8uDKdZ126FM8gl138xQ-_90_Ph1CtQSYUdhXh7Yb_Ka6-aaMN67Ugus0w9w';
     return (
-        <div>
-            <input
-                type="text"
-                value={search}
-                onChange={handleSearch}
-                placeholder="Search..."
-                className="mb-4 px-4 py-2 border rounded w-full"
-            />
-            <table className="w-full border-collapse">
-                <thead>
-                <tr>
-                    <th className="px-4 py-2 border">Tên</th>
-                    <th className="px-4 py-2 border">Nơi bắt đầu</th>
-                    <th className="px-4 py-2 border">Xuất phát từ</th>
-                    <th className="px-4 py-2 border">Tới của tuyến</th>
-                    <th className="px-4 py-2 border">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {currentRoutes.map(route => (
-                    <RouteItem key={route.id} route={route} onEdit={onEdit} onDelete={onDelete} />
-                ))}
-                </tbody>
-            </table>
-            <div className="flex justify-center space-x-2 mt-4">
-                <button
-                    onClick={() => onPageChange(1)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    disabled={currentPage === 1}
-                >
-                    First
-                </button>
-                <button
-                    onClick={() => onPageChange(currentPage - 1)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </button>
-                <button
-                    onClick={() => onPageChange(currentPage + 1)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    disabled={currentPage === totalPages}
-                >
-                    Next
-                </button>
-                <button
-                    onClick={() => onPageChange(totalPages)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    disabled={currentPage === totalPages}
-                >
-                    Last
-                </button>
-            </div>
-        </div>
+        <table className="min-w-full bg-white border-collapse">
+            <thead>
+            <tr>
+                <th className="border px-4 py-2">STT</th>
+                <th className="border px-4 py-2">Bến đi</th>
+                <th className="border px-4 py-2">Bến dừng</th>
+                <th className="border px-4 py-2">Bến đến</th>
+                <th className="border px-4 py-2">Tên tuyến</th>
+                <th className="border px-4 py-2">Trạng thái</th>
+                <th className="border px-4 py-2">Tùy chọn</th>
+            </tr>
+            </thead>
+            <tbody>
+            {routes.map((route) => (
+                <RouteItem key={route.id} route={route} onEdit={onEdit} onDelete={onDelete} stations = {stations}/>
+            ))}
+            </tbody>
+        </table>
     );
 };
 
