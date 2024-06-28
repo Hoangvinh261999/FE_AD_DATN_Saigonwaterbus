@@ -13,11 +13,11 @@ const RouteManagement = () => {
     const routesPerPage = 6;
     const [isCreating, setIsCreating] = useState(false);
 
-    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzYWlnb253YXRlcmJ1cy5jb20udm4iLCJzdWIiOiJwaHVvbmciLCJleHAiOjE3MTkxMzY0NDQsImlhdCI6MTcxOTEzMzQ0NCwic2NvcGUiOiJBRE1JTiJ9.LAVv4eNU-gzRJsLwZhM2rRbR9L80Q1WK96PxtxGxKYQmJnMt0akd7nCLG5Co5gg0lDYLguIaNbdMz3M_iIZgwg';
+    const token = localStorage.getItem("token");
 
     const fetchRoutes = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/admin/route', {
+            const response = await axios.get('http://localhost:8080/api/saigơn/admin/route', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -44,7 +44,7 @@ const RouteManagement = () => {
 
     const fetchStations = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/saigonwaterbus/Station', {
+            const response = await axios.get('http://localhost:8080/api/saigonwaterbus/trip', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
