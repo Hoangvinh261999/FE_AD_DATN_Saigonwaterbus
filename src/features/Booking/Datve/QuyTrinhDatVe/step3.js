@@ -128,9 +128,62 @@ const Step3 = ({ prevStep }) => {
       paymentWindow.close();
     }
   };
-
+  const [showPayment,setShowPayment]=useState(false);
+  const thanhToanTienMat=()=>{
+  setShowPayment(true)
+}
+  const handleClosePopup = () => {
+    setShowPayment(false);
+  };
   return (
     <div className="container mx-auto max-w-md mt-10">
+    {
+      showPayment && 
+      (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded shadow-lg w-1/3">
+        <h2 className="text-2xl mb-4 font-bold">Thông tin vé</h2>
+        <form>
+          <div className="mb-4">
+            <label className="block text-gray-700">Họ Tên</label>
+            <input type="text" className="w-full border border-gray-300 p-2 rounded" />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Số tiền</label>
+            <input type="number" className="w-full border border-gray-300 p-2 rounded" />
+          </div>
+                    <div className="mb-4">
+            <label className="block text-gray-700">Tuyến tàu</label>
+            <input type="text" className="w-full border border-gray-300 p-2 rounded" />
+          </div>
+                    <div className="mb-4">
+            <label className="block text-gray-700">Số ghế</label>
+            <input type="number" className="w-full border border-gray-300 p-2 rounded" />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Ghi chú</label>
+            <textarea className="w-full border border-gray-300 p-2 rounded"></textarea>
+          </div>
+                      <label className="block text-red-500">* Đảm bảo khách hàng đã thanh toán , thông tin vé chính xác trước khi in vé</label>
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+                  onClick={handleClosePopup}
+            >
+              Hủy
+            </button>
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+              In vé
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+      )
+    }
+
       {isLoading && (
 <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
   <div class="flex items-center space-x-2 text-white text-lg">
@@ -146,7 +199,6 @@ const Step3 = ({ prevStep }) => {
       <div id="loadingIndicator" className={isLoading ? '' : 'hidden'}>Đang gửi email...</div>
 
       <h2 className="text-2xl font-bold text-center">Liên hệ</h2>
-      <form className="mt-8" onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Họ tên *</label>
           <input
@@ -210,7 +262,7 @@ const Step3 = ({ prevStep }) => {
   </button>
   
   <button
-    type="submit"
+      onClick={thanhToanTienMat}
     className="text-sm bg-blue-500 hover:bg-blue-600 text-white flex-grow font-bold py-2 rounded flex items-center justify-center focus:outline-none focus:ring-blue-500 focus:ring-2"
   >
     <img src='/icon/money.png' alt='' className="w-6 h-6 mr-2"/>
@@ -231,7 +283,6 @@ const Step3 = ({ prevStep }) => {
         {submitted && (
           <div className="mt-4 text-green-500">Yêu cầu của bạn đã được gửi đi!</div>
         )}
-      </form>
     </div>
   );
 };
