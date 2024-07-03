@@ -15,7 +15,7 @@ const Documentation = lazy(() => import('./pages/Documentation'));
 initializeApp();
 
 function App() {
-        const { notification } = useAuth();
+  const { notification } = useAuth();
 
   const [token, setToken] = useState(localStorage.getItem('token'));
 
@@ -26,25 +26,25 @@ function App() {
   }, []);
 
   return (
-    <Router>
-            
-            {notification && (
-        <div className="fixed top-0 left-0 right-0 bg-red-500 text-white text-center py-2">
-          {notification}
-        </div>
-      )}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/documentation" element={<Documentation />} />
-        
-        {/* Place new routes over this */}
-        <Route path="/app/*" element={<Layout />} />
-        
-        <Route path="*" element={<Navigate to={token ? "/app/welcome" : "/login"} replace />} />
-      </Routes>
-    </Router>
+      <Router>
+
+        {notification && (
+            <div className="fixed top-0 left-0 right-0 bg-red-500 text-white text-center py-2">
+              {notification}
+            </div>
+        )}
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/documentation" element={<Documentation />} />
+
+          {/* Place new routes over this */}
+          <Route path="/admin/*" element={<Layout />} />
+
+          <Route path="*" element={<Navigate to={token ? "/admin/chao-mung" : "/login"} replace />} />
+        </Routes>
+      </Router>
   );
 }
 

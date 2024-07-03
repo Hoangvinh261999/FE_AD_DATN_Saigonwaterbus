@@ -25,8 +25,8 @@ const submenuIconClasses = `h-5 w-5`
 const routes = [
 
   {
-    path: '/app/dashboard',
-    icon: <Squares2X2Icon className={iconClasses}/>, 
+    path: '/admin/trang-chu',
+    icon: <Squares2X2Icon className={iconClasses}/>,
     name: 'Trang Chủ',
   },
   {
@@ -35,12 +35,12 @@ const routes = [
     name: 'Nhân Viên', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/getting-started', // url
+        path: '/admin/nhan-vien', // url
         icon: <DocumentTextIcon className={submenuIconClasses}/>, // icon component
         name: 'Nhân Viên', // name that appear in Sidebar
       },
       {
-        path: '/app/features',
+        path: '/admin/thuyen-truong',
         icon: <TableCellsIcon className={submenuIconClasses}/>,
         name: 'Thuyền trưởng',
       }
@@ -48,34 +48,33 @@ const routes = [
   },
 
   {
-    path: '/app/leads', // url
+    path: '/admin/tuyen-tau', // url
     icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
     name: 'Tuyến tàu', // name that appear in Sidebar
 
   },
   {
-    path: '/app/transactions', // url
+    path: '/admin/chuyen-tau', // url
     icon: <CurrencyDollarIcon className={iconClasses}/>, // icon component
     name: 'Chuyến tàu', // name that appear in Sidebar
 
   },
   {
-    path: '/app/charts', // url
+    path: '/admin/tau', // url
     icon: <ChartBarIcon className={iconClasses}/>, // icon component
     name: 'Tàu', // name that appear in Sidebar
 
   },
   {
-    path: '/app/integration', // url
+    path: '/admin/ghe-tau', // url
     icon: <BoltIcon className={iconClasses}/>, // icon component
     name: 'Ghế tàu', // name that appear in Sidebar
 
   },
   {
-    path: '/app/calendar', // url
+    path: '/admin/ve-tau', // url
     icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
     name: 'Vé tàu', // name that appear in Sidebar
-
   },
 
 
@@ -85,12 +84,12 @@ const routes = [
     name: 'Hoá đơn', // name that appear in Sidebar
     submenu : [
       {
-        path: '/app/booking', //url
+        path: '/admin/dat-ve', //url
         icon: <UserIcon className={submenuIconClasses}/>, // icon component
         name: 'Đặt Vé', // name that appear in Sidebar
       },
       {
-        path: '/app/settings-billing',
+        path: '/admin/hoa-don',
         icon: <WalletIcon className={submenuIconClasses}/>,
         name: 'Hóa Đơn',
       },
@@ -108,13 +107,13 @@ const routes = [
       },
       {
         path: '/app/features',
-        icon: <TableCellsIcon className={submenuIconClasses}/>, 
+        icon: <TableCellsIcon className={submenuIconClasses}/>,
         name: 'Nhân viên trong bến',
       },
     ]
   },
 
-  
+
   {
     path: '', //no url needed as this has submenu
     icon: <DocumentDuplicateIcon className={`${iconClasses} inline` }/>, // icon component
@@ -125,7 +124,7 @@ const routes = [
         icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
         name: 'Đăng nhập',
       },
-            {
+      {
         path: '/logout',
         icon: <ArrowRightOnRectangleIcon className={submenuIconClasses}/>,
         name: 'Đăng xuất',

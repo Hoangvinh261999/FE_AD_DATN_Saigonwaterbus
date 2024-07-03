@@ -5,15 +5,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26736e2b-56dd-4420-9408-fcdfc4a9b6ab" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/GPTCopilotChannelManager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/GPTCopilotChannelManager.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/leads/components/routeForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/leads/components/routeForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/leads/components/routeItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/leads/components/routeItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/leads/components/routelist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/leads/components/routelist.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/leads/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/leads/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/AddRoute.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CalendarView/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CalendarView/util.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Cards/TitleCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Input/InputText.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Input/SearchBar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Input/SelectBox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Input/TextAreaInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Input/ToogleInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Typography/ErrorText.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Typography/HelperText.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Typography/Subtitle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Typography/Title.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/containers/LeftSidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/LeftSidebar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/containers/ModalLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/containers/ModalLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/calendar/component/TicketForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/ticket/component/TicketForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/calendar/component/TicketItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/ticket/component/TicketItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/calendar/component/TicketList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/ticket/component/TicketList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/calendar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/ticket/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/charts/components/BarChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/charts/components/DoughnutChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/charts/components/LineChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/charts/components/PieChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/charts/components/ScatterChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/charts/components/StackBarChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/charts/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/common/components/ConfirmationModalBody.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/common/components/NotificationBodyRightDrawer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/common/headerSlice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/common/modalSlice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/common/rightDrawerSlice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/AmountStats.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/BarChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/DashboardStats.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/DashboardTopBar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/DoughnutChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/LineChart.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/PageStats.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/components/UserChannels.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/dashboard/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/integration/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/components/AddLeadModalBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/components/AddLeadModalBody.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/components/EditForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/components/EditForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/components/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/components/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/components/routeForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/components/routeForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/components/routeItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/components/routeItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/components/routelist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/components/routelist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/leads/leadSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/route/leadSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/transactions/Trip.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/trip/Trip.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/transactions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/trip/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/protected/Calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/protected/Calendar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/protected/Leads.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/protected/Leads.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/protected/Transactions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/protected/Transactions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes/sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/sidebar.js" afterDir="false" />
     </list>
@@ -85,6 +132,7 @@
       <workItem from="1719043951445" duration="3368000" />
       <workItem from="1719059289254" duration="1205000" />
       <workItem from="1719133043956" duration="3854000" />
+      <workItem from="1719971053344" duration="880000" />
     </task>
     <servers />
   </component>
@@ -97,7 +145,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/features/Booking/components/Summary.js</url>
           <line>2</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

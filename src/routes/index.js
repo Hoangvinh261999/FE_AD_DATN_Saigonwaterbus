@@ -16,20 +16,20 @@ const GettingStarted = lazy(() => import('../pages/GettingStarted'));
 const DocFeatures = lazy(() => import('../pages/DocFeatures'));
 const DocComponents = lazy(() => import('../pages/DocComponents'));
 const StaffCreate = lazy(() => import('../pages/AddEmployee'));
-const TicketManagement = lazy(() => import('../features/calendar/index'));
-const AddRoute = lazy(() => import('../features/leads/components/routeForm'));
+const TicketManagement = lazy(() => import('../features/ticket/index'));
+const AddRoute = lazy(() => import('../features/route/components/routeForm'));
 const Booking = lazy(() => import('../pages/protected/Bookingpage'));
 const routes = [
   {
-    path: '/dashboard',
+    path: '/trang-chu',
     component: Dashboard,
   },
   {
-    path: '/welcome',
+    path: '/chao-mung',
     component: Welcome,
   },
   {
-    path: '/leads',
+    path: '/tuyen-tau',
     component: Leads,
   },
   {
@@ -37,52 +37,36 @@ const routes = [
     component: AddRoute,
   },
   {
-    path: '/settings-team',
+    path: '/gioi-thieu-doi-ngu',
     component: Team,
   },
   {
-    path: '/calendar',
+    path: '/quan-ly-ve',
     component: Calendar,
   },
   {
-    path: '/transactions',
+    path: '/Chuyen-tau',
     component: Transactions,
   },
   {
-    path: '/settings-profile',
+    path: '/thong-tin-ca-nhan',
     component: ProfileSettings,
   },
   {
-    path: '/settings-billing',
+    path: '/hoa-don',
     component: Bills,
   },
   {
-    path: '/getting-started',
+    path: '/Nhan-vien',
     component: GettingStarted,
   },
   {
-    path: '/features',
+    path: '/thuyen-truong',
     component: DocFeatures,
-  },
-  {
-    path: '/components',
-    component: DocComponents,
-  },
-  {
-    path: '/integration',
-    component: Integration,
-  },
-  {
-    path: '/charts',
-    component: Charts,
   },
   {
     path: '/404',
     component: Page404,
-  },
-  {
-    path: '/blank',
-    component: Blank,
   },
   {
     path: '/staff/create',
