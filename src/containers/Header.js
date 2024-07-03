@@ -43,7 +43,7 @@ function Header() {
     <div className="navbar sticky top-0 bg-base-100 z-10 shadow-md overflow-hidden">
       <div className="container mx-auto flex justify-between items-center relative">
     
-        <span className="text-xl font-semibold text-gray-800">Chào mừng đến với trang quản trị</span>
+        <span className="text-xl font-semibold text-gray-800">{pageTitle}</span>
       </div>
 
 
@@ -52,7 +52,7 @@ function Header() {
         <label htmlFor="left-sidebar-drawer" className="btn btn-primary drawer-button lg:hidden">
           <Bars3Icon className="h-5 inline-block w-5" />
         </label>
-        <h1 className="text-2xl font-semibold ml-2">{pageTitle}</h1>
+        {/* <h1 className="text-sm font-semibold ml-2">{pageTitle}</h1> */}
       </div>
 
       <div className="flex-none">
