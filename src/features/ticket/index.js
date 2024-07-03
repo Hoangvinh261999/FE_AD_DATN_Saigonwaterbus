@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TicketList from '../../features/calendar/component/TicketList';
+import TicketList from './/component/TicketList';
 
 const generateTickets = (num) => {
     const tickets = [];
