@@ -10,7 +10,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import TitleCard from '../../../components/Cards/TitleCard';
 
 ChartJS.register(
   CategoryScale,
@@ -52,9 +51,9 @@ function LineChart(){
   
 
     return(
-      <TitleCard title={"Montly Active Users (in K)"}>
+      <p title={"Montly Active Users (in K)"}>
           <Line data={data} options={options}/>
-      </TitleCard>
+      </p>
     )
 }
 

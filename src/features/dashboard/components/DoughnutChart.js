@@ -7,8 +7,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import TitleCard from '../../../components/Cards/TitleCard';
-import Subtitle from '../../../components/Typography/Subtitle';
 
 ChartJS.register(ArcElement, Tooltip, Legend,
     Tooltip,
@@ -56,9 +54,9 @@ function DoughnutChart(){
       };
 
     return(
-        <TitleCard title={"Orders by Category"}>
+        <p title={"Orders by Category"}>
                 <Doughnut options={options} data={data} />
-        </TitleCard>
+        </p>
     )
 }
 

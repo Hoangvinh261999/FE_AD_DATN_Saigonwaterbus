@@ -1,13 +1,17 @@
+import { Link } from "react-router-dom"
+
 function TemplatePointers(){
     return(
-        <>
-         <h1 className="text-2xl mt-8 font-bold">Admin Dashboard Starter Kit</h1>
-          <p className="py-2 mt-4">✓ <span className="font-semibold">Light/dark</span> mode toggle</p>
-          <p className="py-2 ">✓ <span className="font-semibold">Redux toolkit</span> and other utility libraries configured</p>
-          <p className="py-2">✓ <span className="font-semibold">Calendar, Modal, Sidebar </span> components</p>
-          <p className="py-2  ">✓ User-friendly <span className="font-semibold">documentation</span></p>
-          <p className="py-2  mb-4">✓ <span className="font-semibold">Daisy UI</span> components, <span className="font-semibold">Tailwind CSS</span> support</p>
-        </>
+      <div className=" flex items-center justify-center " > 
+      <div className="max-w-2xl p-6  shadow-md rounded-md">
+        <h1 className="text-3xl font-bold text-white text-center mb-6">Chào mừng bạn đến với Trang quản trị website SaiGonWaterBus</h1>
+        <p className="text-lg text-white mb-4">Đây là trang chào mừng cho admin khi đăng nhập vào hệ thống.</p>
+        <p className="text-lg text-white mb-4">Bạn có thể bắt đầu bằng cách lựa chọn các mục bên trái màn hình.</p>
+        <div className="flex justify-center">
+            <Link to="/app/dashboard"><button className="btn bg-base-100 btn-outline ">Đến trang chủ</button></Link>
+        </div>
+      </div>
+    </div>
     )
 }
 

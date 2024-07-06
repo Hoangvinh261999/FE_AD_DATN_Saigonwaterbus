@@ -1,82 +1,119 @@
-import moment from "moment"
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import TitleCard from "../../../components/Cards/TitleCard"
-import { showNotification } from '../../common/headerSlice'
+import React, { useState, useEffect } from 'react';
+import './bill.css';
 
+const data = [
+    {
+        id: 45,
+        payMethod: "BANK_TRANSFER",
+        totalAmount: 30000.0,
+        status: "COMPLETED",
+        createAt: "2024-06-17",
+        updateAt: null,
+        deleteAt: null
+    },
+    {
+        id: 50,
+        payMethod: "BANK_TRANSFER",
+        totalAmount: 15000.0,
+        status: "COMPLETED",
+        createAt: "2024-06-17",
+        updateAt: null,
+        deleteAt: null
+    }
+];
 
+const getPayMethod = (method) => {
+    if (method === "BANK_TRANSFER") {
+        return "Chuyển khoản";
+    }
+    return "Tiền mặt";
+};
 
-const BILLS = [
-    {invoiceNo : "#4567", amount : "23,989", description : "Product usages", status : "Pending", generatedOn : moment(new Date()).add(-30*1, 'days').format("DD MMM YYYY"),  paidOn : "-"},
+const getStatus = (status) => {
+    switch (status) {
+        case "COMPLETED":
+            return "Thành công";
+        case "PENDING":
+            return "Đang chờ";
+        case "FAIL":
+            return "Thất bại";
+        default:
+            return status;
+    }
+};
 
-    {invoiceNo : "#4523", amount : "34,989", description : "Product usages", status : "Pending", generatedOn : moment(new Date()).add(-30*2, 'days').format("DD MMM YYYY"), paidOn : "-"},
+const InvoiceTable = () => {
+    const [loading, setLoading] = useState(true);
+    const [selectedInvoice, setSelectedInvoice] = useState(null);
 
-    {invoiceNo : "#4453", amount : "39,989", description : "Product usages", status : "Paid", generatedOn : moment(new Date()).add(-30*3, 'days').format("DD MMM YYYY"), paidOn : moment(new Date()).add(-24*2, 'days').format("DD MMM YYYY")},
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000); // Giả lập loading trong 2 giây
+    }, []);
 
-    {invoiceNo : "#4359", amount : "28,927", description : "Product usages", status : "Paid", generatedOn : moment(new Date()).add(-30*4, 'days').format("DD MMM YYYY"), paidOn : moment(new Date()).add(-24*3, 'days').format("DD MMM YYYY")},
+    const handleRowClick = (invoice) => {
+        setSelectedInvoice(invoice);
+    };
 
-    {invoiceNo : "#3359", amount : "28,927", description : "Product usages", status : "Paid", generatedOn : moment(new Date()).add(-30*5, 'days').format("DD MMM YYYY"), paidOn : moment(new Date()).add(-24*4, 'days').format("DD MMM YYYY")},
+    const handleCloseModal = () => {
+        setSelectedInvoice(null);
+    };
 
-    {invoiceNo : "#3367", amount : "28,927", description : "Product usages", status : "Paid", generatedOn : moment(new Date()).add(-30*6, 'days').format("DD MMM YYYY"), paidOn : moment(new Date()).add(-24*5, 'days').format("DD MMM YYYY")},
-
-    {invoiceNo : "#3359", amount : "28,927", description : "Product usages", status : "Paid", generatedOn : moment(new Date()).add(-30*7, 'days').format("DD MMM YYYY"), paidOn : moment(new Date()).add(-24*6, 'days').format("DD MMM YYYY")},
-
-    {invoiceNo : "#2359", amount : "28,927", description : "Product usages", status : "Paid", generatedOn : moment(new Date()).add(-30*8, 'days').format("DD MMM YYYY"), paidOn : moment(new Date()).add(-24*7, 'days').format("DD MMM YYYY")},
-
-
-]
-
-function Billing(){
-
-
-    const [bills, setBills] = useState(BILLS)
-
-    const getPaymentStatus = (status) => {
-        if(status  === "Paid")return <div className="badge badge-success">{status}</div>
-        if(status  === "Pending")return <div className="badge badge-primary">{status}</div>
-        else return <div className="badge badge-ghost">{status}</div>
+    if (loading) {
+        return <div className="loading">Loading...</div>;
     }
 
-    return(
-        <>
-            
-            <TitleCard title="Billing History" topMargin="mt-2">
-
-                {/* Invoice list in table format loaded constant */}
-            <div className="overflow-x-auto w-full">
-                <table className="table w-full">
-                    <thead>
-                    <tr>
-                        <th>Invoice No</th>
-                        <th>Invoice Generated On</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Invoice Paid On</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            bills.map((l, k) => {
-                                return(
-                                    <tr key={k}>
-                                    <td>{l.invoiceNo}</td>
-                                    <td>{l.generatedOn}</td>
-                                    <td>{l.description}</td>
-                                    <td>${l.amount}</td>
-                                    <td>{getPaymentStatus(l.status)}</td>
-                                    <td>{l.paidOn}</td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
+    return (
+        <div className="App">
+            <div className="invoice-table-container">
+                <div className="invoice-table-wrapper">
+                    <div className="table-header">
+                        <h1>Bảng Hóa Đơn</h1>
+                    </div>
+                    <table className="invoice-table">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã Thanh Toán</th>
+                            <th>Phương Thức Thanh Toán</th>
+                            <th>Tổng Số Tiền</th>
+                            <th>Trạng Thái</th>
+                            <th>Ngày Tạo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {data.map((invoice, index) => (
+                            <tr key={invoice.id} onClick={() => handleRowClick(invoice)} className="cursor-pointer">
+                                <td>{index + 1}</td>
+                                <td>{invoice.id}</td>
+                                <td>{getPayMethod(invoice.payMethod)}</td>
+                                <td>{invoice.totalAmount}</td>
+                                <td>{getStatus(invoice.status)}</td>
+                                <td>{invoice.createAt}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            </TitleCard>
-        </>
-    )
-}
+            {selectedInvoice && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h2>Chi Tiết Hóa Đơn</h2>
+                        <p><strong>ID:</strong> {selectedInvoice.id}</p>
+                        <p><strong>Phương Thức Thanh Toán:</strong> {selectedInvoice.payMethod === "BANK_TRANSFER" ? "Chuyển khoản" : "Tiền mặt"}</p>
+                        <p><strong>Tổng Số Tiền:</strong> {selectedInvoice.totalAmount}</p>
+                        <p><strong>Trạng Thái:</strong> {selectedInvoice.status === "COMPLETED" ? "Thành công" : selectedInvoice.status === "PENDING" ? "Đang chờ" : "Thất bại"}</p>
+                        <p><strong>Ngày Tạo:</strong> {selectedInvoice.createAt}</p>
+                        <p><strong>Ngày Cập Nhật:</strong> {selectedInvoice.updateAt ? selectedInvoice.updateAt : "N/A"}</p>
+                        <p><strong>Ngày Xóa:</strong> {selectedInvoice.deleteAt ? selectedInvoice.deleteAt : "N/A"}</p>
+                        <button onClick={handleCloseModal} className="modal-close-button">Đóng</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
 
-
-export default Billing
+export default InvoiceTable;
