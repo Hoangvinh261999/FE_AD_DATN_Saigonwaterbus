@@ -1,0 +1,53 @@
+/* styles.css */
+
+.table-container {
+    overflow-x: auto;
+    padding: 1rem;
+}
+
+.custom-table {
+    min-width: 100%;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    font-size: 0.75rem; /* Thu nhỏ kích thước phông chữ */
+    border-collapse: separate;
+    border-spacing: 0 0.5rem; /* Tạo khoảng cách giữa các ô */
+}
+
+.table-header {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    text-transform: uppercase;
+    font-size: 0.75rem; /* Thu nhỏ kích thước phông chữ */
+    font-weight: 600;
+    text-align: left;
+    padding: 0.5rem; /* Điều chỉnh padding */
+    white-space: nowrap; /* Đảm bảo không xuống dòng */
+}
+
+.table-row {
+    border-bottom: 1px solid #e5e7eb;
+    transition: background-color 0.3s;
+}
+
+.table-row:hover {
+    background-color: #f9fafb;
+}
+
+.table-cell {
+    color: #4b5563;
+    font-size: 0.75rem; /* Thu nhỏ kích thước phông chữ */
+    padding: 0.5rem; /* Điều chỉnh padding */
+    white-space: nowrap; /* Đảm bảo không xuống dòng */
+    border: 1px solid #e5e7eb; /* Thêm border cho từng ô để tạo khoảng cách rõ ràng */
+}
+
+/* Điều chỉnh chiều rộng các cột */
+.column-id { width: 3rem; }
+.column-date { width: 6rem; }
+.column-time { width: 4rem; }
+.column-seats { width: 4rem; }
+.column-route { width: 10rem; }
+.column-terminal { width: 8rem; }

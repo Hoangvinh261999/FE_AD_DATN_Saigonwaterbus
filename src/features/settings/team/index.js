@@ -1,13 +1,12 @@
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import TitleCard from "../../../components/Cards/TitleCard"
 import { showNotification } from '../../common/headerSlice'
 
 const TopSideButtons = () => {
 }
 const teamMembers = [
-    { name: 'Phạm Minh Đức', role: 'DEV_BE/FE', description: 'Chuyên về phát triển backend và frontend với nhiều năm kinh nghiệm.', image: 'https://via.placeholder.com/150' },
+    { name: 'Phạm Minh Đức', role: 'DEV_BE/FE', description: 'Chuyên về phát triển backend và frontend với nhiều năm kinh nghiệm.', image: 'https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/277160376_362280545819562_7549749154166364318_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeE_SoT5F3A4Ql7TyjHp--EuprvPGi3mDwamu88aLeYPBodxFZQqqnEmA1wFllJomzH6GfRa2Pj-XsAVxEeuPTct&_nc_ohc=dP5hkAXUHN0Q7kNvgEPDHE1&_nc_ht=scontent.fsgn2-10.fna&oh=00_AYC8o3luPv2uDEXU8u0mjzGn-RePDqdTlVpEnAN1yI658Q&oe=6670B903' },
     { name: 'Nguyễn Hoàng Vinh', role: 'DEV_BE/FE', description: 'Có kỹ năng vượt trội trong việc xử lý dữ liệu và xây dựng hệ thống.', image: 'https://via.placeholder.com/150' },
     { name: 'Nguyễn Thị Thu Phương', role: 'DEV_BE/FE', description: 'Chuyên gia về thiết kế và phát triển giao diện người dùng.', image: 'https://via.placeholder.com/150' },
     { name: 'Trần Thị Thúy Diễm', role: 'DEV_BE/FE', description: 'Thành thạo trong việc quản lý dự án và phát triển phần mềm.', image: 'https://via.placeholder.com/150' },
@@ -20,7 +19,7 @@ function Team(){
     return(
         <>
             
-            <TitleCard title="Giới Thiệu" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
+            <p title="Giới Thiệu" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
 
                 <div className="container mx-auto px-4 py-6">
                     <h2 className="text-3xl font-bold mb-4 text-center text-blue-600">Giới Thiệu Dự Án Saigon Waterbus</h2>
@@ -50,10 +49,11 @@ function Team(){
                             <h4 className="text-xl font-bold mb-2">{selectedMember.name}</h4>
                             <p className="text-gray-700">{selectedMember.role}</p>
                             <p className="text-gray-700">{selectedMember.description}</p>
+                            {/*<img src={selectedMember.image}/>*/}
                         </div>
                     )}
                 </div>
-            </TitleCard>
+            </p>
         </>
     )
 }

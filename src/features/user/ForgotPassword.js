@@ -1,8 +1,6 @@
 import {useState, useRef} from 'react'
 import {Link} from 'react-router-dom'
 import LandingIntro from './LandingIntro'
-import ErrorText from  '../../components/Typography/ErrorText'
-import InputText from '../../components/Input/InputText'
 import CheckCircleIcon  from '@heroicons/react/24/solid/CheckCircleIcon'
 
 function ForgotPassword(){
@@ -63,12 +61,12 @@ function ForgotPassword(){
 
                                 <div className="mb-4">
 
-                                    <InputText type="emailId" defaultValue={userObj.emailId} updateType="emailId" containerStyle="mt-4" labelTitle="Email Id" updateFormValue={updateFormValue}/>
+                                    <input type="emailId" defaultValue={userObj.emailId} updateType="emailId" containerStyle="mt-4" labelTitle="Email Id" updateFormValue={updateFormValue}/>
 
 
                                 </div>
 
-                                <ErrorText styleClass="mt-12">{errorMessage}</ErrorText>
+                                <p styleClass="mt-12">{errorMessage}</p>
                                 <button type="submit" className={"btn mt-2 w-full btn-primary" + (loading ? " loading" : "")}>Send Reset Link</button>
 
                                 <div className='text-center mt-4'>Don't have an account yet? <Link to="/register"><button className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Register</button></Link></div>

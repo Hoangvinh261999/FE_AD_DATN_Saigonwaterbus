@@ -1,4 +1,3 @@
-import TitleCard from "../../../components/Cards/TitleCard"
 
 const userSourceData = [
     {source : "Facebook Ads", count : "26,345", conversionPercent : 10.2},
@@ -10,7 +9,7 @@ const userSourceData = [
 
 function UserChannels(){
     return(
-        <TitleCard title={"User Signup Source"}>
+        <p title={"User Signup Source"}>
              {/** Table Data */}
              <div className="overflow-x-auto">
                 <table className="table w-full">
@@ -38,7 +37,7 @@ function UserChannels(){
                     </tbody>
                 </table>
             </div>
-        </TitleCard>
+        </p>
     )
 }
 
