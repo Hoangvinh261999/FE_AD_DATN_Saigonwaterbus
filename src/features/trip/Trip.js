@@ -16,7 +16,7 @@ function Trip() {
 
    const fetchTrips = async () => {
       try {
-         const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/trips/${getCurrentDate}`, {
+         const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/trips/${getCurrentDate()}`, {
             headers: {
                Authorization: `Bearer ${token}`,
             },
@@ -27,22 +27,23 @@ function Trip() {
          console.error("Error fetching trips:", error);
       }
    };
-   const getCurrentDate= "2024-05-28"
-   // const getCurrentDate = () => {
-   //    const today = new Date();
-   //    const year = today.getFullYear();
-   //    let month = today.getMonth() + 1;
-   //    let day = today.getDate();
-   //
-   //    if (month < 10) {
-   //       month = `0${month}`;
-   //    }
-   //    if (day < 10) {
-   //       day = `0${day}`;
-   //    }
-   //
-   //    return `${year}-${month}-${day}`;
-   // };
+   // const getCurrentDate= "2024-05-28"
+
+   const getCurrentDate = () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate();
+
+      if (month < 10) {
+         month = `0${month}`;
+      }
+      if (day < 10) {
+         day = `0${day}`;
+      }
+
+      return `${year}-${month}-${day}`;
+   };
 
    return (
        <div className="container mx-auto p-4">
