@@ -49,21 +49,25 @@ const RouteItem = ({ route, onDelete, onEdit, stations }) => {
             toTerminal: { id: formData.end },
             waypoints: waypoints,
             status: formData.status,
-            createAt:route.createAt
+            createAt: route.createAt
         };
-        console.log(editedRoute)
+        console.log(editedRoute);
 
-        const header = {
-            Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzYWlnb253YXRlcmJ1cy5jb20udm4iLCJzdWIiOiJwaHVvbmciLCJleHAiOjE3MTg4OTQ2NDIsImlhdCI6MTcxODg5MTY0Miwic2NvcGUiOiJBRE1JTiJ9.jV0HNN8JxLzSASAJFeHL7M90ucu9SMPdDfA9xxYXTusvQ9ppHoGPcpG3-2a8lo42ukCInRzMcs6vu9NFKXzM2A'
-        }
+        const token = localStorage.getItem("token");
 
         try {
             // Gửi request PUT để cập nhật editedRoute xuống server
-            const response = await axios.put(`http://localhost:8080/api/admin/route/update/${route.id}`, editedRoute, {header});
+            const response = await axios.put(
+                'http://localhost:8080/api/saigonwaterbus/admin/route/update',
+                editedRoute,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             console.log('Response from server:', response.data);
 
-            // Cập nhật route trong danh sách các route
-            onEdit(editedRoute);
 
             // Đóng popup
             closePopup();
@@ -185,15 +189,13 @@ const RouteItem = ({ route, onDelete, onEdit, stations }) => {
                                 <button
                                     type="button"
                                     onClick={closePopup}
-                                    className="px-4 py-2 bg-gray-500 text-white rounded hover
-                                       bg-gray-700 mr-2"
+                                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mr-2"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                                    onClick={handleSubmit}
                                 >
                                     Save
                                 </button>

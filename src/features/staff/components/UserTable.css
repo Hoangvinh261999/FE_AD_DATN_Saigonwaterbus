@@ -201,4 +201,14 @@ label {
     background: rgba(0, 0, 0, .08);
     color: rgba(0, 0, 0, .3);
 }
+.hello{
+    display:  flex;
+}
+.hello input{
+    width: 90%;
+    margin-top: 3%;
+}
+.hello a{
+    margin-left: 5%;
+}
 

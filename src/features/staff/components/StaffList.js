@@ -1,12 +1,21 @@
-// UserTable.js
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import axios from 'axios';
 import './UserTable.css';
 
-
-const UserTable = ({ data, onEdit, onDelete }) => {
+const UserTable = ({ data, onDelete }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const token = localStorage.getItem("token")
+    const [selectedUser, setSelectedUser] = useState({
+        id: '',
+        firstname: '',
+        lastname: '',
+        email: '',
+        phoneNumber: '',
+        username: '',
+        role: 'USER',
+        status: 'ACTIVE'
+    });
 
     const openModal = (user) => {
         setSelectedUser(user);
@@ -15,25 +24,58 @@ const UserTable = ({ data, onEdit, onDelete }) => {
 
     const closeModal = () => {
         setModalIsOpen(false);
-        setSelectedUser(null);
+        setSelectedUser({
+            id: '',
+            firstname: '',
+            lastname: '',
+            email: '',
+            phoneNumber: '',
+            username: '',
+            role: 'USER',
+            status: 'ACTIVE'
+        });
     };
 
-    const handleSave = () => {
-        onEdit(selectedUser);
+    const handleSave = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`http://localhost:8080/api/saigonwaterbus/admin/staff/update/${selectedUser.id}`, selectedUser,{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.status === 200) {
+                alert('Cập nhật nhân viên thành công');
+                // Refresh data or update state after successful edit
+                window.location.href = "http://localhost:3000/admin/Nhan-vien"
+            } else {
+                alert('Cập nhật nhân viên thất bại');
+            }
+        } catch (error) {
+            console.error('Có lỗi xảy ra khi cập nhật nhân viên!', error);
+        }
         closeModal();
     };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setSelectedUser({ ...selectedUser, [name]: value });
+    };
+
     const getStatus = (status) => {
         switch (status) {
             case "ACTIVE":
-                return "kích hoạt";
+                return "Kích hoạt";
             case "INACTIVE":
-                return "chưa kích hoạt";
+                return "Chưa kích hoạt";
             case "DELETE":
-                return "đã xóa";
+                return "Đã xóa";
             default:
                 return status;
         }
     };
+
     const getRole = (role) => {
         switch (role) {
             case "USER":
@@ -41,17 +83,16 @@ const UserTable = ({ data, onEdit, onDelete }) => {
             case "ADMIN":
                 return "Quản trị viên";
             case "GUEST":
-                return "Khách hàng google";
+                return "Khách hàng Google";
             case "STAFF":
-                return "nhân viên";
+                return "Nhân viên";
             default:
                 return role;
         }
     };
+
     return (
         <div>
-                    <h2 className="text-2xl font-bold mb-4">Danh sách nhân viên</h2>
-
             <table>
                 <thead>
                 <tr>
@@ -84,70 +125,84 @@ const UserTable = ({ data, onEdit, onDelete }) => {
                 contentLabel="Edit User"
                 overlayClassName="Modal__Overlay"
                 className="Modal__Content"
+                appElement={document.getElementById('root')}
             >
                 {selectedUser && (
                     <div>
                         <h2 className="modal-header">Edit User</h2>
-                        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+                        <form onSubmit={handleSave}>
                             <label>
-                                Họ:
+                                First Name:
                                 <input
                                     type="text"
+                                    name="firstname"
                                     value={selectedUser.firstname || ''}
-                                    onChange={(e) => setSelectedUser({ ...selectedUser, firstname: e.target.value })}
+                                    onChange={handleChange}
                                 />
                             </label>
                             <label>
-                                Tên:
+                                Last Name:
                                 <input
                                     type="text"
+                                    name="lastname"
                                     value={selectedUser.lastname || ''}
-                                    onChange={(e) => setSelectedUser({ ...selectedUser, lastname: e.target.value })}
+                                    onChange={handleChange}
                                 />
                             </label>
                             <label>
                                 Email:
                                 <input
                                     type="text"
-                                    value={selectedUser.email}
-                                    onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
+                                    name="email"
+                                    value={selectedUser.email || ''}
+                                    onChange={handleChange}
                                 />
                             </label>
                             <label>
-                                Số điện thoại:
+                                Phone Number:
                                 <input
                                     type="text"
+                                    name="phoneNumber"
                                     value={selectedUser.phoneNumber || ''}
-                                    onChange={(e) => setSelectedUser({ ...selectedUser, phoneNumber: e.target.value })}
+                                    onChange={handleChange}
                                 />
                             </label>
                             <label>
-                                Tài khoản:
+                                Username:
                                 <input
                                     type="text"
-                                    value={selectedUser.username}
-                                    onChange={(e) => setSelectedUser({ ...selectedUser, username: e.target.value })}
+                                    name="username"
+                                    value={selectedUser.username || ''}
+                                    onChange={handleChange}
+                                    disabled
                                 />
                             </label>
                             <label>
-                                Vai trò:
-                                <input
-                                    type="text"
-                                    value={selectedUser.role}
-                                    onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-                                />
+                                Role:
+                                <select
+                                    name="role"
+                                    value={selectedUser.role || 'USER'}
+                                    onChange={handleChange}
+                                >
+                                    <option value="USER">USER</option>
+                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="STAFF">STAFF</option>
+                                </select>
                             </label>
                             <label>
-                                Trạng thái:
-                                <input
-                                    type="text"
-                                    value={selectedUser.status}
-                                    onChange={(e) => setSelectedUser({ ...selectedUser, status: e.target.value })}
-                                />
+                                Status:
+                                <select
+                                    name="status"
+                                    value={selectedUser.status || 'ACTIVE'}
+                                    onChange={handleChange}
+                                >
+                                    <option value="ACTIVE">ACTIVE</option>
+                                    <option value="INACTIVE">INACTIVE</option>
+                                </select>
                             </label>
-                            <button type="submit" className="save">Save</button>
-                            <button type="button" onClick={closeModal} className="cancel">Cancel</button>
+                            <button type="submit">Save</button>
                         </form>
+                        <button onClick={closeModal}>Close</button>
                     </div>
                 )}
             </Modal>

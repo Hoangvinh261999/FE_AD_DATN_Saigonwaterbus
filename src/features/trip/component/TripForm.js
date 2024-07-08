@@ -46,9 +46,7 @@ const AddTripForm = () => {
         setStation(response.data.result);
         console.log(response.data.result);
     };
-
     const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(setPageTitle({ title: 'Chuyến tàu: Thêm Chuyến Tàu' }));
         Fillroute();
