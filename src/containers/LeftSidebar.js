@@ -15,37 +15,42 @@ function LeftSidebar(){
     }
 
     return(
-        <div className="drawer-side  z-30  relative">
+        <div className="drawer-side z-30  relative">
+        
             <label htmlFor="left-sidebar-drawer" className="drawer-overlay"></label>
-            <ul className="menu  pt-2 w-80 bg-base-100  text-base-content">
-                <button className="btn btn-ghost bg-base-300 btn-circle z-50 top-0 right-0 mt-4 mr-2 absolute lg:hidden" onClick={() => close()}>
+            <ul className="menu pt-2 w-80 bg-base-100  text-base-content">
+                {/* <button className="btn btn-ghost bg-base-300 btn-circle z-50 top-0 right-0 mt-4 mr-2 absolute lg:hidden" onClick={() => close()}>
                     <XMarkIcon className="h-5 inline-block w-5"/>
-                </button>
+                </button> */}
 
                 <li className="mb-2 font-semibold text-xl">
-
                     <Link to={'/admin/chao-mung'}><img className="mask mask-squircle w-10" src="/logo.png" alt="DashWind Logo"/>Saigon Waterbus</Link> </li>
-
                 {
                     routes.map((route, k) => {
                         return(
-                            <li className="text-base my-3 mx-3" key={k}>
-                                {
-                                    route.submenu ?
-                                        <SidebarSubmenu {...route}/> :
-                                        (<NavLink
-                                            end
-                                            to={route.path}
-                                            className={({isActive}) => `${isActive ? 'font-semibold  bg-base-200 ' : 'font-normal'}`} >
-                                            {route.icon} {route.name}
-                                            {
-                                                location.pathname === route.path ? (<span className="absolute inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary "
-                                                                                          aria-hidden="true"></span>) : null
-                                            }
-                                        </NavLink>)
-                                }
-
-                            </li>
+                    <li className="text-base my-3 mx-3" key={k}>
+                        {route.submenu ? (
+                            <SidebarSubmenu {...route}/>
+                        ) : (
+                            <NavLink
+                            end
+                            to={route.path}
+                            className={({ isActive }) =>
+                                `${isActive ? 'font-semibold bg-base-200' : 'font-semibold'} flex items-center font-semibold`
+                            }>
+                  <span className="flex items-center">
+                    {route.icon}
+                    <span className="ml-2">{route.name}</span>
+                  </span>
+                  {location.pathname === route.path ? (
+                    <span
+                      className="absolute inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary"
+                      aria-hidden="true"
+                    ></span>
+                  ) : null}
+                </NavLink>
+              )}
+            </li>
                         )
                     })
                 }
@@ -53,6 +58,10 @@ function LeftSidebar(){
             </ul>
             <div className='bottom-0 absolute'>
                 <label>Phiên bản 1.0.2 07072024</label>
+                <span
+                      className="absolute inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary"
+                      aria-hidden="true"
+                    ></span>
             </div>
         </div>
     )
