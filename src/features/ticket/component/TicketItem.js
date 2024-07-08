@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../../common/headerSlice";
-
+import { formatDate } from '../../../utils/formatDate';
 const TicketItem = ({ ticket, updateTicket, deleteTicket }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [updatedTicket, setUpdatedTicket] = useState({ ...ticket });
@@ -36,9 +36,11 @@ const TicketItem = ({ ticket, updateTicket, deleteTicket }) => {
                 <>
                     <td className="border p-2">{ticket.id}</td>
                     <td className="border p-2">{ticket.trainId}</td>
-                    <td className="border p-2">{ticket.status}</td>
+                        <td className="border p-2">
+                        {ticket.status === 'Cancelled' ? 'Đã huỷ' :ticket.status === 'Pending' ? 'Chờ xử lý' :'Đã đặt'}
+                        </td>
                     <td className="border p-2">{ticket.price}</td>
-                    <td className="border p-2">{ticket.dateCreated}</td>
+                    <td className="border p-2">{formatDate(ticket.dateCreated)}</td>
                     <td className="border p-2">
                         <div className="inline-flex gap-x-2">
                             <button onClick={() => setIsEditing(true)} className="px-4 py-2 bg-yellow-500 text-white rounded">Sửa</button>

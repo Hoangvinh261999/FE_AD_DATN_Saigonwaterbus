@@ -116,20 +116,64 @@ const TicketManagement = () => {
                 </div>
             </div>
             <TicketList tickets={currentTickets} updateTicket={updateTicket} deleteTicket={deleteTicket} />
-            <div className="mt-4 flex justify-center">
-                <button onClick={handleFirstPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                    First
-                </button>
-                <button onClick={handlePrevPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                    Previous
-                </button>
-                <button onClick={handleNextPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                    Next
-                </button>
-                <button onClick={handleLastPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                    Last
-                </button>
-            </div>
+                    <div className="mt-4 flex justify-center">
+                        <button onClick={handleFirstPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                               <svg
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                    height="1em"
+                                    width="1em"
+                                    >
+                                    <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+                                    </svg>
+                        </button>
+                        <button onClick={handlePrevPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                               <svg
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                    height="1em"
+                                    width="1em"
+                                    >
+                                    <path d="M15 18l-6-6 6-6" />
+                                    </svg>
+                        </button>
+                        <button onClick={handleNextPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                                <svg
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                    height="1em"
+                                    width="1em"
+                                    >
+                                    <path d="M9 18l6-6-6-6" />
+                                    </svg>
+                        </button>
+                        <button onClick={handleLastPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                               <svg
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                    height="1em"
+                                    width="1em"
+                                    >
+                                    <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
+                                    </svg>
+                        </button>
+                    </div>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../features/common/headerSlice'
-import Billing from '../../features/settings/billing/index'
+import Billing from '../../features/invoice/billing/index'
 
 function InternalPage(){
     const dispatch = useDispatch()
