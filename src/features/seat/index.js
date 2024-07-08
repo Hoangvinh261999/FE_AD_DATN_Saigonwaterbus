@@ -9,7 +9,7 @@ const TicketManagement = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setPageTitle({ title: "Chuyến tàu" }));
+    dispatch(setPageTitle({ title: "Ghế tàu" }));
   }, []);
 
   const [seats, setSeats] = useState([]);
@@ -78,14 +78,14 @@ const TicketManagement = () => {
     <div className="container mx-auto p-4 ">
       <div className="flex items-center space-x-6">
         <h1 className="text-2xl font-bold mb-4">Quản lý ghế tàu</h1>
-        <input
+        {/* <input
           type="text"
           placeholder="Nhập từ khóa tìm kiếm..."
           className="px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
         />
         <button className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
           Tìm kiếm
-        </button>
+        </button> */}
       </div>
       {isPopupVisible && (
         <Popup
@@ -96,8 +96,8 @@ const TicketManagement = () => {
       )}
       <table className="min-w-full bg-white">
         <thead>
-          <tr className="bg-sky-400">
-            <th className="py-2">Stt</th>
+          <tr className="bg-sky-400 text-center">
+            <th className="py-2">STT</th>
             <th className="py-2">Tàu</th>
             <th className="py-2">Trạng thái</th>
             <th className="py-2">Tên ghế</th>

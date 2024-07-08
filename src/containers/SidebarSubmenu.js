@@ -14,35 +14,29 @@ function SidebarSubmenu({submenu, name, icon}){
     }, [])
 
     return (
-        <div className='flex flex-col'>
-
-            {/** Route header */}
-            <div className='w-full block' onClick={() => setIsExpanded(!isExpanded)}>
-                {icon} {name} 
-                <ChevronDownIcon className={'w-5 h-5 mt-1 float-right delay-400 duration-500 transition-all  ' + (isExpanded ? 'rotate-180' : '')}/>
-            </div>
-
-            {/** Submenu list */}
-            <div className={` w-full `+ (isExpanded ? "" : "hidden")}>
-                <ul className={`menu menu-compact`}>
-                {
-                    submenu.map((m, k) => {
-                        return(
-                            <li key={k}>
-                                <Link to={m.path}>
-                                    {m.icon} {m.name}
-                                    {
-                                            location.pathname == m.path ? (<span className="absolute mt-1 mb-1 inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary "
-                                                aria-hidden="true"></span>) : null
-                                    }
-                                </Link>
-                            </li>
-                        )
-                    })
-                }
-                </ul>
-            </div>
+         <div className='flex flex-col'>
+      <div className='w-full flex justify-between items-center' onClick={() => setIsExpanded(!isExpanded)}>
+        <div className='flex items-center'>
+          {icon} <span className='ml-2 font-semibold'>{name}</span>
         </div>
+        <ChevronDownIcon className={'w-5 h-5 transition-transform duration-500 ' + (isExpanded ? 'transform rotate-180' : '')} />
+      </div>
+
+      <div className={`w-full ${isExpanded ? "" : "hidden"}`}>
+        <ul className='menu menu-compact'>
+          {submenu.map((m, k) => (
+            <li key={k}>
+              <Link to={m.path} className='relative'>
+                {m.icon} <span className='ml-2'>{m.name}</span>
+                {location.pathname === m.path && (
+                  <span className="absolute inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary mt-1 mb-1" aria-hidden="true"></span>
+                )}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
     )
 }
 
