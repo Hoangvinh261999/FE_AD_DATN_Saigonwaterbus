@@ -10,7 +10,7 @@ const Team = lazy(() => import('../pages/protected/Team'));
 const Ticket = lazy(() => import('../features/ticket/index.js'));
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'));
 const Staff = lazy(() => import('../pages/protected/Staff'));
-const Captain = lazy(() => import('../features/captain/Captain'));
+const Captain = lazy(() => import('../features/captain/index.js'));
 // const StaffCreate = lazy(() => import('../pages/AddEmployee'));
 const TicketManagement = lazy(() => import('../features/ticket/index'));
 const AddRoute = lazy(() => import('../features/route/components/routeForm'));
@@ -22,7 +22,7 @@ const TaoChuyen = lazy(() => import('../features/trip/component/TripForm'));
 const TaoStaff = lazy(() => import('../features/staff/components/StaffForm'));
 const HoaDon = lazy(() => import('../features/invoice/billing/index.js'));
 const GheTau = lazy(() => import('../features/seat/index.js'));
-
+const ThemThuyenTruong = lazy(() => import('../features/captain/components/CaptainForm'));
 const routes = [
   {
     path: '/trang-chu',
@@ -79,6 +79,10 @@ const routes = [
   {
     path: '/thuyen-truong',
     component: Captain,
+  },
+  {
+    path: '/thuyen-truong/tao',
+    component: ThemThuyenTruong,
   },
   {
     path: '/404',
