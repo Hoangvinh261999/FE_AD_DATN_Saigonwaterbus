@@ -4,40 +4,44 @@ import RouteList from './components/routelist';
 import RouteForm from './components/routeForm';
 
 const RouteManagement = () => {
-
     const [routes, setRoutes] = useState([]);
     const [stations, setStations] = useState([]);
     const [editingRoute, setEditingRoute] = useState(null);
     const [searchName, setSearchName] = useState('');
     const [searchStatus, setSearchStatus] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const routesPerPage = 6;
     const [isCreating, setIsCreating] = useState(false);
-
+    const [totalPages, setTotalPages] = useState(0);
+    const pageSize = 2;
     const token = localStorage.getItem("token");
 
-    const fetchRoutes = async () => {
+    const fetchRoutes = async (page = 1) => {
         try {
-            const response = await axios.get('http://localhost:8080/api/saigonwaterbus/admin/route', {
+            const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/routes?page=${page - 1}&size=${pageSize}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            const apiRoutes = response.data.result.map(route => ({
-                id: route.id,
-                start: route.fromTerminal.name,
-                stops: route.waypoints.map(wp => wp.station.name).join(', '),
-                end: route.toTerminal.name,
-                name: route.nameRoute,
-                bs: `SG00${route.id}`,
-                status: route.status,
-                // Adding waypoints to route object for editing
-                waypoints: route.waypoints.map(wp => ({
-                    id: wp.station.id,
-                    stopOrder: wp.stopOrder
-                })),
-            }));
-            setRoutes(apiRoutes);
+            const result = response.data.result;
+            if (result && Array.isArray(result.content)) {
+                const apiRoutes = result.content.map(route => ({
+                    id: route.id,
+                    start: route.fromTerminal.name,
+                    stops: route.waypoints.map(wp => wp.station.name).join(', '),
+                    end: route.toTerminal.name,
+                    name: route.nameRoute,
+                    bs: `SG00${route.id}`,
+                    status: route.status,
+                    waypoints: route.waypoints.map(wp => ({
+                        id: wp.station.id,
+                        stopOrder: wp.stopOrder
+                    })),
+                }));
+                setRoutes(apiRoutes);
+                setTotalPages(result.totalPages);
+            } else {
+                console.error('Expected an array for routes:', result.content);
+            }
         } catch (error) {
             console.error('Error fetching routes:', error);
         }
@@ -45,35 +49,40 @@ const RouteManagement = () => {
 
     const fetchStations = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/saigonwaterbus/admin/station', {
+            const response = await axios.get('http://localhost:8080/api/saigonwaterbus/admin/stations', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            const apiStation = response.data.result.map(station => ({
-                id: station.id,
-                name: station.name,
-                addressStation: station.addressStation,
-            }));
-            setStations(apiStation);
+            const result = response.data.result;
+            if (result && Array.isArray(result.content)) {
+                const apiStations = result.content.map(station => ({
+                    id: station.id,
+                    name: station.name,
+                    addressStation: station.addressStation,
+                }));
+                setStations(apiStations);
+            } else {
+                console.error('Expected an array for stations:', result.content);
+            }
         } catch (error) {
             console.error('Error fetching stations:', error);
         }
     };
 
     useEffect(() => {
-        fetchRoutes();
+        fetchRoutes(currentPage);
         fetchStations();
-    }, []);
+    }, [currentPage]);
 
     const handleEdit = (route) => {
-        setEditingRoute(route); // Set the editing route
-        setIsCreating(false); // Ensure creation mode is off
+        setEditingRoute(route);
+        setIsCreating(false);
     };
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/admin/route/delete/${id}`, {
+            await axios.delete(`http://localhost:8080/api/saigonwaterbus/admin/route/delete/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -95,22 +104,20 @@ const RouteManagement = () => {
     const handleSaveRoute = async (formData) => {
         try {
             if (formData.id) {
-                // Update existing route
-                await axios.put(`http://localhost:8080/api/admin/route/update/${formData.id}`, formData, {
+                await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/route/update/${formData.id}`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
             } else {
-                // Add new route
-                const response = await axios.post('http://localhost:8080/api/admin/route/save', formData, {
+                const response = await axios.post('http://localhost:8080/api/saigonwaterbus/admin/route/save', formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                formData.id = response.data.id; // Update ID from server
+                formData.id = response.data.id;
             }
-            fetchRoutes(); // Fetch updated routes
+            fetchRoutes(currentPage);
             setEditingRoute(null);
             setIsCreating(false);
         } catch (error) {
@@ -125,30 +132,10 @@ const RouteManagement = () => {
 
     const uniqueStatuses = [...new Set(routes.map(route => route.status))];
 
-    const indexOfLastRoute = currentPage * routesPerPage;
-    const indexOfFirstRoute = indexOfLastRoute - routesPerPage;
-    const currentRoutes = filteredRoutes.slice(indexOfFirstRoute, indexOfLastRoute);
-
-    const totalPageNumbers = Math.ceil(filteredRoutes.length / routesPerPage);
-
-    const handleClick = (event) => {
-        setCurrentPage(Number(event.target.id));
-    };
-
-    const handleNextPage = () => {
-        setCurrentPage((prevPage) => (prevPage < totalPageNumbers ? prevPage + 1 : prevPage));
-    };
-
-    const handlePrevPage = () => {
-        setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
-    };
-
-    const handleFirstPage = () => {
-        setCurrentPage(1);
-    };
-
-    const handleLastPage = () => {
-        setCurrentPage(totalPageNumbers);
+    const handlePageChange = (newPage) => {
+        if (newPage > 0 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
     };
 
     return (
@@ -187,63 +174,19 @@ const RouteManagement = () => {
             </div>
             {!isCreating && !editingRoute && (
                 <>
-                    <RouteList routes={currentRoutes} onEdit={handleEdit} onDelete={handleDelete} stations = {stations}/>
+                    <RouteList routes={filteredRoutes} onEdit={handleEdit} onDelete={handleDelete} stations={stations} />
                     <div className="mt-4 flex justify-center">
-                        <button onClick={handleFirstPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                               <svg
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24"
-                                    height="1em"
-                                    width="1em"
-                                    >
-                                    <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
-                                    </svg>
+                        <button onClick={() => handlePageChange(1)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                            Đầu
                         </button>
-                        <button onClick={handlePrevPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                               <svg
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24"
-                                    height="1em"
-                                    width="1em"
-                                    >
-                                    <path d="M15 18l-6-6 6-6" />
-                                    </svg>
+                        <button onClick={() => handlePageChange(currentPage - 1)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                            Trước
                         </button>
-                        <button onClick={handleNextPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                                <svg
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24"
-                                    height="1em"
-                                    width="1em"
-                                    >
-                                    <path d="M9 18l6-6-6-6" />
-                                    </svg>
+                        <button onClick={() => handlePageChange(currentPage + 1)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                            Tiếp
                         </button>
-                        <button onClick={handleLastPage} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                               <svg
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    viewBox="0 0 24 24"
-                                    height="1em"
-                                    width="1em"
-                                    >
-                                    <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
-                                    </svg>
+                        <button onClick={() => handlePageChange(totalPages)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
+                            Cuối
                         </button>
                     </div>
                 </>
@@ -251,7 +194,7 @@ const RouteManagement = () => {
             {(isCreating || editingRoute) && (
                 <div id="editForm">
                     <RouteForm
-                        route={editingRoute} // Pass editingRoute to RouteForm for editing
+                        route={editingRoute}
                         onSave={handleSaveRoute}
                         setIsCreating={setIsCreating}
                         setEditingRoute={setEditingRoute}

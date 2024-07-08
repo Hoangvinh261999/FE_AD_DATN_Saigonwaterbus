@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './bill.css';
-
-const data = [
-    {
-        id: 45,
-        payMethod: "BANK_TRANSFER",
-        totalAmount: 30000.0,
-        status: "COMPLETED",
-        createAt: "2024-06-17",
-        updateAt: null,
-        deleteAt: null
-    },
-    {
-        id: 50,
-        payMethod: "BANK_TRANSFER",
-        totalAmount: 15000.0,
-        status: "COMPLETED",
-        createAt: "2024-06-17",
-        updateAt: null,
-        deleteAt: null
-    }
-];
+import axios from "axios";
+const token = localStorage.getItem("token")
+const [data, setData]  = useState([]);
+const getData = async () =>{
+    const response = await axios.get("http://localhost:8080/api/saigonwaterbus/admin/hoa-don",{
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    })
+}
 
 const getPayMethod = (method) => {
     if (method === "BANK_TRANSFER") {

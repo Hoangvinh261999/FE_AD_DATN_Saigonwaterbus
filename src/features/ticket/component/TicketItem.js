@@ -36,7 +36,9 @@ const TicketItem = ({ ticket, updateTicket, deleteTicket }) => {
                 <>
                     <td className="border p-2">{ticket.id}</td>
                     <td className="border p-2">{ticket.trainId}</td>
-                    <td className="border p-2">{ticket.status}</td>
+                    <td className="border p-2">
+                        {ticket.status === 'Cancelled' ? 'Đã huỷ' :ticket.status === 'Pending' ? 'Chờ xử lý' :'Đã đặt'}
+                    </td>
                     <td className="border p-2">{ticket.price}</td>
                     <td className="border p-2">{ticket.dateCreated}</td>
                     <td className="border p-2">
