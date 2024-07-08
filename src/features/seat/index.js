@@ -24,6 +24,8 @@ const TicketManagement = () => {
       try {
         if(selectedSeat.status==='ACTIVE'){
           selectedSeat.status='INACTIVE'
+                    selectedSeat.status='INACTIVE'
+
         }else{
                     selectedSeat.status='ACTIVE'
 
