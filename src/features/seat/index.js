@@ -96,7 +96,7 @@ const TicketManagement = () => {
           onCancel={handleCancel}
         />
       )}
-      <table className="min-w-full bg-white">
+      <table className="w-full bg-white">
         <thead>
           <tr className="bg-sky-400 text-center">
             <th className="py-2">STT</th>
