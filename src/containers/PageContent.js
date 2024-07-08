@@ -40,12 +40,9 @@ function PageContent(){
                                     )
                                 })
                             }
-
-                            {/* Redirecting unknown url to 404 page */}
                             <Route path="*" element={<Page404 />} />
                         </Routes>
                 </Suspense>
-                {/* <div className="h-16"></div> */}
             </main>
         </div> 
     )

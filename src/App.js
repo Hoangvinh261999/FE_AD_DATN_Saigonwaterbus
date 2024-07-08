@@ -1,7 +1,6 @@
 import React, { lazy, useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { themeChange } from 'theme-change';
 import initializeApp from './app/init';
 import { useAuth } from './AuthContext';
 // Importing pages

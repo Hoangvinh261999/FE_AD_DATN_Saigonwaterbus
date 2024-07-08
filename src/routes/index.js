@@ -7,10 +7,10 @@ const Page404 = lazy(() => import('../pages/protected/404'));
 const RoutePage = lazy(() => import('../pages/protected/Route'));
 const Calendar = lazy(() => import('../pages/protected/Calendar'));
 const Team = lazy(() => import('../pages/protected/Team'));
-const Bills = lazy(() => import('../pages/protected/Bills'));
+const Ticket = lazy(() => import('../features/ticket/index.js'));
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'));
 const Staff = lazy(() => import('../pages/protected/Staff'));
-const Captain = lazy(() => import('../features/captain/index'));
+const Captain = lazy(() => import('../features/captain/Captain'));
 // const StaffCreate = lazy(() => import('../pages/AddEmployee'));
 const TicketManagement = lazy(() => import('../features/ticket/index'));
 const AddRoute = lazy(() => import('../features/route/components/routeForm'));
@@ -20,8 +20,9 @@ const Tau = lazy(() => import('../features/Ship/index'));
 const ChuyenTauTong = lazy(() => import('../features/trip/Trip'));
 const TaoChuyen = lazy(() => import('../features/trip/component/TripForm'));
 const TaoStaff = lazy(() => import('../features/staff/components/StaffForm'));
-const TaoCaptain = lazy(() => import('../features/captain/components/CaptainForm'));
-const Ticket = lazy(() => import('../features/ticket/index'));
+const HoaDon = lazy(() => import('../features/invoice/billing/index.js'));
+const GheTau = lazy(() => import('../features/seat/index.js'));
+
 const routes = [
   {
     path: '/trang-chu',
@@ -47,6 +48,14 @@ const routes = [
     path: '/gioi-thieu-doi-ngu',
     component: Team,
   },
+    {
+    path: '/ghe-tau',
+    component: GheTau,
+  },
+    {
+    path: '/hoa-don',
+    component: HoaDon,
+  },
   {
     path: '/quan-ly-ve',
     component: Calendar,
@@ -61,11 +70,7 @@ const routes = [
   },
   {
     path: '/ve-tau',
-    component:  Ticket,
-  },
-  {
-    path: '/thuyen-truong/tao',
-    component: TaoCaptain,
+    component: Ticket,
   },
   {
     path: '/nhan-vien',
