@@ -17,6 +17,7 @@
     "axios": "^1.7.2",
     "capitalize-the-first-letter": "^1.0.8",
     "chart.js": "^4.4.3",
+    "datepicker": "^0.0.0",
     "dayjs": "^1.11.7",
     "moment": "^2.30.1",
     "react": "^18.2.0",

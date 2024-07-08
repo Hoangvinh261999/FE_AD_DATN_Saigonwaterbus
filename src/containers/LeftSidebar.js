@@ -15,10 +15,10 @@ function LeftSidebar(){
     }
 
     return(
-        <div className="drawer-side  z-30  ">
+        <div className="drawer-side  z-30  relative">
             <label htmlFor="left-sidebar-drawer" className="drawer-overlay"></label>
-            <ul className="menu  pt-2 w-80 bg-base-100 min-h-full   text-base-content">
-                <button className="btn btn-ghost bg-base-300  btn-circle z-50 top-0 right-0 mt-4 mr-2 absolute lg:hidden" onClick={() => close()}>
+            <ul className="menu  pt-2 w-80 bg-base-100  text-base-content">
+                <button className="btn btn-ghost bg-base-300 btn-circle z-50 top-0 right-0 mt-4 mr-2 absolute lg:hidden" onClick={() => close()}>
                     <XMarkIcon className="h-5 inline-block w-5"/>
                 </button>
 
@@ -51,6 +51,9 @@ function LeftSidebar(){
                 }
 
             </ul>
+            <div className='bottom-0 absolute'>
+                <label>Phiên bản 1.0.2 07072024</label>
+            </div>
         </div>
     )
 }

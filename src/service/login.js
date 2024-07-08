@@ -18,7 +18,6 @@ const LoginProcess = async (username, password) => {
 
         console.log("Response data:", response.data);
 
-        const responseDataUsername = response.data.result.username;
         localStorage.setItem('token', response.data.result.token);
         localStorage.setItem('us', username);
 
