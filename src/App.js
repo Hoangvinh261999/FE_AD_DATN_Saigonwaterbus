@@ -8,7 +8,6 @@ const Layout = lazy(() => import('./containers/Layout'));
 const Login = lazy(() => import('./pages/Login'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const Register = lazy(() => import('./pages/Register'));
-
 // Initializing different libraries
 initializeApp();
 

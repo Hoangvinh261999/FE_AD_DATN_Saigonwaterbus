@@ -10,7 +10,7 @@ const Team = lazy(() => import('../pages/protected/Team'));
 const Ticket = lazy(() => import('../features/ticket/index.js'));
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'));
 const Staff = lazy(() => import('../pages/protected/Staff'));
-const Captain = lazy(() => import('../features/captain/Captain'));
+const Captain = lazy(() => import('../features/captain/index'));
 // const StaffCreate = lazy(() => import('../pages/AddEmployee'));
 const TicketManagement = lazy(() => import('../features/ticket/index'));
 const AddRoute = lazy(() => import('../features/route/components/routeForm'));
@@ -22,7 +22,9 @@ const TaoChuyen = lazy(() => import('../features/trip/component/TripForm'));
 const TaoStaff = lazy(() => import('../features/staff/components/StaffForm'));
 const HoaDon = lazy(() => import('../features/invoice/billing/index.js'));
 const GheTau = lazy(() => import('../features/seat/index.js'));
-
+const ThemNhanVien = lazy(() => import('../features/staff/components/StaffForm'));
+const ThemThuyenTruong = lazy(() => import('../features/captain/components/CaptainForm'));
+const Bentau = lazy(() => import('../features/station/index'));
 const routes = [
   {
     path: '/trang-chu',
@@ -52,6 +54,10 @@ const routes = [
     path: '/ghe-tau',
     component: GheTau,
   },
+  {
+    path: 'Nhan-vien/create',
+    component: ThemNhanVien,
+  },
     {
     path: '/hoa-don',
     component: HoaDon,
@@ -63,6 +69,10 @@ const routes = [
   {
     path: '/Chuyen-tau',
     component: ChuyenTauTong,
+  },
+  {
+    path: '/thuyen-truong/tao',
+    component: ThemThuyenTruong,
   },
   {
     path: '/thong-tin-ca-nhan',
@@ -108,6 +118,10 @@ const routes = [
   {
     path: '/nhan-vien/create',
     component: TaoStaff,
+  },
+  {
+    path: '/ben-tau',
+    component: Bentau,
   },
 ];
 

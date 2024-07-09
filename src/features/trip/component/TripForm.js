@@ -4,11 +4,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../common/headerSlice';
-
+import './styleButtonTrip.css'
 const AddTripForm = () => {
     const [trips, setTrips] = useState([]);
     const [route, setRoute] = useState([]);
     const [station, setStation] = useState([]);
+    const [ship, setShip] = useState([]);
     const token = localStorage.getItem('token');
     const [formData, setFormData] = useState({
         id: '',
@@ -22,6 +23,14 @@ const AddTripForm = () => {
             toTerminal: { name: '' },
         },
         status: '',
+        ship:{
+            id:'',
+            totalSeats:'',
+            createAt:'',
+            updateAt:'',
+            deleteAt:'',
+            status:'',
+        }
     });
 
     const changeLayout = () => {
@@ -46,11 +55,21 @@ const AddTripForm = () => {
         setStation(response.data.result);
         console.log(response.data.result);
     };
+    const FillShip = async () => {
+        const response = await axios.get('http://localhost:8080/api/saigonwaterbus/admin/ship', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setShip(response.data.result);
+        console.log(response.data.result);
+    };
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle({ title: 'Chuyến tàu: Thêm Chuyến Tàu' }));
         Fillroute();
         FillStation();
+        FillShip()
     }, []);
 
     const handleChange = (e) => {
@@ -196,6 +215,21 @@ const AddTripForm = () => {
                         <option key={station.id} value={station.name}>
                             {station.name}
                         </option>
+                    ))}
+                </select>
+            </div>
+            <div className="col-span-2 mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Tàu:</label>
+                <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    name="shipId"
+                    value={formData.shipId}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Chọn tàu</option>
+                    {ship.map((ship) => (
+                        <option key={ship.id} value={ship}>{ship.id}</option>
                     ))}
                 </select>
             </div>

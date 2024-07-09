@@ -13,13 +13,13 @@ const AddCaptainForm = () => {
         dispatch(setPageTitle({ title: 'Thêm thuyền trưởng' }));
     }, []);
     const getShip = async () => {
-        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/tau`, {
+        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/ship`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        setShips(response.data.content);
-        console.log(response.data.content)
+        setShips(response.data.result);
+        console.log(response.data.result)
     };
 
     useEffect(() => {
@@ -51,7 +51,7 @@ const AddCaptainForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/saigonwaterbus/admin/captains', captainData, {
+            const response = await axios.post('http://localhost:8080/api/saigonwaterbus/admin/captain/save', captainData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },

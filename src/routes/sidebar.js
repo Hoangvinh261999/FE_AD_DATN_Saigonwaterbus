@@ -86,6 +86,11 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/admin/ben-tau',
+    icon: <img src='/icon/train-station.png' alt=''/>,
+    name: 'Bến tàu',
+  },
 ]
 
 export default routes
