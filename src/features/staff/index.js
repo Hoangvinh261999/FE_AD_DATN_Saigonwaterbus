@@ -69,7 +69,7 @@ function Staff() {
             });
 
             if (response.status === 200 && response.data.code === 200) {
-                setEmployees(employees.filter(user => user.id !== id));
+setEmployees(employees.filter(user => user.id !== id));
                 setFilteredEmployees(filteredEmployees.filter(user => user.id !== id));
             } else {
                 console.error('Failed to delete user', response.data.message);

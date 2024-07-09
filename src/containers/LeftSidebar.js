@@ -57,7 +57,7 @@ function LeftSidebar(){
 
             </ul>
             <div className='bottom-0 absolute'>
-                <label>Phiên bản 1.0.2 07072024</label>
+                
                 <span
                       className="absolute inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary"
                       aria-hidden="true"

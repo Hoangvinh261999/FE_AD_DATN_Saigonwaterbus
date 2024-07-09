@@ -102,7 +102,7 @@ const UserTable = ({ data, onDelete }) => {
                     <th>Quyền</th>
                     <th>Trạng Thái</th>
                     <th>Hành Động</th>
-                </tr>
+</tr>
                 </thead>
                 <tbody>
                 {data.map((user, index) => (
@@ -166,7 +166,7 @@ const UserTable = ({ data, onDelete }) => {
                                     value={selectedUser.phoneNumber || ''}
                                     onChange={handleChange}
                                 />
-                            </label>
+</label>
                             <label>
                                 Username:
                                 <input
