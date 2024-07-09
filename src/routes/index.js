@@ -11,6 +11,7 @@ const Ticket = lazy(() => import('../features/ticket/index.js'));
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'));
 const Staff = lazy(() => import('../pages/protected/Staff'));
 const Captain = lazy(() => import('../features/captain/index'));
+
 // const StaffCreate = lazy(() => import('../pages/AddEmployee'));
 const TicketManagement = lazy(() => import('../features/ticket/index'));
 const AddRoute = lazy(() => import('../features/route/components/routeForm'));
@@ -25,6 +26,7 @@ const GheTau = lazy(() => import('../features/seat/index.js'));
 const ThemNhanVien = lazy(() => import('../features/staff/components/StaffForm'));
 const ThemThuyenTruong = lazy(() => import('../features/captain/components/CaptainForm'));
 const Bentau = lazy(() => import('../features/station/index'));
+
 const routes = [
   {
     path: '/trang-chu',
@@ -89,6 +91,10 @@ const routes = [
   {
     path: '/thuyen-truong',
     component: Captain,
+  },
+  {
+    path: '/thuyen-truong/tao',
+    component: ThemThuyenTruong,
   },
   {
     path: '/404',

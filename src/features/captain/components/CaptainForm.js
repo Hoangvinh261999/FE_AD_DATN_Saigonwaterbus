@@ -73,7 +73,7 @@ const AddCaptainForm = () => {
 
 
     return (
-        <form onSubmit={handleSubmit} className="add-captain-form">
+        <form onSubmit={handleSubmit} className="add-captain-form z-50">
             <div className="form-row">
                 <div className="form-column">
                     <label>

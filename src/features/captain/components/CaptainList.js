@@ -84,28 +84,28 @@ const CaptainList = ({ captains, fetchCaptains }) => {
         <div className="table-container">
             <table className="captain-table">
                 <thead>
-                <tr>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">Họ</th>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">Tên</th>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">Số điện thoại</th>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">Địa chỉ</th>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">Giấy phép tàu</th>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">Trạng thái</th>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">ID tàu</th>
-                    <th className="py-2 px-4 bg-gray-100 border border-gray-200 text-left">Ngày tạo</th>
+                <tr className=' text-center'>
+                    <th className=" border  text-left">Họ</th>
+                    <th className=" border  text-left">Tên</th>
+                    <th className=" border  text-left">Số điện thoại</th>
+                    <th className=" border  text-left">Địa chỉ</th>
+                    <th className=" border  text-left">Giấy phép tàu</th>
+                    <th className=" border  text-left">Trạng thái</th>
+                    <th className=" border  text-left">ID tàu</th>
+                    <th className=" border  text-left">Ngày tạo</th>
                 </tr>
                 </thead>
                 <tbody>
                 {captains.map((captain, index) => (
                     <tr key={index} onClick={() => handleRowClick(captain)}>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{captain.firstname}</td>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{captain.lastname}</td>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{captain.phoneNumber}</td>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{captain.address}</td>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{captain.shipLicense}</td>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{getStatus(captain.status)}</td>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{captain.shipId}</td>
-                        <td className="py-2 px-4 border border-gray-200 text-left">{new Date(captain.createdAt).toLocaleDateString()}</td>
+                        <td className=" border  text-left">{captain.firstname}</td>
+                        <td className=" border  text-left">{captain.lastname}</td>
+                        <td className=" border  text-left">{captain.phoneNumber}</td>
+                        <td className=" border  text-left">{captain.address}</td>
+                        <td className=" border  text-left">{captain.shipLicense}</td>
+                        <td className=" border  text-left">{getStatus(captain.status)}</td>
+                        <td className=" border  text-left">{captain.shipId}</td>
+                        <td className=" border  text-left">{new Date(captain.createdAt).toLocaleDateString()}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -117,6 +117,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 contentLabel="Edit Captain"
                 overlayClassName="Modal__Overlay"
                 className="Modal__Content"
+  style={{ zIndex: 100 }}
+                
             >
                 {editedCaptain && (
                     <div>
