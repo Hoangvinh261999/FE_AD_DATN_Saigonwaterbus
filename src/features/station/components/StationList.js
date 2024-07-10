@@ -88,16 +88,16 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
                         <td className="border px-4 py-2">{station.name}</td>
                         <td className="border px-4 py-2">{station.address}</td>
                         <td className="border px-4 py-2">{getStatus(station.status)}</td>
-                        <td className="border px-4 py-2">
+                        <td className="border px-4 py-2 flex">
                             <button
                                 onClick={() => handleEditClick(station)}
-                                className="bg-blue-500 text-white py-1 px-3 rounded mr-2"
+                                className="bg-blue-500 text-white py-1 px-3 rounded mr-2 w-auto"
                             >
                                 Cập nhật
                             </button>
                             <button
                                 onClick={() => onDelete(station.id)}
-                                className="bg-red-500 text-white py-1 px-3 rounded"
+                                className="bg-red-500 text-white py-1 px-3 rounded w-auto"
                             >
                                 Xóa
                             </button>

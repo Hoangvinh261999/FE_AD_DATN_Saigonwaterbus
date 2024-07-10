@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { formatDate } from '../../../utils/formatDate';
 function TripList({ trip }) {
     const [selectedItem, setSelectedItem] = useState(null);
     const [stations, setStations] = useState([]);
@@ -176,7 +176,7 @@ function TripList({ trip }) {
                         onClick={() => openDetail(item)}
                     >
                         <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.departureDate}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{formatDate(item.departureDate)}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.departureTime}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.arrivalTime}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.availableSeats}</td>

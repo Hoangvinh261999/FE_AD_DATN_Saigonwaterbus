@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-
+import { formatDate } from '../../../utils/formatDate';
 function ShipList() {
     const [ships, setShips] = useState([]);
     const token = localStorage.getItem("token");
@@ -178,10 +178,15 @@ function ShipList() {
                             <td className="px-6 py-4 whitespace-nowrap">{ship.id}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{ship.totalSeats}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{getStatus(ship.status)}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{ship.createAt}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{formatDate(ship.createAt)}</td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <button onClick={() => handleRowClick(ship)} className="text-blue-500 hover:text-blue-700 font-bold mr-2">
-                                    ✏ Edit
+                                <button onClick={() => handleRowClick(ship)}
+                                        className="text-blue-500 hover:text-blue-700 font-bold mr-2">
+                                    ✏ Cập Nhật
+                                </button>
+                                <button onClick={() => handleRowClick(ship)}
+                                        className="text-blue-500 hover:text-blue-700 font-bold mr-2">
+                                    ➕Tạo Ghế
                                 </button>
                             </td>
                         </tr>
@@ -191,7 +196,7 @@ function ShipList() {
             </div>
 
             <div className="flex justify-center mt-4">
-                {paginationItems}
+            {paginationItems}
             </div>
 
             {isViewModalOpen && selectedShip && (

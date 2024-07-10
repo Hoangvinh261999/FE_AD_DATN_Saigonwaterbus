@@ -76,7 +76,7 @@ const routes = [
     submenu : [
       {
         path: '/admin/dat-ve', //url
-    icon: <img src='/icon/booking.png' alt=''/>,
+        icon: <img src='/icon/booking.png' alt=''/>,
         name: 'Đặt Vé', // name that appear in Sidebar
       },
       {
@@ -90,6 +90,23 @@ const routes = [
     path: '/admin/ben-tau',
     icon: <img src='/icon/train-station.png' alt=''/>,
     name: 'Bến tàu',
+  },
+  {
+    path: '', //no url needed as this has submenu
+    icon: <img src='/icon/bar-chart.png' alt=''/>,
+    name: 'Thống Kê', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/admin/dat-ve', //url
+        icon: <img src='/icon/business-planning.png' alt=''/>,
+        name: 'Thống Kê Doanh Số Theo Ngày', // name that appear in Sidebar
+      },
+      {
+        path: '/admin/hoa-don',
+        icon: <img src='/icon/pie-chart.png' alt=''/>,
+        name: 'Thống Kê Báo Cáo',
+      },
+    ]
   },
 ]
 
