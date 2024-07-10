@@ -3,7 +3,7 @@ import axios from "axios";
 import TripList from "./component/TripList";
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../common/headerSlice";
-
+import './styleButtonTrip.css'
 function Trip() {
    const [trips, setTrips] = useState([]);
    const token = localStorage.getItem("token");
@@ -13,23 +13,7 @@ function Trip() {
       dispatch(setPageTitle({ title: "Danh sách chuyến đi" }));
       fetchTrips(); // Fetch trips on component mount
    }, []);
-
-   const fetchTrips = async () => {
-      try {
-         const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/trips/${getCurrentDate()}`, {
-            headers: {
-               Authorization: `Bearer ${token}`,
-            },
-         });
-         setTrips(response.data.result.content);
-         console.log(response.data.result.content);
-      } catch (error) {
-         console.error("Error fetching trips:", error);
-      }
-   };
-   // const getCurrentDate= "2024-05-28"
-
-   const getCurrentDate = () => {
+const getCurrentDate = () => {
       const today = new Date();
       const year = today.getFullYear();
       let month = today.getMonth() + 1;
@@ -44,6 +28,34 @@ function Trip() {
 
       return `${year}-${month}-${day}`;
    };
+   const fetchTrips = async () => {
+      try {
+         const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/trips/${getCurrentDate()}`, {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         });
+         setTrips(response.data.result.content);
+      } catch (error) {
+         console.error("Error fetching trips:", error);
+      }
+   };
+
+   // const getCurrentDate = () => {
+   //    const today = new Date();
+   //    const year = today.getFullYear();
+   //    let month = today.getMonth() + 1;
+   //    let day = today.getDate();
+   //
+   //    if (month < 10) {
+   //       month = `0${month}`;
+   //    }
+   //    if (day < 10) {
+   //       day = `0${day}`;
+   //    }
+   //
+   //    return `${year}-${month}-${day}`;
+   // };
 
    return (
        <div className="container mx-auto p-4">
