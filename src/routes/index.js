@@ -40,9 +40,17 @@ const routes = [
     path: '/chao-mung',
     component: Welcome,
   },
+    {
+    path: '/Chuyen-tau',
+    component: ChuyenTauTong,
+  },
   {
     path: '/tuyen-tau',
     component: RoutePage,
+  },
+   {
+    path: '/ben-tau',
+    component: Bentau,
   },
   {
     path: '/saigonwaterbus/admin/createRoute/:id?',
@@ -57,7 +65,7 @@ const routes = [
     component: GheTau,
   },
   {
-    path: 'Nhan-vien/create',
+    path: 'nhan-vien/them-nhan-vien',
     component: ThemNhanVien,
   },
     {
@@ -68,10 +76,7 @@ const routes = [
     path: '/quan-ly-ve',
     component: Calendar,
   },
-  {
-    path: '/Chuyen-tau',
-    component: ChuyenTauTong,
-  },
+
   {
     path: '/thuyen-truong/tao',
     component: ThemThuyenTruong,
@@ -122,13 +127,10 @@ const routes = [
     component: TaoChuyen,
   },
   {
-    path: '/nhan-vien/create',
+    path: '/nhan-vien/them-nhan-vien',
     component: TaoStaff,
   },
-  {
-    path: '/ben-tau',
-    component: Bentau,
-  },
+ 
 ];
 
 export default routes;

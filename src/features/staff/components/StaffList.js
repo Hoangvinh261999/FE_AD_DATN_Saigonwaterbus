@@ -13,12 +13,13 @@ const UserTable = ({ data, onDelete }) => {
         email: '',
         phoneNumber: '',
         username: '',
-        role: 'USER',
-        status: 'ACTIVE'
+        role: '',
+        status: ''
     });
 
     const openModal = (user) => {
         setSelectedUser(user);
+
         setModalIsOpen(true);
     };
 
@@ -31,13 +32,14 @@ const UserTable = ({ data, onDelete }) => {
             email: '',
             phoneNumber: '',
             username: '',
-            role: 'USER',
-            status: 'ACTIVE'
+            role: '',
+            status: ''
         });
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
+        console.log("data",data)
         try {
             const response = await axios.post(`http://localhost:8080/api/saigonwaterbus/admin/staff/update/${selectedUser.id}`, selectedUser,{
                 headers: {
@@ -113,7 +115,7 @@ const UserTable = ({ data, onDelete }) => {
                         <td onClick={() => openModal(user)}>{getRole(user.role)}</td>
                         <td onClick={() => openModal(user)}>{getStatus(user.status)}</td>
                         <td>
-                            <button className="delete" onClick={() => onDelete(user.id)}>Delete</button>
+                            <button className="delete" onClick={() => onDelete(user.id)}>Xóa</button>
                         </td>
                     </tr>
                 ))}
@@ -129,10 +131,10 @@ const UserTable = ({ data, onDelete }) => {
             >
                 {selectedUser && (
                     <div>
-                        <h2 className="modal-header">Edit User</h2>
+                        <h2 className="modal-header">Chỉnh Sửa Thông Tin</h2>
                         <form onSubmit={handleSave}>
                             <label>
-                                First Name:
+                                Họ:
                                 <input
                                     type="text"
                                     name="firstname"
@@ -141,7 +143,7 @@ const UserTable = ({ data, onDelete }) => {
                                 />
                             </label>
                             <label>
-                                Last Name:
+                                Tên:
                                 <input
                                     type="text"
                                     name="lastname"
@@ -159,16 +161,16 @@ const UserTable = ({ data, onDelete }) => {
                                 />
                             </label>
                             <label>
-                                Phone Number:
+                                Số Điện Thoại:
                                 <input
                                     type="text"
                                     name="phoneNumber"
                                     value={selectedUser.phoneNumber || ''}
-                                    onChange={handleChange}
+onChange={handleChange}
                                 />
                             </label>
                             <label>
-                                Username:
+                                Tên Tài Khoản:
                                 <input
                                     type="text"
                                     name="username"
@@ -178,31 +180,32 @@ const UserTable = ({ data, onDelete }) => {
                                 />
                             </label>
                             <label>
-                                Role:
+                                Quyền:
                                 <select
                                     name="role"
                                     value={selectedUser.role || 'USER'}
                                     onChange={handleChange}
                                 >
-                                    <option value="USER">USER</option>
-                                    <option value="ADMIN">ADMIN</option>
-                                    <option value="STAFF">STAFF</option>
+
+                                    <option value="ADMIN">Quản Trị</option>
+                                    <option value="STAFF">Nhân Viên</option>
                                 </select>
                             </label>
                             <label>
-                                Status:
+                                Trạng Thái:
                                 <select
                                     name="status"
                                     value={selectedUser.status || 'ACTIVE'}
                                     onChange={handleChange}
                                 >
-                                    <option value="ACTIVE">ACTIVE</option>
-                                    <option value="INACTIVE">INACTIVE</option>
+                                    <option value="ACTIVE">Kích Hoạt</option>
+                                    <option value="INACTIVE">Không Kích Hoạt</option>
                                 </select>
                             </label>
-                            <button type="submit">Save</button>
+                            <button type="submit" className='button-18'>Lưu</button>
+                            <button onClick={closeModal} className='button-18'>Đóng</button>
                         </form>
-                        <button onClick={closeModal}>Close</button>
+
                     </div>
                 )}
             </Modal>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './components/UserTable.css';
 import UserTable from "./components/StaffList";
 
@@ -13,7 +12,7 @@ function Staff() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const getAdmin = async (page) => {
-        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staffs?page=${page}&size=7`, {
+        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staff1?page=${page}&size=7`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -116,7 +115,7 @@ function Staff() {
                     onChange={handleSearchChange}
                     className="search-bar"
                 />
-                <a href="Nhan-vien/create" className="button-18">
+                <a href="/nhan-vien/them-nhan-vien" className="button-18">
                     Thêm Mới
                 </a>
             </div>
@@ -126,19 +125,62 @@ function Staff() {
             <div className="pagination">
                 <div className="pagination-buttons">
                     <button onClick={() => handlePageChange(0)} disabled={page === 0} className="flex">
-                        <ChevronLeftIcon className="h-5 w-5"/><ChevronLeftIcon className="h-5 w-5"/>
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
+                        </svg>
                     </button>
                     <button onClick={() => handlePageChange(page - 1)} disabled={page === 0} className="flex">
-                        <ChevronLeftIcon className="h-5 w-5"/>
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
                     </button>
-                    <span>Page {page + 1} of {totalPages}</span>
                     <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1}
                             className="flex">
-                        <ChevronRightIcon className="h-5 w-5"/>
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
                     </button>
                     <button onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1}
                             className="flex">
-                        <ChevronRightIcon className="h-5 w-5"/><ChevronRightIcon className="h-5 w-5"/>
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
+                        </svg>
                     </button>
                 </div>
             </div>
