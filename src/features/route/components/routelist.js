@@ -17,8 +17,8 @@ const RouteList = ({ routes, onEdit, onDelete,stations }) => {
             </tr>
             </thead>
             <tbody>
-            {routes.map((route) => (
-                <RouteItem key={route.id} route={route} onEdit={onEdit} onDelete={onDelete} stations = {stations}/>
+            {routes.map((route,index) => (
+                <RouteItem key={route.id} route={route} onEdit={onEdit} onDelete={onDelete} stations = {stations} stt={index} />
             ))}
             </tbody>
         </table>

@@ -169,13 +169,13 @@ function TripList({ trip }) {
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {trip.map((item) => (
+                {trip.map((item,index) => (
                     <tr
                         key={item.id}
                         className="hover:bg-gray-100 cursor-pointer"
                         onClick={() => openDetail(item)}
                     >
-                        <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{index+1}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{formatDate(item.departureDate)}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.departureTime}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.arrivalTime}</td>

@@ -56,6 +56,7 @@ const TicketManagement = () => {
       const response = await seatService.dsGhe(page);
       setSeats(response.content);
       setTotalPages(response.totalPages);
+      console.log(response.content)
     } catch (error) {
       console.error('Error fetching seats:', error);
     }

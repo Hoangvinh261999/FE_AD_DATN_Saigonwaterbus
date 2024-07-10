@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const RouteItem = ({ route, onDelete, onEdit, stations }) => {
+const RouteItem = ({ route, onDelete, onEdit, stations ,stt}) => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [formData, setFormData] = useState({ ...route });
     const [selectedWaypoints, setSelectedWaypoints] = useState([]);
@@ -66,6 +66,11 @@ const RouteItem = ({ route, onDelete, onEdit, stations }) => {
                     }
                 }
             );
+            if(response.data.code===200){
+                window.alert("Sửa Tuyến Thành Công")
+            }else{
+                window.alert("Sửa Tuyến Thất Bại")
+            }
             console.log('Response from server:', response.data);
 
 
@@ -76,15 +81,26 @@ const RouteItem = ({ route, onDelete, onEdit, stations }) => {
             // Xử lý lỗi nếu cần thiết
         }
     };
-
+    const getStatus = (status) => {
+        switch (status) {
+            case "ACTIVE":
+                return "Kích hoạt";
+            case "INACTIVE":
+                return "Chưa kích hoạt";
+            case "DELETE":
+                return "Đã xóa";
+            default:
+                return status;
+        }
+    };
     return (
         <tr>
+            <td className="border px-4 py-2">{stt+1}</td>
             <td className="border px-4 py-2">{route.start}</td>
             <td className="border px-4 py-2">{route.stops}</td>
             <td className="border px-4 py-2">{route.end}</td>
             <td className="border px-4 py-2">{route.name}</td>
-            <td className="border px-4 py-2">{route.bs}</td>
-            <td className="border px-4 py-2">{route.status}</td>
+            <td className="border px-4 py-2">{getStatus(route.status)}</td>
             <td className="border px-4 py-2">
                 <button onClick={openPopup} className="px-2 py-1 bg-yellow-500 text-white rounded hover">
                     ✏️
@@ -128,7 +144,8 @@ const RouteItem = ({ route, onDelete, onEdit, stations }) => {
                                             onChange={(e) => handleWaypointChange(e, station.id)}
                                             className="mr-2"
                                         />
-                                        <label htmlFor={`waypoint-${station.id}`} className="mr-2 text-gray-700">{station.name}</label>
+                                        <label htmlFor={`waypoint-${station.id}`}
+                                               className="mr-2 text-gray-700">{station.name}</label>
                                         {selectedWaypoints.some(wp => wp.id === station.id) && (
                                             <input
                                                 type="number"

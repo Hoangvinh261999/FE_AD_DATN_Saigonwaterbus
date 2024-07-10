@@ -193,7 +193,7 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                         </label>
                         <br />
                         <button onClick={handleUpdate} className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer text-sm mr-2">Lưu</button>
-                        <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer text-sm mr-2">Xóa</button>
+                        <button onClick={handleDelete} className="px-4 py-2 bg-red-800 text-white rounded-md cursor-pointer text-sm mr-2">Xóa</button>
                         <button onClick={closeModal} className="px-4 py-2 bg-gray-500 text-white rounded-md cursor-pointer text-sm">Đóng</button>
                     </div>
                 )}
