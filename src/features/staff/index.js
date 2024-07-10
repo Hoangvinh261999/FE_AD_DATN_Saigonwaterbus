@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import './components/UserTable.css';
 import UserTable from "./components/StaffList";
 
@@ -13,7 +12,7 @@ function Staff() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const getAdmin = async (page) => {
-        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staffs?page=${page}&size=7`, {
+        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staff1?page=${page}&size=7`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -116,7 +115,7 @@ function Staff() {
                     onChange={handleSearchChange}
                     className="search-bar"
                 />
-                <a href="Nhan-vien/create" className="button-18">
+                <a href="/nhan-vien/them-nhan-vien" className="button-18">
                     Thêm Mới
                 </a>
             </div>

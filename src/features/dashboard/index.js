@@ -58,7 +58,9 @@ function Dashboard() {
                     <p className="text-gray-700">{selectedMember.description}</p>
                 </div>
             )}
-        </div>
+       
+
+</div>
 
     );
 }

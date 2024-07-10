@@ -13,8 +13,8 @@ const UserTable = ({ data, onDelete }) => {
         email: '',
         phoneNumber: '',
         username: '',
-        role: 'USER',
-        status: 'ACTIVE'
+        role: '',
+        status: ''
     });
 
     const openModal = (user) => {
@@ -32,14 +32,14 @@ const UserTable = ({ data, onDelete }) => {
             email: '',
             phoneNumber: '',
             username: '',
-            role: 'USER',
-            status: 'ACTIVE'
+            role: '',
+            status: ''
         });
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
-        console.log(selectedUser)
+
         try {
             const response = await axios.post(`http://localhost:8080/api/saigonwaterbus/admin/staff/update/${selectedUser.id}`, selectedUser,{
                 headers: {
@@ -166,7 +166,7 @@ const UserTable = ({ data, onDelete }) => {
                                     type="text"
                                     name="phoneNumber"
                                     value={selectedUser.phoneNumber || ''}
-                                    onChange={handleChange}
+onChange={handleChange}
                                 />
                             </label>
                             <label>

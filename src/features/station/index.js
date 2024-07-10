@@ -6,7 +6,7 @@ import StationList from './components/StationList';
 
 function StationManager() {
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(3);
+    const [size, setSize] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [stations, setStations] = useState([]);
     const token = localStorage.getItem("token");
@@ -70,7 +70,6 @@ function StationManager() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data.code);
             getStations();
             window.alert('Xóa bến tàu thành công!');
         } catch (error) {

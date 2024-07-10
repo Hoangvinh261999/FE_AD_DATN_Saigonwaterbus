@@ -16,11 +16,11 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
     const getStatus = (status) => {
         switch (status) {
             case "ACTIVE":
-                return "kích hoạt";
+                return "Đang hoạt động";
             case "INACTIVE":
-                return "chưa kích hoạt";
+                return "Tạm ngưng";
             default:
-                return "không xác định";
+                return "Không xác định";
         }
     };
 
@@ -70,51 +70,72 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
 
     return (
         <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold mb-4">Danh sách bến tàu</h2>
+            <h2 className="text-2xl font-bold">Danh sách bến tàu</h2>
+<div className='my-4 flex flex-col w-full'>
+  <div className='flex justify-between items-center mb-4'>
+    <div className='flex'>
+      <input
+        type="text"
+        placeholder="Tìm kiếm..."
+        className="px-3 py-2 text-gray-700 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+      />
+      <button
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-r-md shadow-md transition duration-300 ease-in-out"
+      >
+        Tìm kiếm
+      </button>
+    </div>
+      <div className='flex justify-end items-center'>
+    <button
+      onClick={handleCreateClick}
+      className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out"
+    >
+      Thêm bến tàu
+    </button>
+  </div>
+  </div>
+
+</div>
+
             <table className="min-w-full bg-white">
                 <thead>
-                <tr>
-                    <th className="py-2">ID</th>
-                    <th className="py-2">Tên</th>
-                    <th className="py-2">Địa chỉ</th>
-                    <th className="py-2">Trạng thái</th>
-                    <th className="py-2">Hành động</th>
+                <tr className='bg-sky-500 border'>
+                    <th className="py-2 border">ID</th>
+                    <th className="py-2 border">Tên</th>
+                    <th className="py-2 border">Địa chỉ</th>
+                    <th className="py-2 border">Trạng thái</th>
+                    <th className="py-2 border">Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
                 {stations.map((station) => (
                     <tr key={station.id} className="text-center">
                         <td className="border px-4 py-2">{station.id}</td>
-                        <td className="border px-4 py-2">{station.name}</td>
-                        <td className="border px-4 py-2">{station.address}</td>
+                        <td className="border px-4 py-2 text-left">{station.name}</td>
+                        <td className="border px-4 py-2 text-left">{station.address}</td>
                         <td className="border px-4 py-2">{getStatus(station.status)}</td>
-                        <td className="border px-4 py-2 flex">
-                            <button
-                                onClick={() => handleEditClick(station)}
-                                className="bg-blue-500 text-white py-1 px-3 rounded mr-2 w-auto"
-                            >
-                                Cập nhật
-                            </button>
-                            <button
-                                onClick={() => onDelete(station.id)}
-                                className="bg-red-500 text-white py-1 px-3 rounded w-auto"
-                            >
-                                Xóa
-                            </button>
+                        <td className="border px-4 py-2 flex justify-center space-x-2">
+                        <button
+                            onClick={() => handleEditClick(station)}
+                            className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none"
+                        >
+                            <span role="img" aria-label="Edit">✏️</span>
+                        </button>
+                        <button
+                            onClick={() => onDelete(station.id)}
+                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
+                        >
+                            <span role="img" aria-label="Delete">🗑️</span>
+                        </button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
-            <button
-                onClick={handleCreateClick}
-                className="bg-green-500 text-white py-2 px-4 rounded mt-4"
-            >
-                Tạo bến tàu mới
-            </button>
+
 
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-10" style={{'ReactModal__Overlay ReactModal__Overlay--after-open':'z-10'}}>
                     <div className="bg-white p-6 rounded shadow-lg">
                         <h2 className="text-xl font-bold mb-4">
                             {isEditing ? 'Chỉnh sửa bến tàu' : 'Tạo bến tàu mới'}
