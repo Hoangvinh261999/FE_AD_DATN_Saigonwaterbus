@@ -39,7 +39,7 @@ const UserTable = ({ data, onDelete }) => {
 
     const handleSave = async (e) => {
         e.preventDefault();
-        console.log("data",data)
+
         try {
             const response = await axios.post(`http://localhost:8080/api/saigonwaterbus/admin/staff/update/${selectedUser.id}`, selectedUser,{
                 headers: {

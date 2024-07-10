@@ -137,7 +137,18 @@ const RouteManagement = () => {
             setCurrentPage(newPage);
         }
     };
-
+    const getStatus = (status) => {
+        switch (status) {
+            case "ACTIVE":
+                return "Kích hoạt";
+            case "INACTIVE":
+                return "Chưa kích hoạt";
+            case "DELETE":
+                return "Đã xóa";
+            default:
+                return status;
+        }
+    };
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Quản lý tuyến</h1>
@@ -162,7 +173,7 @@ const RouteManagement = () => {
                     >
                         <option value="">Tất cả</option>
                         {uniqueStatuses.map(status => (
-                            <option key={status} value={status}>{status}</option>
+                            <option key={status} value={status}>{getStatus(status)}</option>
                         ))}
                     </select>
                 </div>
