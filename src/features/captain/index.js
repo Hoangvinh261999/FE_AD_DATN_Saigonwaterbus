@@ -8,7 +8,7 @@ import {setPageTitle} from "../common/headerSlice";
 const CaptainIndex = () => {
     const [captains, setCaptains] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState('');
     const token = localStorage.getItem("token");
