@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../common/headerSlice';
@@ -7,9 +7,9 @@ import './style.css';
 const AddCaptainForm = () => {
     const dispatch = useDispatch();
 
-    useState(() => {
+    useEffect(() => {
         dispatch(setPageTitle({ title: 'Thêm nhân viên' }));
-    }, []);
+    }, [dispatch]);
 
     const token = localStorage.getItem('token');
 
@@ -19,8 +19,8 @@ const AddCaptainForm = () => {
         email: '',
         phoneNumber: '',
         username: '',
-        role: 'ADMIN', // Mặc định là USER
-        status: 'ACTIVE', // Mặc định là ACTIVE
+        role: '',
+        status: '',
         createdAt: new Date().toISOString().split('T')[0],
         updatedAt: null,
         deletedAt: null,
@@ -44,6 +44,7 @@ const AddCaptainForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            console.log("form la",captainData)
             const response = await axios.post('http://localhost:8080/api/saigonwaterbus/admin/staff/save', captainData, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,8 +60,8 @@ const AddCaptainForm = () => {
                 email: '',
                 phoneNumber: '',
                 username: '',
-                role: 'ADMIN', // Reset lại role về USER sau khi thêm thành công
-                status: 'ACTIVE', // Reset lại status về ACTIVE sau khi thêm thành công
+                role: 'ADMIN',
+                status: 'ACTIVE',
                 createdAt: new Date().toISOString().split('T')[0],
                 updatedAt: null,
                 deletedAt: null,
@@ -198,7 +199,7 @@ const AddCaptainForm = () => {
                     Thêm nhân viên
                 </button>
             </div>
-            <a href="http://localhost:3000/admin/Nhan-vien" type="button"
+            <a href="http://localhost:3000/admin/nhan-vien" type="button"
                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full text-center">
             Trở về
             </a>

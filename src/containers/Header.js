@@ -10,7 +10,6 @@ import { useAuth } from '../AuthContext';
 import Weather from '../service/weather';
 function Header() {
       const { isLoggedIn, logout } = useAuth();
-
   const dispatch = useDispatch();
   const { pageTitle } = useSelector(state => state.header);
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
@@ -27,10 +26,7 @@ function Header() {
     }
   }, [currentTheme]);
 
-  // Opening right sidebar for notification
-  const openNotification = () => {
-    dispatch(openRightDrawer({ header: 'Notifications', bodyType: RIGHT_DRAWER_TYPES.NOTIFICATION }));
-  };
+ 
 
   function logoutUser() {
     localStorage.clear();

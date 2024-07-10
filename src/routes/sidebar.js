@@ -1,19 +1,3 @@
-/** Icons are imported separatly to reduce build time */
-import DocumentTextIcon from '@heroicons/react/24/outline/DocumentTextIcon'
-import TableCellsIcon from '@heroicons/react/24/outline/TableCellsIcon'
-import WalletIcon from '@heroicons/react/24/outline/WalletIcon'
-
-import CalendarDaysIcon from '@heroicons/react/24/outline/CalendarDaysIcon'
-import UserIcon from '@heroicons/react/24/outline/UserIcon'
-import Cog6ToothIcon from '@heroicons/react/24/outline/Cog6ToothIcon'
-import BoltIcon from '@heroicons/react/24/outline/BoltIcon'
-import ChartBarIcon from '@heroicons/react/24/outline/ChartBarIcon'
-import CurrencyDollarIcon from '@heroicons/react/24/outline/CurrencyDollarIcon'
-import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
-
-
-const iconClasses = `h-6 w-6`
-const submenuIconClasses = `h-5 w-5`
 
 const routes = [
 
@@ -39,19 +23,24 @@ const routes = [
       }
     ]
   },
-
-  {
-    path: '/admin/tuyen-tau', 
-    icon: <img src='/icon/route.png' alt=''/>,
-    name: 'Tuyến tàu', 
-
-  },
   {
     path: '/admin/chuyen-tau', // url
     icon: <img src='/icon/boat.png' alt=''/>,
     name: 'Chuyến tàu', 
 
   },
+  {
+    path: '/admin/tuyen-tau', 
+    icon: <img src='/icon/route.png' alt=''/>,
+    name: 'Tuyến tàu', 
+
+  },
+    {
+    path: '/admin/ben-tau',
+    icon: <img src='/icon/train-station.png' alt=''/>,
+    name: 'Bến tàu',
+  },
+
   {
     path: '/admin/tau', // url
     icon: <img src='/icon/ship.png' alt=''/>,
@@ -76,7 +65,7 @@ const routes = [
     submenu : [
       {
         path: '/admin/dat-ve', //url
-    icon: <img src='/icon/booking.png' alt=''/>,
+        icon: <img src='/icon/booking.png' alt=''/>,
         name: 'Đặt Vé', // name that appear in Sidebar
       },
       {
@@ -86,10 +75,23 @@ const routes = [
       },
     ]
   },
+
   {
-    path: '/admin/ben-tau',
-    icon: <img src='/icon/train-station.png' alt=''/>,
-    name: 'Bến tàu',
+    path: '', //no url needed as this has submenu
+    icon: <img src='/icon/bar-chart.png' alt=''/>,
+    name: 'Thống Kê', // name that appear in Sidebar
+    submenu : [
+      {
+        path: '/admin/dat-ve', //url
+        icon: <img src='/icon/business-planning.png' alt=''/>,
+        name: 'Thống Kê Doanh Số Theo Ngày', // name that appear in Sidebar
+      },
+      {
+        path: '/admin/hoa-don',
+        icon: <img src='/icon/pie-chart.png' alt=''/>,
+        name: 'Thống Kê Báo Cáo',
+      },
+    ]
   },
 ]
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { formatDate } from '../../../utils/formatDate';
 function TripList({ trip }) {
     const [selectedItem, setSelectedItem] = useState(null);
     const [stations, setStations] = useState([]);
@@ -75,11 +75,13 @@ function TripList({ trip }) {
 
     const handleUpdateTrip = async () => {
         try {
+            console.log("Form data being sent:", formData);
             const response = await axios.put("http://localhost:8080/api/saigonwaterbus/admin/trip/update", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log("Update successful", response.data);
             window.alert("Cập nhật thành công")
             closeDetail();
         } catch (error) {
@@ -101,6 +103,7 @@ function TripList({ trip }) {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log("Delete successful", response.data);
             alert("Xóa chuyến tàu thành công");
             closeDetail();
         } catch (error) {
@@ -130,7 +133,7 @@ function TripList({ trip }) {
 
     const getStations = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/saigonwaterbus/admin/stations", {
+            const response = await axios.get("http://localhost:8080/api/saigonwaterbus/admin/station", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -173,7 +176,7 @@ function TripList({ trip }) {
                         onClick={() => openDetail(item)}
                     >
                         <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.departureDate}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{formatDate(item.departureDate)}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.departureTime}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.arrivalTime}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{item.availableSeats}</td>

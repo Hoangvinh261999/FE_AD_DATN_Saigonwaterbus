@@ -56,6 +56,7 @@ function LeftSidebar(){
                 }
 
             </ul>
+            
             <div className='bottom-0 absolute'>
                 
 
@@ -64,6 +65,7 @@ function LeftSidebar(){
                       aria-hidden="true"
                     ></span>
             </div>
+            
         </div>
     )
 }

@@ -346,36 +346,36 @@ const AddTripForm = () => {
         fetchShips();
     }, [dispatch]);
 
-const handleChange = (e) => {
-    const { name, value } = e.target;
-    
-    if (name === "status") {
-        setFormData({
-            ...formData,
-            status: value,
-        });
-    } else if (name === "fixed") {
-        setFormData({
-            ...formData,
-            fixed: value,
-        });
-    } else if (name === "routeId") {
-        setFormData({
-            ...formData,
-            route: { id: value },
-        });
-    } else if (name === "shipId") {
-        setFormData({
-            ...formData,
-            ship: { id: value },
-        });
-    } else {
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    }
-};
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === "status") {
+            setFormData({
+                ...formData,
+                status: value,
+            });
+        } else if (name === "fixed") {
+            setFormData({
+                ...formData,
+                fixed: value,
+            });
+        } else if (name === "routeId") {
+            setFormData({
+                ...formData,
+                route: { id: value },
+            });
+        } else if (name === "shipId") {
+            setFormData({
+                ...formData,
+                ship: { id: value },
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
+    };
 
     const handleAddTrip = (newTrip) => {
         // Add new trip to the trips state
@@ -389,7 +389,7 @@ const handleChange = (e) => {
         create(formData);
         console.log(formData);
         // Reset form after submit if needed
-setFormData({
+        setFormData({
             id: "",
             departureDate: "",
             departureTime: "",
@@ -459,7 +459,7 @@ setFormData({
                         placeholder="Chọn thời gian đến"
                     />
                 </div>
-<div className="mb-4">
+                <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Số ghế trống:</label>
                     <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -507,7 +507,7 @@ setFormData({
             {/* <div className="col-span-2 mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Trạng thái:</label>
                 <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     type="text"
                     name="status"
                     value={formData.status}
@@ -515,37 +515,37 @@ setFormData({
                     placeholder="Trạng thái"
                 />
             </div> */}
-            
 
-              <div className="col-span-2 mb-4">
-                      <label className="block text-gray-700 text-sm font-bold mb-2">Trạng thái:</label>
-                       <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            name="status"
-                            value={formData.status}
-                            onChange={handleChange}
-                        >
-                            <option value="ACTIVE">Hoạt động</option>
-                            <option value="INACTIVE">Tạm dừng</option>
-                        </select>
-                    </div>
-                        <div className="col-span-2 mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">Chuyến Cố định:</label>
-                            <select
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                name="fixed"
-                                value={formData.fixed}
-                                onChange={handleChange}
-                            >
-                                <option value="FIXED">Cố định</option>
-                                <option value="UNSTABLE">Không cố định</option>
-                            </select>
-                        </div>
+
+            <div className="col-span-2 mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Trạng thái:</label>
+                <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                >
+                    <option value="ACTIVE">Hoạt động</option>
+                    <option value="INACTIVE">Tạm dừng</option>
+                </select>
+            </div>
+            <div className="col-span-2 mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Chuyến Cố định:</label>
+                <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    name="fixed"
+                    value={formData.fixed}
+                    onChange={handleChange}
+                >
+                    <option value="FIXED">Cố định</option>
+                    <option value="UNSTABLE">Không cố định</option>
+                </select>
+            </div>
 
             <div className="col-span-2 flex justify-end">
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit"
+                    type="submit"
                 >
                     Thêm Chuyến
                 </button>
