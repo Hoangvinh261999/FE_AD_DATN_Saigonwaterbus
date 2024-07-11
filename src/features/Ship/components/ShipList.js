@@ -8,13 +8,15 @@ function ShipList() {
     const token = localStorage.getItem("token");
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(7);
-    const [totalPages, setTotalPages] = useState(0); // State to keep track of total pages
+    const [totalPages, setTotalPages] = useState(0);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedShip, setSelectedShip] = useState(null);
     const [newShip, setNewShip] = useState({
         totalSeats: 0,
-        status: "ACTIVE", // Default status
+        status: "ACTIVE",
+        numberPlate: "", // Thêm trường biển số
+        createAt: "", // Thêm trường ngày nhập
     });
     const [editShipStatus, setEditShipStatus] = useState("");
     const [deleteShipId, setDeleteShipId] = useState(null);
@@ -34,7 +36,6 @@ function ShipList() {
             setShips(ships);
             setTotalPages(response.data.result.totalPages);
 
-            // Kiểm tra và lưu trữ thông tin về tàu có ghế
             const shipsWithSeatsPromises = ships.map(async (ship) => {
                 const seatCount = await getSeatByID(ship.id);
                 return seatCount > 0 ? ship.id : null;
@@ -54,10 +55,10 @@ function ShipList() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.result.length; // Trả về số lượng phần tử trong mảng
+            return response.data.result.length;
         } catch (error) {
             console.error('Error fetching seats:', error);
-            return 0; // Trả về 0 trong trường hợp có lỗi
+            return 0;
         }
     };
 
@@ -71,6 +72,7 @@ function ShipList() {
     };
 
     const openAddModal = () => {
+
         setIsAddModalOpen(true);
     };
 
@@ -83,7 +85,9 @@ function ShipList() {
         setIsAddModalOpen(false);
         setNewShip({
             totalSeats: 0,
-            status: "ACTIVE", // Reset form values
+            status: "ACTIVE",
+            numberPlate: "", // Reset form values
+            createAt: "", // Reset form values
         });
     };
 
@@ -91,71 +95,82 @@ function ShipList() {
         const { name, value } = e.target;
         setNewShip({
             ...newShip,
-            [name]: value
+            [name]: value.toUpperCase() // Chuyển đổi thành chữ hoa và validate theo định dạng VN-1234
         });
     };
 
     const handlePageChange = (page) => {
-        setCurrentPage(page); // Update current page
+        setCurrentPage(page);
     };
 
     const handleEditShip = async () => {
         try {
-            const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/ship/update`, {
+            const data ={
                 id: selectedShip.id,
-                totalSeats:selectedShip.totalSeats,
+                totalSeats: selectedShip.totalSeats,
                 status: editShipStatus,
-                createAt:selectedShip.createAt,
-                updateAt:new Date().toISOString().slice(0, 10),
-                deleteAt:null
-            }, {
+                createAt: selectedShip.createAt, // Định dạng lại ngày nhập nếu cần thiết
+                updateAt: new Date().toISOString().slice(0, 10),
+                deleteAt: null,
+                numberPlate: selectedShip.numberPlate // Thêm trường biển số
+            }
+            console.log(data)
+            const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/ship/update`,data, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             console.log('Ship updated:', response.data.result);
-            alert("Sửa thành công")
-            getShips(); // Fetch ships again to update list
-            closeViewModal(); // Close modal after successful update
+            alert("Sửa thành công");
+            getShips();
+            closeViewModal();
         } catch (error) {
             console.error('Error updating ship:', error);
-            // Handle error
         }
     };
+
     const handleAddShip = async () => {
+        // Kiểm tra định dạng biển số VN-1234
+        const licensePlatePattern = /^[A-Z]{2}-[0-9]{4}$/;
+        if (!licensePlatePattern.test(newShip.numberPlate)) {
+            alert('Định dạng biển số không hợp lệ. Vui lòng nhập lại theo định dạng VN-1234.');
+            return;
+        }
+
         try {
             const response = await axios.post(`http://localhost:8080/api/saigonwaterbus/admin/ship/save`, {
                 totalSeats: newShip.totalSeats,
                 status: newShip.status,
-                createAt: new Date().toISOString().slice(0, 10),
-                updateAt:null,
-                deleteAt:null// Set createAt to today's date
+                createAt: newShip.createAt,
+                updateAt: null,
+                deleteAt: null,
+                numberPlate: newShip.numberPlate
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             console.log('Ship added:', response.data.result);
-            getShips(); // Fetch ships again to update list
-            closeAddModal(); // Close modal after successful addition
+            window.alert("them thanh cong")
+            getShips();
+            closeAddModal();
         } catch (error) {
             console.error('Error adding ship:', error);
-            // Handle error
         }
     };
-    const handleDeleteShip = async () => {
+
+    const handleDeleteShip = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/saigonwaterbus/admin/ship/delete/${selectedShip.id}`, {
+            const response = await axios.delete(`http://localhost:8080/api/saigonwaterbus/admin/ship/delete/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             console.log('Ship deleted:', response.data.message);
-            getShips(); // Fetch ships again to update list
-            closeViewModal(); // Close modal after successful deletion
+            getShips();
+            closeViewModal();
         } catch (error) {
             console.error('Error deleting ship:', error);
-            // Handle error
         }
     };
 
@@ -179,14 +194,13 @@ function ShipList() {
                     window.alert("Thêm ghế cho tàu thất bại");
                 }
             }
-            getShips(); // Fetch ships again to update list after seat creation
+            getShips();
         } catch (error) {
             console.error('Error adding seats:', error);
             window.alert("Lỗi khi thêm ghế");
         }
     };
 
-    // Generate pagination buttons based on total pages
     const paginationItems = [];
     for (let i = 0; i < totalPages; i++) {
         paginationItems.push(
@@ -219,25 +233,26 @@ function ShipList() {
                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Tổng ghế</th>
                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Trạng thái</th>
                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Ngày nhập</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Biển số</th>
                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Công Cụ</th>
                     </tr>
                     </thead>
                     <tbody>
                     {ships.map((ship) => (
                         <tr key={ship.id} className="hover:bg-gray-100 cursor-pointer">
-                            <td className="px-6 py-4 whitespace-nowrap">{ship.id}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{ship.totalSeats}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{getStatus(ship.status)}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{formatDate(ship.createAt)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{ship.id}</td>
+                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{ship.totalSeats}</td>
+                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{getStatus(ship.status)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{formatDate(ship.createAt)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{ship.numberPlate}</td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <button onClick={() => handleRowClick(ship)}
-                                        className="text-blue-500 hover:text-blue-700 font-bold mr-2">
-                                    ✏ Cập Nhật
-                                </button>
                                 <button onClick={() => CreateSeat(ship.id)}
-                                        disabled={shipsWithSeats.includes(ship.id)}
-                                        className={`text-blue-500 hover:text-blue-700 font-bold mr-2 ${shipsWithSeats.includes(ship.id) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                    ➕Tạo Ghế
+                                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded ${shipsWithSeats.includes(ship.id) && 'opacity-50 cursor-not-allowed'}`}>
+                                    Thêm ghế
+                                </button>
+                                <button onClick={() => handleDeleteShip(ship.id)}
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Xóa tàu
                                 </button>
                             </td>
                         </tr>
@@ -250,78 +265,194 @@ function ShipList() {
                 {paginationItems}
             </div>
 
-            {isViewModalOpen && selectedShip && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-8 max-w-md w-full relative">
-                        <button onClick={closeViewModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                            ✖
-                        </button>
-                        <h2 className="text-2xl font-bold mb-4">Chi Tiết Tàu</h2>
-                        <p className="mb-2"><strong>ID:</strong> {selectedShip.id}</p>
-                        <p className="mb-2"><strong>Tổng ghế:</strong> {selectedShip.totalSeats}</p>
-                        <p className="mb-2"><strong>Trạng thái:</strong> {getStatus(selectedShip.status)}</p>
-                        <p className="mb-2"><strong>Ngày nhập:</strong> {selectedShip.createAt}</p>
-
-                        {/* Edit form */}
-                        <div className="mt-4">
-                            <label className="block text-sm font-medium text-gray-700">Trạng thái mới</label>
-                            <select
-                                name="status"
-                                value={editShipStatus}
-                                onChange={(e) => setEditShipStatus(e.target.value)}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            >
-                                <option value="ACTIVE">Đang hoạt động</option>
-                                <option value="INACTIVE">Ngừng hoạt động</option>
-                            </select>
-                            <button onClick={handleEditShip} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mt-2">
-                                Lưu thay đổi
-                            </button>
+            {isViewModalOpen && (
+                <div className="fixed inset-0 z-10 overflow-y-auto">
+                    <div
+                        className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div className="fixed inset-0 transition-opacity">
+                            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                         </div>
+                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
+                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="sm:flex sm:items-start">
+                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Chi tiết tàu</h3>
+                                        <div className="mt-2">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="col-span-2">
+                                                    <label htmlFor="numberPlate"
+                                                           className="block text-sm font-medium text-gray-700">Biển
+                                                        số</label>
+                                                    <input
+                                                        type="text"
+                                                        name="numberPlate"
+                                                        id="numberPlate"
+                                                        value={selectedShip?.numberPlate || ''}
+                                                        onChange={(e) => setSelectedShip({
+                                                            ...selectedShip,
+                                                            numberPlate: e.target.value
+                                                        })}
+                                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    />
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <label htmlFor="createAt"
+                                                           className="block text-sm font-medium text-gray-700">Ngày
+                                                        nhập</label>
+                                                    <input
+                                                        type="date"
+                                                        name="createAt"
+                                                        id="createAt"
+                                                        value={selectedShip?.createAt || ''}
+                                                        onChange={(e) => setSelectedShip({
+                                                            ...selectedShip,
+                                                            createAt: e.target.value
+                                                        })}
+                                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    />
+                                                </div>
 
-                        {/* Delete confirmation */}
-                        <button onClick={handleDeleteShip} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md mt-4">
-                            ❌ Xóa tàu
-                        </button>
+                                                <div className="col-span-2">
+                                                    <label htmlFor="totalSeats"
+                                                           className="block text-sm font-medium text-gray-700">Tổng số
+                                                        ghế</label>
+                                                    <input
+                                                        type="number"
+                                                        name="totalSeats"
+                                                        id="totalSeats"
+                                                        value={selectedShip?.totalSeats || ''}
+                                                        onChange={(e) => setSelectedShip({
+                                                            ...selectedShip,
+                                                            totalSeats: e.target.value
+                                                        })}
+                                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    />
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <label htmlFor="status"
+                                                           className="block text-sm font-medium text-gray-700">Trạng
+                                                        thái</label>
+                                                    <select
+                                                        id="status"
+                                                        name="status"
+                                                        value={editShipStatus}
+                                                        onChange={(e) => setEditShipStatus(e.target.value)}
+                                                        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                    >
+                                                        <option value="ACTIVE">Hoạt động</option>
+                                                        <option value="INACTIVE">Không hoạt động</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button onClick={handleEditShip}
+                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Lưu thay đổi
+                                </button>
+                                <button onClick={closeViewModal} className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Đóng
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
 
             {isAddModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-8 max-w-md w-full relative">
-                        <button onClick={closeAddModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                            ✖
-                        </button>
-                        <h2 className="text-2xl font-bold mb-4">Thêm Tàu</h2>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Tổng số ghế</label>
-                            <input
-                                type="number"
-                                name="totalSeats"
-                                value={newShip.totalSeats}
-                                onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
+                <div className="fixed inset-0 z-10 overflow-y-auto">
+                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div className="fixed inset-0 transition-opacity">
+                            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Trạng thái</label>
-                            <select
-                                name="status"
-                                value={newShip.status}
-                                onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            >
-                                <option value="ACTIVE">Đang hoạt động</option>
-                                <option value="INACTIVE">Ngừng hoạt động</option>
-                            </select>
+                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
+                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="sm:flex sm:items-start">
+                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Thêm tàu mới</h3>
+                                        <div className="mt-2">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="col-span-2">
+                                                    <label htmlFor="numberPlate"
+                                                           className="block text-sm font-medium text-gray-700">Biển
+                                                        số</label>
+                                                    <input
+                                                        type="text"
+                                                        name="numberPlate"
+                                                        id="numberPlate"
+                                                        value={newShip.numberPlate}
+                                                        onChange={handleChange}
+                                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        placeholder="VD: VN-1234"
+                                                    />
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <label htmlFor="createAt"
+                                                           className="block text-sm font-medium text-gray-700">Ngày
+                                                        nhập</label>
+                                                    <input
+                                                        type="date"
+                                                        name="createAt"
+                                                        id="createAt"
+                                                        value={newShip.createAt}
+                                                        onChange={handleChange}
+                                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        placeholder="YYYY-MM-DD"
+                                                    />
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <label htmlFor="status"
+                                                           className="block text-sm font-medium text-gray-700">Trạng
+                                                        thái</label>
+                                                    <select
+                                                        id="status"
+                                                        name="status"
+                                                        value={newShip.status}
+                                                        onChange={handleChange}
+                                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    >
+                                                        <option value="ACTIVE">Kích hoạt</option>
+                                                        <option value="INACTIVE">Không kích hoạt</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <label htmlFor="totalSeats"
+                                                           className="block text-sm font-medium text-gray-700">Tổng số
+                                                        ghế</label>
+                                                    <input
+                                                        type="number"
+                                                        name="totalSeats"
+                                                        id="totalSeats"
+                                                        value={newShip.totalSeats}
+                                                        onChange={handleChange}
+                                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button onClick={handleAddShip}
+                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Thêm tàu
+                                </button>
+                                <button onClick={closeAddModal}
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Đóng
+                                </button>
+                            </div>
                         </div>
-                        <button onClick={handleAddShip} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
-                            Thêm Tàu
-                        </button>
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

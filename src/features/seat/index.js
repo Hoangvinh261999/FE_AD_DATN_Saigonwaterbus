@@ -79,17 +79,24 @@ const TicketManagement = () => {
 
   return (
     <div className="container mx-auto p-4 ">
-      <div className="flex items-center space-x-6">
-        <h1 className="text-2xl font-bold mb-4">Quản lý ghế tàu</h1>
-        {/* <input
-          type="text"
-          placeholder="Nhập từ khóa tìm kiếm..."
-          className="px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-        />
-        <button className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
-          Tìm kiếm
-        </button> */}
-      </div>
+  <div className="flex items-center justify-between">
+                <div className="flex items-center  w-3/5 p-2">
+                    <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
+                    <input
+                        type="text"
+                        placeholder="Nhập tên ghế..."
+                        // value={searchKeyword}
+                        //             onChange={handleSearchChange}
+                        className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    />
+                </div>
+                <a
+                    href="/"
+                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                >
+                    Thêm Mới
+                </a>
+            </div>
       {isPopupVisible && (
         <Popup
           message="Xác nhận thay đổi trạng thái ghế?"

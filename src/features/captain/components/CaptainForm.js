@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './CaptainForm.css';
 import {useDispatch} from "react-redux";
 import {setPageTitle} from "../../common/headerSlice";
 
@@ -73,92 +72,128 @@ const AddCaptainForm = () => {
 
 
     return (
-        <form onSubmit={handleSubmit} className="add-captain-form z-50">
-            <div className="form-row">
-                <div className="form-column">
-                    <label>
-                        Họ:
-                        <input
-                            type="text"
-                            name="firstname"
-                            value={captainData.firstname}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Số điện thoại:
-                        <input
-                            type="text"
-                            name="phoneNumber"
-                            value={captainData.phoneNumber}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Giấy phép tàu:
-                        <input
-                            type="text"
-                            name="shipLicense"
-                            value={captainData.shipLicense}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                </div>
-                <div className="form-column">
-                    <label>
-                        Tên:
-                        <input
-                            type="text"
-                            name="lastname"
-                            value={captainData.lastname}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Địa chỉ:
-                        <input
-                            type="text"
-                            name="address"
-                            value={captainData.address}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Trạng thái:
-                        <select
-                            name="status"
-                            value={captainData.status}
-                            onChange={handleChange}
-                        >
-                            <option value="ACTIVE">Hoạt động</option>
-                            <option value="INACTIVE">Ngưng hoạt động</option>
-                            <option value="SUSPENDED">Tạm ngừng</option>
-                        </select>
-                    </label>
-                    <label>
-                        Tàu:
-                        <select
-                            name="shipId"
-                            value={captainData.shipId}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">Chọn tàu</option>
-                            {ships.map((ship) => (
-                                <option key={ship.id} value={ship.id}>{ship.id}</option>
-                            ))}
-                        </select>
-                    </label>
-                </div>
-            </div>
-            <button type="submit" className="button-74">Thêm Thuyền Trưởng</button>
-            <a className="button-74" href="http://localhost:3000/admin/thuyen-truong">Quay lại</a>
-        </form>
+    <form onSubmit={handleSubmit} className="add-captain-form z-50 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="firstname">
+                Họ
+            </label>
+            <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="firstname"
+                type="text"
+                name="firstname"
+                value={captainData.firstname}
+                onChange={handleChange}
+                required
+            />
+        </div>
+        <div className="w-full md:w-1/2 px-3">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="lastname">
+                Tên
+            </label>
+            <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="lastname"
+                type="text"
+                name="lastname"
+                value={captainData.lastname}
+                onChange={handleChange}
+                required
+            />
+        </div>
+    </div>
+    <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="phoneNumber">
+                Số điện thoại
+            </label>
+            <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="phoneNumber"
+                type="text"
+                name="phoneNumber"
+                value={captainData.phoneNumber}
+                onChange={handleChange}
+                required
+            />
+        </div>
+        <div className="w-full md:w-1/2 px-3">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="address">
+                Địa chỉ
+            </label>
+            <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="address"
+                type="text"
+                name="address"
+                value={captainData.address}
+                onChange={handleChange}
+                required
+            />
+        </div>
+    </div>
+    <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipLicense">
+                Giấy phép tàu
+            </label>
+            <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="shipLicense"
+                type="text"
+                name="shipLicense"
+                value={captainData.shipLicense}
+                onChange={handleChange}
+                required
+            />
+        </div>
+        <div className="w-full md:w-1/2 px-3">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="status">
+                Trạng thái
+            </label>
+            <select
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                name="status"
+                value={captainData.status}
+                onChange={handleChange}
+            >
+                <option value="ACTIVE">Đang làm việc</option>
+                <option value="INACTIVE">Ngưng làm việc</option>
+                <option value="SUSPENDED">Tạm dừng làm việc</option>
+            </select>
+        </div>
+    </div>
+    <div className="flex flex-wrap -mx-3 mb-2">
+        <div className="w-full md:w-1/2 px-3">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="shipId">
+                Tàu
+            </label>
+            <select
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                name="shipId"
+                value={captainData.shipId}
+                onChange={handleChange}
+                required
+            >
+                <option value="">Chọn tàu</option>
+                {ships.map((ship) => (
+                    <option key={ship.id} value={ship.id}>{ship.id}</option>
+                ))}
+            </select>
+        </div>
+    </div>
+    <div className="flex items-center justify-between">
+        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Thêm Thuyền Trưởng
+        </button>
+        <a href="http://localhost:3000/admin/thuyen-truong" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+            Quay lại
+        </a>
+    </div>
+</form>
+
+
     );
 };
 

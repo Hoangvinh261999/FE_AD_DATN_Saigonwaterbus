@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import Bars3Icon from '@heroicons/react/24/outline/Bars3Icon';
 import MoonIcon from '@heroicons/react/24/outline/MoonIcon';
 import SunIcon from '@heroicons/react/24/outline/SunIcon';
-import { openRightDrawer } from '../features/common/rightDrawerSlice';
-import { RIGHT_DRAWER_TYPES } from '../utils/globalConstantUtil';
 import { useAuth } from '../AuthContext';
 import Weather from '../service/weather';
 function Header() {

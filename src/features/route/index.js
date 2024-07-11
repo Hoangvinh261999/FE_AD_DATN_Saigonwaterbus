@@ -150,8 +150,7 @@ const RouteManagement = () => {
         }
     };
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Quản lý tuyến</h1>
+        <div className="container mx-auto my-4">
             <div className="mb-4 flex justify-between items-center space-x-4">
                 <div>
                     <label htmlFor="searchName" className="mr-2">Tìm kiếm theo tên:</label>
@@ -179,25 +178,69 @@ const RouteManagement = () => {
                 </div>
                 <button
                     onClick={() => setIsCreating(true)}
-                    className="ml-3 px-4 py-2 bg-green-600 text-white rounded-r hover:bg-green-700">
-                    ➕ Thêm Mới
+                        className=" px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                    Thêm Mới
                 </button>
             </div>
             {!isCreating && !editingRoute && (
                 <>
                     <RouteList routes={filteredRoutes} onEdit={handleEdit} onDelete={handleDelete} stations={stations} />
                     <div className="mt-4 flex justify-center">
-                        <button onClick={() => handlePageChange(1)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                            Đầu
+                        <button onClick={() => handlePageChange(1)} className="px-4 py-2 mx-1 bg-sky-500 text-white rounded">
+                                                    <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
+                        </svg>
                         </button>
-                        <button onClick={() => handlePageChange(currentPage - 1)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                            Trước
+                        <button onClick={() => handlePageChange(currentPage - 1)} className="px-4 py-2 mx-1 bg-sky-500 text-white rounded">
+                                                    <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
                         </button>
-                        <button onClick={() => handlePageChange(currentPage + 1)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                            Tiếp
+                        <button onClick={() => handlePageChange(currentPage + 1)} className="px-4 py-2 mx-1 bg-sky-500 text-white rounded">
+                                                    <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
                         </button>
-                        <button onClick={() => handlePageChange(totalPages)} className="px-4 py-2 mx-1 bg-blue-500 text-white rounded">
-                            Cuối
+                        <button onClick={() => handlePageChange(totalPages)} className="px-4 py-2 mx-1 bg-sky-500 text-white rounded">
+                                                    <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
+                        </svg>
                         </button>
                     </div>
                 </>

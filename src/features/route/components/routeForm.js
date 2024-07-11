@@ -9,6 +9,8 @@ const RouteForm = ({ route, onSave, setIsCreating, setEditingRoute, stations }) 
     const [toStationId, setToStationId] = useState('');
     const [selectedWaypoints, setSelectedWaypoints] = useState([]);
     const [status, setStatus] = useState('ACTIVE');
+       const token = localStorage.getItem("token");
+
     useEffect(() => {
         if (route) {
             setNameRoute(route.nameRoute);
@@ -28,9 +30,9 @@ const RouteForm = ({ route, onSave, setIsCreating, setEditingRoute, stations }) 
     const fetchRouteById = async (routeId) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/admin/route/${routeId}`, {
-                headers: {
-                    Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzYWlnb253YXRlcmJ1cy5jb20udm4iLCJzdWIiOiJwaHVvbmciLCJleHAiOjE3MTg4ODA0MjYsImlhdCI6MTcxODg3NzQyNiwic2NvcGUiOiJBRE1JTiJ9.bS1o1xWa5jSNN96A03NsOiCBzbnYLXRMs7ummkkncvcCdfnJLrS4UAsCFw0On2sMV8xCCiZnpXgJkYGDr5m2ZQ'
-                }
+   headers: {
+               Authorization: `Bearer ${token}`,
+            }
             });
             const routeData = response.data;
             setNameRoute(routeData.nameRoute);

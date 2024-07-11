@@ -5,7 +5,6 @@ import TicketList from './component/TicketList';
 import {useDispatch} from "react-redux";
 import {setPageTitle} from "../common/headerSlice";
 
-
 const TicketListContainer = () => {
     const [tickets, setTickets] = useState([]);
     const [date, setDate] = useState('');
