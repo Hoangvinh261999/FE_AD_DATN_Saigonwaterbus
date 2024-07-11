@@ -3,7 +3,7 @@ import axios from "axios";
 import TripList from "./component/TripList";
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../common/headerSlice";
-import './styleButtonTrip.css';
+import '../../app/css/indexcss.css';
 
 function Trip() {
    const [trips, setTrips] = useState([]);
@@ -14,7 +14,7 @@ function Trip() {
    const dispatch = useDispatch();
 
    useEffect(() => {
-      dispatch(setPageTitle({ title: "Danh sách chuyến đi" }));
+      dispatch(setPageTitle({ title: "Danh sách chuyến tàu" }));
       fetchTrips(); // Fetch trips on component mount
    }, []);
 
@@ -90,26 +90,35 @@ function Trip() {
    };
 
    return (
-       <div className="container mx-auto p-4">
-          <h1 className="text-2xl font-bold mb-4">Danh sách chuyến đi</h1>
-          <form onSubmit={handleSearch} className="mb-4">
-             <label htmlFor="searchDate" className="mr-2">Tìm chuyến theo ngày:</label>
-             <input
-                 type="date"
-                 id="searchDate"
-                 value={searchDate}
-                 onChange={(e) => setSearchDate(e.target.value)}
-                 min={getCurrentDate()} // Khóa chọn ngày quá khứ
-                 className="p-2 border rounded"
-             />
-             <button type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded">Tìm kiếm</button>
-          </form>
-          {error && <p className="text-red-500">{error}</p>} {/* Hiển thị lỗi */}
+       <div className="container mx-auto my-4">
+                 {error && <p className="text-red-500 text-center">{error}</p>}
           {message && <p className="text-red-500">{message}</p>}
+                  <div className="flex items-center justify-between p-4 mb-2">
+                     <form onSubmit={handleSearch} className="flex items-center  w-full">
+                        <label htmlFor="searchDate" className="text-gray-700 mr-2  text-center font-bold">Tìm chuyến theo ngày:</label>
+                        <input
+                              type="date"
+                              id="searchDate"
+                              value={searchDate}
+                              onChange={(e) => setSearchDate(e.target.value)}
+                              min={getCurrentDate()}
+                              className="px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                        />
+                        <button type="submit" className="ml-2  px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                              Tìm kiếm
+                        </button>
+                     </form>
+                     <a
+                        href="/admin/create/trip"
+                        className=" px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                     >
+                       <label> Thêm chuyến</label>
+                     </a>
+                  </div>
+
           <TripList trip={trips} />
-          <a href="/admin/create/trip">
-             <button className="button-18" role="button">Thêm chuyến</button>
-          </a>
+
+
        </div>
    );
 }

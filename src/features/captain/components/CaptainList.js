@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import './CaptainList.css';
 
 const CaptainList = ({ captains, fetchCaptains }) => {
     const token = localStorage.getItem("token")
@@ -23,7 +22,7 @@ const CaptainList = ({ captains, fetchCaptains }) => {
 
     const handleUpdate = async () => {
         try {
-            const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/captains/${editedCaptain.id}`, editedCaptain, {
+            const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/captain/update`, editedCaptain, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -45,9 +44,9 @@ const CaptainList = ({ captains, fetchCaptains }) => {
     };
 
 
-    const handleDelete = async () => {
+    const handleDelete = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/saigonwaterbus/admin/captains/${selectedCaptain.id}`,{
+            const response = await axios.delete(`http://localhost:8080/api/saigonwaterbus/admin/captain/delete/${id}`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -55,6 +54,7 @@ const CaptainList = ({ captains, fetchCaptains }) => {
             console.log('Captain deleted:', response.data);
             fetchCaptains();
             closeModal();
+            window.alert("Xoá thành công!")
         } catch (error) {
             console.error('Error deleting captain:', error);
         }
@@ -70,9 +70,9 @@ const CaptainList = ({ captains, fetchCaptains }) => {
     const getStatus = (status) => {
         switch (status) {
             case "ACTIVE":
-                return "Kích hoạt";
+                return "Đang làm việc";
             case "INACTIVE":
-                return "Chưa kích hoạt";
+                return "Ngưng làm việc";
             case "DELETE":
                 return "Đã xóa";
             default:
@@ -81,35 +81,43 @@ const CaptainList = ({ captains, fetchCaptains }) => {
     };
 
     return (
-        <div className="table-container">
-            <table className="captain-table">
-                <thead>
-                <tr className=' text-center'>
-                    <th className=" border  text-left">Họ</th>
-                    <th className=" border  text-left">Tên</th>
-                    <th className=" border  text-left">Số điện thoại</th>
-                    <th className=" border  text-left">Địa chỉ</th>
-                    <th className=" border  text-left">Giấy phép tàu</th>
-                    <th className=" border  text-left">Trạng thái</th>
-                    <th className=" border  text-left">ID tàu</th>
-                    <th className=" border  text-left">Ngày tạo</th>
-                </tr>
-                </thead>
-                <tbody>
-                {captains.map((captain, index) => (
-                    <tr key={index} onClick={() => handleRowClick(captain)}>
-                        <td className=" border  text-left">{captain.firstname}</td>
-                        <td className=" border  text-left">{captain.lastname}</td>
-                        <td className=" border  text-left">{captain.phoneNumber}</td>
-                        <td className=" border  text-left">{captain.address}</td>
-                        <td className=" border  text-left">{captain.shipLicense}</td>
-                        <td className=" border  text-left">{getStatus(captain.status)}</td>
-                        <td className=" border  text-left">{captain.shipId}</td>
-                        <td className=" border  text-left">{new Date(captain.createdAt).toLocaleDateString()}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className="">
+<table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
+    <thead className="bg-sky-500">
+        <tr>
+            <th className="border text-left py-2 px-4">Họ</th>
+            <th className="border text-left py-2 px-4">Tên</th>
+            <th className="border text-left py-2 px-4">Số điện thoại</th>
+            <th className="border text-left py-2 px-4">Địa chỉ</th>
+            <th className="border text-left py-2 px-4">Giấy phép tàu</th>
+            <th className="border text-left py-2 px-4">Trạng thái</th>
+            <th className="border text-left py-2 px-4">ID tàu</th>
+            <th className="border text-left py-2 px-4">Ngày tạo</th>
+                        <th className="border text-left py-2 px-4">Tuỳ chọn</th>
+
+        </tr>
+    </thead>
+    <tbody className="bg-white divide-y divide-gray-200">
+        {captains.map((captain, index) => (
+            <tr key={index}  className="cursor-pointer hover:bg-gray-100">
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.firstname}</td>
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.lastname}</td>
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.phoneNumber}</td>
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.address}</td>
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.shipLicense}</td>
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{getStatus(captain.status)}</td>
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.shipId}</td>
+                <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{new Date(captain.createAt).toLocaleDateString()}</td>
+                <td className="border py-2 px-4">
+                            <button onClick={() => handleDelete(captain.id)}
+                                    className="px-4 py-2 bg-red-800 text-white rounded-md cursor-pointer text-sm mr-2">Xóa
+                            </button>
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</table>
+
 
             <Modal
                 isOpen={modalIsOpen}
@@ -121,81 +129,90 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 
             >
                 {editedCaptain && (
-                    <div>
-                        <h2>Chỉnh sửa thông tin thuyền trưởng</h2>
-                        <label className="block mb-2">
-                            Họ:
-                            <input
-                                type="text"
-                                name="firstname"
-                                value={editedCaptain.firstname}
-                                onChange={handleEditChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none"
-                            />
-                        </label>
-                        <br />
-                        <label className="block mb-2">
-                            Tên:
-                            <input
-                                type="text"
-                                name="lastname"
-                                value={editedCaptain.lastname}
-                                onChange={handleEditChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none"
-                            />
-                        </label>
-                        <br />
-                        <label className="block mb-2">
-                            Số điện thoại:
-                            <input
-                                type="text"
-                                name="phoneNumber"
-                                value={editedCaptain.phoneNumber}
-                                onChange={handleEditChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none"
-                            />
-                        </label>
-                        <br />
-                        <label className="block mb-2">
-                            Địa chỉ:
-                            <input
-                                type="text"
-                                name="address"
-                                value={editedCaptain.address}
-                                onChange={handleEditChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none"
-                            />
-                        </label>
-                        <br />
-                        <label className="block mb-2">
-                            Giấy phép tàu:
-                            <input
-                                type="text"
-                                name="shipLicense"
-                                value={editedCaptain.shipLicense}
-                                onChange={handleEditChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none"
-                            />
-                        </label>
-                        <br />
-                        <label className="block mb-2">
-                            Trạng thái:
-                            <select
-                                name="status"
-                                value={editedCaptain.status}
-                                onChange={handleEditChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none"
-                            >
-                                <option value="ACTIVE">Kích hoạt</option>
-                                <option value="INACTIVE">Không kích hoạt</option>
-                                {/*<option value="SUSPENDED">Suspended</option>*/}
-                            </select>
-                        </label>
-                        <br />
-                        <button onClick={handleUpdate} className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer text-sm mr-2">Lưu</button>
-                        <button onClick={handleDelete} className="px-4 py-2 bg-red-800 text-white rounded-md cursor-pointer text-sm mr-2">Xóa</button>
-                        <button onClick={closeModal} className="px-4 py-2 bg-gray-500 text-white rounded-md cursor-pointer text-sm">Đóng</button>
-                    </div>
+                   <div className="p-6 bg-white rounded-lg shadow-md">
+    <h2 className="text-xl font-bold mb-4 text-center">Chỉnh sửa thông tin thuyền trưởng</h2>
+    <form onSubmit={handleUpdate} className="space-y-4">
+        <div>
+            <label className="block text-sm font-bold text-gray-700">
+                Họ:
+                <input
+                    type="text"
+                    name="firstname"
+                    value={editedCaptain.firstname}
+                    onChange={handleEditChange}
+                    className="mt-1 block w-full p-2 border font-normal border-gray-300 rounded-md outline-none"
+                />
+            </label>
+        </div>
+        <div>
+            <label className="block text-sm font-bold text-gray-700 ">
+                Tên:
+                <input
+                    type="text"
+                    name="lastname"
+                    value={editedCaptain.lastname}
+                    onChange={handleEditChange}
+                    className="mt-1 block w-full font-normal p-2 border border-gray-300 rounded-md outline-none"
+                />
+            </label>
+        </div>
+        <div>
+            <label className="block text-sm font-bold text-gray-700">
+                Số điện thoại:
+                <input
+                    type="text"
+                    name="phoneNumber"
+                    value={editedCaptain.phoneNumber}
+                    onChange={handleEditChange}
+                    className="mt-1 block w-full p-2 border font-normal border-gray-300 rounded-md outline-none"
+                />
+            </label>
+        </div>
+        <div>
+            <label className="block text-sm font-bold text-gray-700">
+                Địa chỉ:
+                <input
+                    type="text"
+                    name="address"
+                    value={editedCaptain.address}
+                    onChange={handleEditChange}
+                    className="mt-1 block w-full p-2 border font-normal border-gray-300 rounded-md outline-none"
+                />
+            </label>
+        </div>
+        <div>
+            <label className="block text-sm font-bold text-gray-700">
+                Giấy phép tàu:
+                <input
+                    type="text"
+                    name="shipLicense"
+                    value={editedCaptain.shipLicense}
+                    onChange={handleEditChange}
+                    className="mt-1 block w-full p-2 border font-normal border-gray-300 rounded-md outline-none"
+                />
+            </label>
+        </div>
+        <div>
+            <label className="block text-sm font-bold text-gray-700">
+                Trạng thái:
+                <select
+                    name="status"
+                    value={editedCaptain.status}
+                    onChange={handleEditChange}
+                    className="mt-1 block w-full p-2 border font-normal border-gray-300 rounded-md outline-none"
+                >
+                    <option value="ACTIVE">Đang làm việc</option>
+                    <option value="INACTIVE">Ngưng làm việc</option>
+                </select>
+            </label>
+        </div>
+        <div className="flex space-x-4">
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 text-sm">Lưu</button>
+            <button onClick={closeModal} className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 text-sm">Đóng</button>
+        </div>
+    </form>
+</div>
+
                 )}
             </Modal>
         </div>

@@ -106,23 +106,77 @@ function StationManager() {
                         className={`bg-blue-500 text-white py-2 px-4 rounded flex items-center mr-2
                     ${page === 0 ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-600'}`}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                             className="w-5 h-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/>
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
                         </svg>
                     </button>
-                    <span className="text-lg">Trang {page + 1} / {totalPages}</span>
+                    <button
+                        onClick={handlePrevPage}
+                        disabled={page === page-1}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>          
+                    </button>
+                                        <span className="text-lg">{page + 1} / {totalPages}</span>
+
+                     <button
+                        onClick={handleNextPage}
+                        disabled={page=== totalPages-1}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
                     <button
                         onClick={handleNextPage}
                         disabled={page === totalPages - 1}
                         className={`bg-blue-500 text-white py-2 px-4 rounded flex items-center ml-2
                     ${page === totalPages - 1 ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-600'}`}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                             className="w-5 h-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
+                            <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
                         </svg>
                     </button>
+                    
                 </div>
             </div>
         </div>

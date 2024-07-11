@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { formatDate } from '../../../utils/formatDate';
+import { formatCurrencyVND } from '../../../utils/formatVnd';
+
 const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, fetchTickets }) => {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -39,92 +41,144 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
     }
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Danh sách vé </h1>
-            <div className="mb-4">
-                <input
+
+
+  <div className="flex items-center my-4">
+  <label className='mx-2'>Hiển thị vé theo ngày</label>
+                 <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className="border border-gray-300 px-2 py-1 mr-2"
                 />
-                <button onClick={fetchTickets} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Tìm Kiếm</button>
+                <button onClick={fetchTickets} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Tìm</button>
             </div>
-            <table className="w-full border-collapse border border-gray-300">
-                <thead className="bg-gray-200">
+
+
+            <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden bg-white border-collapse">
+                <thead className="bg-sky-500 text-white">
                 <tr>
-                    <th className="border border-gray-300 px-4 py-2">STT</th>
-                    <th className="border border-gray-300 px-4 py-2">Ngày Khởi Hành</th>
-                    <th className="border border-gray-300 px-4 py-2">Giá vé</th>
-                    <th className="border border-gray-300 px-4 py-2">Trạng thái vé</th>
-                    <th className="border border-gray-300 px-4 py-2">Ngày tạo vé</th>
+                    <th className="border text-left py-2 px-4">STT</th>
+                    <th className="border text-left py-2 px-4">Ngày Khởi Hành</th>
+                    <th className="border text-left py-2 px-4">Giá vé</th>
+                    <th className="border text-left py-2 px-4">Trạng thái vé</th>
+                    <th className="border text-left py-2 px-4">Ngày tạo vé</th>
                 </tr>
                 </thead>
                 <tbody>
                 {tickets.map((ticket,index) => (
                     <tr key={ticket.id} onClick={() => handleRowClick(ticket.id)}
                         className="cursor-pointer hover:bg-gray-100">
-                        <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-                        <td className="border border-gray-300 px-4 py-2">{ticket.departureDate ? formatDate(ticket.departureDate) : 'Không có'}</td>
-                        <td className="border border-gray-300 px-4 py-2">{ticket.price}</td>
-                        <td className="border border-gray-300 px-4 py-2">{getStatus(ticket.status)}</td>
-                        <td className="border border-gray-300 px-4 py-2">{formatDate(ticket.createAt)}</td>
+                        <td className="border py-2 px-4">{index + 1}</td>
+                        <td className="border py-2 px-4">{ticket.departureDate ? formatDate(ticket.departureDate) : 'Không có'}</td>
+                        <td className="border py-2 px-4">{ticket.price}</td>
+                        <td className="border py-2 px-4">{getStatus(ticket.status)}</td>
+                        <td className="border py-2 px-4">{formatDate(ticket.createAt)}</td>
                     </tr>
                 ))}
                 </tbody>
             </table>
-            <div className="mt-4">
-            <button onClick={() => setPage(page - 1)} disabled={page === 0}
-                        className="bg-blue-500 text-white px-4 py-1 rounded mr-2 hover:bg-blue-600">
-                    <svg
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                        height="1em"
-                        width="1em"
-                    >
-                        <path d="M15 18l-6-6 6-6"/>
-                    </svg>
-                </button>
-                <button onClick={() => setPage(page + 1)} disabled={page + 1 >= totalPages}
-                        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
-                    <svg
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                        height="1em"
-                        width="1em"
-                    >
-                    <path d="M9 18l6-6-6-6"/>
-                </svg></button>
-            </div>
+<div className="mt-4 flex justify-center">
+    <button
+        onClick={() => setPage(0)}
+        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded`}
+        disabled={page === 0}
+    >
+        <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+            height="1em"
+            width="1em"
+        >
+            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+        </svg>
+    </button>
+
+    <button
+        onClick={() => setPage(page - 1)}
+        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded `}
+        disabled={page === 0}
+    >
+        <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+            height="1em"
+            width="1em"
+        >
+            <path d="M15 18l-6-6 6-6" />
+        </svg>
+    </button>
+
+    <button
+        onClick={() => setPage(page + 1)}
+        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded `}
+        disabled={page + 1 >= totalPages}
+    >
+        <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+            height="1em"
+            width="1em"
+        >
+            <path d="M9 18l6-6-6-6" />
+        </svg>
+    </button>
+
+    <button
+        onClick={() => setPage(totalPages - 1)}
+        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded `}
+        disabled={page === totalPages - 1}
+    >
+        <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+            height="1em"
+            width="1em"
+        >
+            <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
+        </svg>
+    </button>
+</div>
+
 
             {/* Popup for displaying ticket details */}
             {isPopupOpen && selectedTicket && (
-                <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-                    <div className="bg-white p-4 rounded shadow-lg max-w-md">
-                        <h2 className="text-xl font-bold mb-4">Chi Tiết Vé</h2>
-                        <p><strong>Mã Vé:</strong> {selectedTicket.id}</p>
-                        <p><strong>Ngày Khởi
-                            Hành:</strong> {selectedTicket.departureDate ? selectedTicket.departureDate : 'không có'}</p>
+<div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
+        <h2 className="text-2xl font-semibold mb-4 border-b pb-2 text-center">Chi Tiết Vé</h2>
+        <div className="space-y-2">
+            <p className="text-gray-700"><strong>Mã Vé:</strong> {selectedTicket.id}</p>
+            <p className="text-gray-700"><strong>Ngày Khởi Hành:</strong> {selectedTicket.departureDate ? formatDate(selectedTicket.departureDate)  : 'không có'}</p>
+            <p className="text-gray-700"><strong>Giá:</strong> {formatCurrencyVND(selectedTicket.price) }</p>
+            <p className="text-gray-700"><strong>Trạng Thái:</strong> {getStatus(selectedTicket.status)}</p>
+            <p className="text-gray-700"><strong>Ngày Tạo:</strong> {formatDate(selectedTicket.createAt)}</p>
+            {selectedTicket.seatName && <p className="text-gray-700"><strong>Tên Ghế:</strong> {selectedTicket.seatName}</p>}
+            {selectedTicket.tripid && <p className="text-gray-700"><strong>Chuyến:</strong> {selectedTicket.tripid}</p>}
+            {selectedTicket.invoiceId && <p className="text-gray-700"><strong>Hóa Đơn:</strong> {selectedTicket.invoiceId}</p>}
+        </div>
+        <button onClick={closePopup} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none">
+            Đóng
+        </button>
+    </div>
+</div>
 
-                        <p><strong>Giá:</strong> {selectedTicket.price}</p>
-                        <p><strong>Trạng Thái:</strong> {getStatus(selectedTicket.status)}</p>
-                        <p><strong>Ngày Tạo:</strong> {selectedTicket.createAt}</p>
-                        {/* Example of displaying additional details */}
-                        {selectedTicket.seatName && <p><strong>Tên Ghế:</strong> {selectedTicket.seatName}</p>}
-                        {selectedTicket.tripid && <p><strong>Chuyến :</strong> {selectedTicket.tripid}</p>}
-                        {selectedTicket.invoiceId && <p><strong>Hóa Đơn:</strong> {selectedTicket.invoiceId}</p>}
-                        <button onClick={closePopup}
-                                className="bg-blue-500 text-white px-4 py-1 rounded mt-4 hover:bg-blue-600">Đóng
-                        </button>
-                    </div>
-                </div>
+
             )}
         </div>
     );

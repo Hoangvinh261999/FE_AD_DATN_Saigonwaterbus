@@ -83,7 +83,9 @@ function TripList({ trip }) {
             });
             console.log("Update successful", response.data);
             window.alert("Cập nhật thành công")
+            window.location.href="http://localhost:3000/admin/chuyen-tau"
             closeDetail();
+           
         } catch (error) {
             window.alert("Cập nhật thất bại")
             if (error.response) {
@@ -96,16 +98,16 @@ function TripList({ trip }) {
         }
     };
 
-    const handleDeleteTrip = async () => {
+    const handleDeleteTrip = async (item) => {
         try {
-            const response = await axios.delete(`http://localhost:8080/api/saigonwaterbus/admin/trip/delete/${formData.id}`, {
+            const response = await axios.delete(`http://localhost:8080/api/saigonwaterbus/admin/trip/delete/${item.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("Delete successful", response.data);
-            alert("Xóa chuyến tàu thành công");
             closeDetail();
+                        alert("Xóa chuyến tàu thành công");
+
         } catch (error) {
             if (error.response) {
                 console.error("Error response data:", error.response.data);
@@ -154,38 +156,45 @@ function TripList({ trip }) {
     };
 
     return (
-        <div className="p-4 rounded-lg">
-            <h2 className="font-bold text-xl">Danh sách chuyến tàu</h2>
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-blue-600 text-white">
-                <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Ngày khởi hành</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Thời gian khởi hành</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Thời gian đến</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Số ghế trống</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Tuyến đường</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Trạng thái</th>
-                </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                {trip.map((item,index) => (
-                    <tr
-                        key={item.id}
-                        className="hover:bg-gray-100 cursor-pointer"
-                        onClick={() => openDetail(item)}
-                    >
-                        <td className="px-6 py-4 whitespace-nowrap">{index+1}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{formatDate(item.departureDate)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.departureTime}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.arrivalTime}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.availableSeats}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.route.nameRoute}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{getStatus(item.status)}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className="">
+           <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
+    <thead className="bg-sky-500">
+        <tr>
+            <th className="border text-left py-2 px-4">ID</th>
+            <th className="border text-left py-2 px-4">Ngày khởi hành</th>
+            <th className="border text-left py-2 px-4">Thời gian khởi hành</th>
+            <th className="border text-left py-2 px-4">Thời gian đến</th>
+            <th className="border text-left py-2 px-4">Số ghế trống</th>
+            <th className="border text-left py-2 px-4">Tuyến đường</th>
+            <th className="border text-left py-2 px-4">Trạng thái</th>
+             <th className="border text-left py-2 px-4">Hành động</th>
+
+        </tr>
+    </thead>
+    <tbody className="bg-white divide-y divide-gray-200">
+        {trip.map((item, index) => (
+            <tr
+                key={item.id}
+                className="hover:bg-gray-100 cursor-pointer"
+                
+            >
+                <td className="border py-2 px-4 " onClick={() => openDetail(item)}>{index + 1}</td>
+                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{formatDate(item.departureDate)}</td>
+                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.departureTime}</td>
+                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.arrivalTime}</td>
+                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.availableSeats}</td>
+                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.route.nameRoute}</td>
+                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{getStatus(item.status)}</td>
+<td>
+                        <button  onClick={() => handleDeleteTrip(item)}
+                                    className="px-4 py-2 bg-red-800 text-white rounded-md cursor-pointer text-sm mr-2">Xóa
+                            </button>
+</td>
+            </tr>
+        ))}
+    </tbody>
+</table>
+
 
             {selectedItem && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -301,7 +310,6 @@ function TripList({ trip }) {
                         </form>
                         <div className="mt-4 flex justify-end space-x-2">
                             <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleUpdateTrip}>Chỉnh sửa</button>
-                            <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={handleDeleteTrip}>Xóa</button>
                             <button className="bg-gray-300 text-black px-4 py-2 rounded" onClick={closeDetail}>Đóng</button>
                         </div>
                     </div>

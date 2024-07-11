@@ -1,7 +1,6 @@
 import routes from '../routes/sidebar'
 import { NavLink,  Routes, Link , useLocation} from 'react-router-dom'
 import SidebarSubmenu from './SidebarSubmenu';
-import XMarkIcon  from '@heroicons/react/24/outline/XMarkIcon'
 import { useDispatch } from 'react-redux';
 
 function LeftSidebar(){

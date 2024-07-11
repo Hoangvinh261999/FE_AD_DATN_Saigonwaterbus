@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../common/headerSlice';
-import './style.css';
+// import './style.css';
 
 const AddCaptainForm = () => {
     const dispatch = useDispatch();
@@ -14,6 +14,7 @@ const AddCaptainForm = () => {
     const token = localStorage.getItem('token');
 
     const [captainData, setCaptainData] = useState({
+        
         firstname: '',
         lastname: '',
         email: '',
@@ -60,8 +61,8 @@ const AddCaptainForm = () => {
                 email: '',
                 phoneNumber: '',
                 username: '',
-                role: 'ADMIN',
-                status: 'ACTIVE',
+                role: '',
+                status: '',
                 createdAt: new Date().toISOString().split('T')[0],
                 updatedAt: null,
                 deletedAt: null,

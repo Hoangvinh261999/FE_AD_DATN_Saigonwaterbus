@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import './components/UserTable.css';
+// import './components/UserTable.css';
 import UserTable from "./components/StaffList";
+import '../../app/css/indexcss.css';
 
 function Staff() {
     const token = localStorage.getItem("token");
@@ -12,7 +13,7 @@ function Staff() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const getAdmin = async (page) => {
-        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staff1?page=${page}&size=7`, {
+        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staff1?page=${page}&size=10`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -106,25 +107,35 @@ function Staff() {
     }, [employees]);
 
     return (
-        <div>
-            <div className='hello'>
-                <input
-                    type="text"
-                    placeholder="Tìm kiếm nhân viên"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    className="search-bar"
-                />
-                <a href="/nhan-vien/them-nhan-vien" className="button-18">
+       <div className="my-4">
+                   <div className="flex items-center justify-between">
+                <div className="flex items-center  w-3/5 p-2">
+                    <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
+                    <input
+                        type="text"
+                        placeholder="Nhập từ khoá trong họ tên nhân viên"
+                        value={searchQuery}
+                                onChange={handleSearchChange}
+                        className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    />
+                </div>
+                <a
+                    href="thuyen-truong/tao"
+                    className="ml-2 px-4 py-1 font-bold bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                >
                     Thêm Mới
                 </a>
             </div>
 
-            <UserTable data={filteredEmployees} onDelete={handleDelete}/>
+    <UserTable data={filteredEmployees} onDelete={handleDelete} />
 
-            <div className="pagination">
-                <div className="pagination-buttons">
-                    <button onClick={() => handlePageChange(0)} disabled={page === 0} className="flex">
+    <div className="flex   mt-4 justify-center">
+                <div className="pagination-buttons space-x-5">
+                    <button
+                        onClick={() => handlePageChange(0)}
+                        disabled={page=== 0}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
                         <svg
                             fill="none"
                             stroke="currentColor"
@@ -138,7 +149,11 @@ function Staff() {
                             <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
                         </svg>
                     </button>
-                    <button onClick={() => handlePageChange(page - 1)} disabled={page === 0} className="flex">
+                    <button
+                        onClick={() => handlePageChange(page - 1)}
+                        disabled={page === 0}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
                         <svg
                             fill="none"
                             stroke="currentColor"
@@ -152,8 +167,13 @@ function Staff() {
                             <path d="M15 18l-6-6 6-6"/>
                         </svg>
                     </button>
-                    <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1}
-                            className="flex">
+                    <span>{page+1}/{totalPages}</span>
+                
+                    <button
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={page + 1 === totalPages}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
                         <svg
                             fill="none"
                             stroke="currentColor"
@@ -167,8 +187,11 @@ function Staff() {
                             <path d="M9 18l6-6-6-6"/>
                         </svg>
                     </button>
-                    <button onClick={() => handlePageChange(totalPages - 1)} disabled={page === totalPages - 1}
-                            className="flex">
+                    <button
+                        onClick={() => handlePageChange(page - 1)}
+                            disabled={page + 1 === totalPages}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
                         <svg
                             fill="none"
                             stroke="currentColor"
@@ -183,8 +206,12 @@ function Staff() {
                         </svg>
                     </button>
                 </div>
+                {/* <div className="pagination-info">
+                    <span>Trang {currentPage + 1} của {totalPages}</span>
+                </div> */}
             </div>
-        </div>
+</div>
+
     );
 }
 

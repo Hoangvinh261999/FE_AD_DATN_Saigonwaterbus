@@ -65,7 +65,7 @@ const routes = [
     component: GheTau,
   },
   {
-    path: 'nhan-vien/them-nhan-vien',
+    path: '/nhan-vien/them-nhan-vien',
     component: ThemNhanVien,
   },
     {
