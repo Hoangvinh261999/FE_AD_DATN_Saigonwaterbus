@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function StationList({ stations, onCreate, onUpdate, onDelete }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +12,12 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
         update_at: null,
         delete_at: null
     });
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [filteredStations, setFilteredStations] = useState([]);
+
+    useEffect(() => {
+        setFilteredStations(filterStations());
+    }, [stations, searchKeyword]);
 
     const getStatus = (status) => {
         switch (status) {
@@ -23,7 +29,6 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
                 return "Không xác định";
         }
     };
-
 
     const handleCreateClick = () => {
         setIsEditing(false);
@@ -43,7 +48,6 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
         setIsEditing(true);
         setStationData(station);
         setIsModalOpen(true);
-        
     };
 
     const handleCloseModal = () => {
@@ -68,27 +72,42 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
         handleCloseModal();
     };
 
+    const handleSearchChange = (e) => {
+        setSearchKeyword(e.target.value);
+    };
+
+    const filterStations = () => {
+        return stations.filter(station => {
+            const searchableFields = [
+                station.name || '',
+                station.address || ''
+            ];
+            return searchableFields.some(field =>
+                field.toLowerCase().includes(searchKeyword.toLowerCase())
+            );
+        });
+    };
+
     return (
         <div className="container mx-auto my-4">
-                    <div className="flex items-center justify-between">
-                <div className="flex items-center  w-3/5 p-2">
-                    <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center w-3/5 p-2">
                     <input
                         type="text"
-                        placeholder="Nhập từ khoá trong tên bến tàu..."
-                        // value={searchKeyword}
-                        // onChange={handleSearchChange}
-                        className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                        value={searchKeyword}
+                        onChange={handleSearchChange}
+                        placeholder="Tìm kiếm bến tàu..."
+                        className="border px-4 py-2 w-full"
                     />
                 </div>
-                    <button
+                <button
                     onClick={handleCreateClick}
-                                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                    >
+                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                >
                     Thêm bến tàu
-                    </button>
+                </button>
             </div>
-            <table className="min-w-full  shadow-md rounded-lg overflow-hidden border-collapse">
+            <table className="min-w-full shadow-md rounded-lg overflow-hidden border-collapse">
                 <thead>
                 <tr className='bg-sky-500 border'>
                     <th className="py-2 border">ID</th>
@@ -99,28 +118,27 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
                 </tr>
                 </thead>
                 <tbody>
-                {stations.map((station) => (
+                {filteredStations.map((station) => (
                     <tr key={station.id} className="text-center">
                         <td className="border px-4 py-2 " onClick={() => handleEditClick(station)}>{station.id}</td>
                         <td className="border px-4 py-2 text-left" onClick={() => handleEditClick(station)}>{station.name}</td>
                         <td className="border px-4 py-2 text-left" onClick={() => handleEditClick(station)}>{station.address}</td>
                         <td className="border px-4 py-2" onClick={() => handleEditClick(station)}>{getStatus(station.status)}</td>
-                        <td className="border px-4 py-2 flex justify-center space-x-2" >
-                        <button
-                            onClick={() => onDelete(station.id)}
-                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
-                        >
-                            <span role="img" aria-label="Delete">🗑️</span>
-                        </button>
+                        <td className="border px-4 py-2 flex justify-center space-x-2">
+                            <button
+                                onClick={() => onDelete(station.id)}
+                                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
+                            >
+                                <span role="img" aria-label="Delete">🗑️</span>
+                            </button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
 
-
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50" style={{'ReactModal__Overlay ReactModal__Overlay--after-open':'z-100'}}>
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50" style={{ 'ReactModal__Overlay ReactModal__Overlay--after-open': 'z-100' }}>
                     <div className="bg-white p-6 rounded shadow-lg">
                         <h2 className="text-xl font-bold mb-4">
                             {isEditing ? 'Chỉnh sửa bến tàu' : 'Tạo bến tàu mới'}

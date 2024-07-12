@@ -20,6 +20,7 @@ function ShipList() {
     });
     const [editShipStatus, setEditShipStatus] = useState("");
     const [deleteShipId, setDeleteShipId] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         getShips();
@@ -72,7 +73,6 @@ function ShipList() {
     };
 
     const openAddModal = () => {
-
         setIsAddModalOpen(true);
     };
 
@@ -105,7 +105,7 @@ function ShipList() {
 
     const handleEditShip = async () => {
         try {
-            const data ={
+            const data = {
                 id: selectedShip.id,
                 totalSeats: selectedShip.totalSeats,
                 status: editShipStatus,
@@ -115,7 +115,7 @@ function ShipList() {
                 numberPlate: selectedShip.numberPlate // Thêm trường biển số
             }
             console.log(data)
-            const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/ship/update`,data, {
+            const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/ship/update`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -201,6 +201,14 @@ function ShipList() {
         }
     };
 
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const filteredShips = ships.filter((ship) =>
+        ship.numberPlate.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     const paginationItems = [];
     for (let i = 0; i < totalPages; i++) {
         paginationItems.push(
@@ -213,12 +221,19 @@ function ShipList() {
             </button>
         );
     }
-
     return (
         <div className="container mx-auto p-4">
 
             <div className="flex justify-end mb-4">
-                <button onClick={openAddModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
+                <input
+                    type="text"
+                    placeholder="Tìm kiếm theo biển số"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="px-4 py-2 border rounded"
+                />
+                <button onClick={openAddModal}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
                     Thêm tàu
                 </button>
             </div>
@@ -238,21 +253,17 @@ function ShipList() {
                     </tr>
                     </thead>
                     <tbody>
-                    {ships.map((ship) => (
-                        <tr key={ship.id} className="hover:bg-gray-100 cursor-pointer">
-                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{ship.id}</td>
-                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{ship.totalSeats}</td>
-                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{getStatus(ship.status)}</td>
-                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{formatDate(ship.createAt)}</td>
-                            <td className="px-6 py-4 whitespace-nowrap" onClick={() => handleRowClick(ship)}>{ship.numberPlate}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                    {filteredShips.map((ship, index) => (
+                        <tr key={ship.id} className="bg-white border-b" onClick={() => handleRowClick(ship)}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ship.totalSeats}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getStatus(ship.status)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ship.numberPlate}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(ship.createAt)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <button onClick={() => CreateSeat(ship.id)}
-                                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded ${shipsWithSeats.includes(ship.id) && 'opacity-50 cursor-not-allowed'}`}>
+                                        className="text-indigo-600 hover:text-indigo-900">
                                     Thêm ghế
-                                </button>
-                                <button onClick={() => handleDeleteShip(ship.id)}
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                    Xóa tàu
                                 </button>
                             </td>
                         </tr>
@@ -273,7 +284,8 @@ function ShipList() {
                             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                         </div>
                         <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
-                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div
+                            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-start">
                                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
