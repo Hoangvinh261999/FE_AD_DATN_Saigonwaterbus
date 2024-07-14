@@ -4,38 +4,36 @@ import TripList from "./component/TripList";
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../common/headerSlice";
 import '../../app/css/indexcss.css';
-
+import AddTripForm from "./component/TripForm";
+import usePopup from "../../utils/popup/usePopup";
+import PopupDone from "../../utils/popup/popupDone";
 function Trip() {
    const [trips, setTrips] = useState([]);
-   const [message, setMessage] = useState("");
    const [searchDate, setSearchDate] = useState("");
-   const [error, setError] = useState(""); // Trạng thái lỗi
+   const [error, setError] = useState(""); 
    const token = localStorage.getItem("token");
    const dispatch = useDispatch();
+   const [openModal, setOpenModal] = useState(false);
+   const { isOpen, message, type, showPopup, closePopup } = usePopup();
 
    useEffect(() => {
       dispatch(setPageTitle({ title: "Danh sách chuyến tàu" }));
-      fetchTrips(); // Fetch trips on component mount
+      fetchTrips(); 
    }, []);
 
    const fetchTrips = async () => {
       try {
-         const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/trips/${getCurrentDate()}`, {
+         const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/trips`, {
             headers: {
                Authorization: `Bearer ${token}`,
             },
          });
          if (response.data.result.content.length === 0) {
-            setMessage("Tạm thời chưa có chuyến nào trong ngày hôm nay.");
             setTrips([]);
          } else {
-            setMessage("");
             setTrips(response.data.result.content);
          }
-         console.log(response.data.result.content);
       } catch (error) {
-         console.error("Error fetching trips:", error);
-         setMessage("Đã xảy ra lỗi khi tải dữ liệu.");
       }
    };
 
@@ -47,16 +45,11 @@ function Trip() {
             },
          });
          if (response.data.result.content.length === 0) {
-            setMessage(`Tạm thời chưa có chuyến nào trong ngày ${date}.`);
             setTrips([]);
          } else {
-            setMessage("");
             setTrips(response.data.result.content);
          }
-         console.log(response.data.result.content);
       } catch (error) {
-         console.error("Error fetching trips:", error);
-         setMessage("Đã xảy ra lỗi khi tải dữ liệu.");
       }
    };
 
@@ -90,11 +83,9 @@ function Trip() {
    };
 
    return (
-       <div className="container mx-auto my-4">
-                 {error && <p className="text-red-500 text-center">{error}</p>}
-          {message && <p className="text-red-500">{message}</p>}
-                  <div className="flex items-center justify-between p-4 mb-2">
-                     <form onSubmit={handleSearch} className="flex items-center  w-full">
+       <div className="my-4">
+                  <div className="flex items-center justify-between p-2">
+                     <form onSubmit={handleSearch} className="flex items-center ">
                         <label htmlFor="searchDate" className="text-gray-700 mr-2  text-center font-bold">Tìm chuyến theo ngày:</label>
                         <input
                               type="date"
@@ -104,20 +95,34 @@ function Trip() {
                               min={getCurrentDate()}
                               className="px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         />
+                        
                         <button type="submit" className="ml-2  px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
                               Tìm kiếm
                         </button>
                      </form>
-                     <a
-                        href="/admin/create/trip"
-                        className=" px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                     >
-                       <label> Thêm chuyến</label>
-                     </a>
-                  </div>
+                  <div className="">
+                    <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
+                    <select
+                        id="searchStatus"
+                        // value={searchStatus}
+                        // onChange={handleSearchStatusChange}
+                        className="p-2 border rounded"
+                    >
+                        <option value="">Tất cả</option>
+                        <option value="ACTIVE">Hoạt động</option>
+                        <option value="INACTIVE">Không hoạt động</option>
+                    </select>
+                </div>
+                <button className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                         onClick={()=>setOpenModal(!openModal)}>Thêm chuyến</button>
+               </div>
 
-          <TripList trip={trips} />
 
+               
+      {openModal &&<AddTripForm setOpenModal={setOpenModal} fetchTrips={fetchTrips} showPopup={showPopup} />}
+          <TripList trip={trips} fetchTrips={fetchTrips} showPopup={showPopup}/>
+
+            <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
 
        </div>
    );

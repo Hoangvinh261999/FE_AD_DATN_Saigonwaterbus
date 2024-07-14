@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
+import PopupDone from '../../../utils/popup/popupDone';
+import usePopup from '../../../utils/popup/usePopup';
 
 const CaptainList = ({ captains, fetchCaptains }) => {
     const token = localStorage.getItem("token")
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedCaptain, setSelectedCaptain] = useState(null);
     const [editedCaptain, setEditedCaptain] = useState(null);
+
+    const { isOpen, message, type, showPopup, closePopup } = usePopup();
 
     const handleRowClick = (captain) => {
         setSelectedCaptain(captain);
@@ -20,7 +24,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
         setEditedCaptain(null);
     };
 
-    const handleUpdate = async () => {
+    const handleUpdate = async (e) => {
+        e.preventDefault(); 
         try {
             const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/captain/update`, editedCaptain, {
                 headers: {
@@ -28,18 +33,16 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 },
             });
 
-            if (response.status === 200 || response.status === 201) {
-                alert('Cập nhật thành công');
-                console.log('Captain updated:', response.data);
+            if (response.data.code!==1004) {
                 fetchCaptains();
-                closeModal();
+                 showPopup('Cập nhật thuyền trưởng thành công!', 'success');
+                 closeModal();
             } else {
-                alert('Cập nhật thất bại');
-                console.error('Unexpected response code:', response.status);
+                 showPopup(response.data.message, 'fail');
             }
         } catch (error) {
-            alert('Cập nhật thất bại');
-            console.error('Error updating captain:', error);
+                 showPopup('Cập nhật thuyền trưởng thất bại!', 'fail');
+
         }
     };
 
@@ -51,12 +54,13 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                     Authorization: `Bearer ${token}`
                 },
             });
-            console.log('Captain deleted:', response.data);
             fetchCaptains();
-            closeModal();
-            window.alert("Xoá thành công!")
+                 showPopup('Xoá thuyền trưởng thành công!', 'success');
+                setTimeout(() => {
+                    closeModal();
+              }, 3000);
         } catch (error) {
-            console.error('Error deleting captain:', error);
+                 showPopup('Xoá thuyền trưởng thất bại!', 'success');
         }
     };
 
@@ -82,18 +86,20 @@ const CaptainList = ({ captains, fetchCaptains }) => {
 
     return (
         <div className="">
+             <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
+
 <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
     <thead className="bg-sky-500">
-        <tr>
-            <th className="border text-left py-2 px-4">Họ</th>
-            <th className="border text-left py-2 px-4">Tên</th>
-            <th className="border text-left py-2 px-4">Số điện thoại</th>
-            <th className="border text-left py-2 px-4">Địa chỉ</th>
-            <th className="border text-left py-2 px-4">Giấy phép tàu</th>
-            <th className="border text-left py-2 px-4">Trạng thái</th>
-            <th className="border text-left py-2 px-4">ID tàu</th>
-            <th className="border text-left py-2 px-4">Ngày tạo</th>
-                        <th className="border text-left py-2 px-4">Tuỳ chọn</th>
+        <tr className='text-center'>
+            <th className="border  py-2 px-4">Họ</th>
+            <th className="border  py-2 px-4">Tên</th>
+            <th className="border  py-2 px-4">Số điện thoại</th>
+            <th className="border  py-2 px-4">Địa chỉ</th>
+            <th className="border  py-2 px-4">Giấy phép tàu</th>
+            <th className="border  py-2 px-4">Trạng thái</th>
+            <th className="border  py-2 px-4">ID tàu</th>
+            <th className="border  py-2 px-4">Ngày tạo</th>
+            <th className="border  py-2 px-4">Tuỳ chọn</th>
 
         </tr>
     </thead>
@@ -108,10 +114,10 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{getStatus(captain.status)}</td>
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.shipId}</td>
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{new Date(captain.createAt).toLocaleDateString()}</td>
-                <td className="border py-2 px-4">
-                            <button onClick={() => handleDelete(captain.id)}
-                                    className="px-4 py-2 bg-red-800 text-white rounded-md cursor-pointer text-sm mr-2">Xóa
-                            </button>
+                <td className="border py-2 px-4 text-center">
+                    <button onClick={() => handleDelete(captain.id)} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none">
+                                                 <span role="img" aria-label="Delete">🗑️</span>
+                    </button>
                 </td>
             </tr>
         ))}
@@ -136,7 +142,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
             <label className="block text-sm font-bold text-gray-700">
                 Họ:
                 <input
-                    type="text"
+                    type="text" 
+                    required
                     name="firstname"
                     value={editedCaptain.firstname}
                     onChange={handleEditChange}
@@ -148,7 +155,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
             <label className="block text-sm font-bold text-gray-700 ">
                 Tên:
                 <input
-                    type="text"
+                    type="text" 
+                    required
                     name="lastname"
                     value={editedCaptain.lastname}
                     onChange={handleEditChange}
@@ -160,7 +168,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
             <label className="block text-sm font-bold text-gray-700">
                 Số điện thoại:
                 <input
-                    type="text"
+                    type="text" 
+                    required
                     name="phoneNumber"
                     value={editedCaptain.phoneNumber}
                     onChange={handleEditChange}
@@ -172,7 +181,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
             <label className="block text-sm font-bold text-gray-700">
                 Địa chỉ:
                 <input
-                    type="text"
+                    type="text" 
+                    required
                     name="address"
                     value={editedCaptain.address}
                     onChange={handleEditChange}
@@ -184,7 +194,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
             <label className="block text-sm font-bold text-gray-700">
                 Giấy phép tàu:
                 <input
-                    type="text"
+                    type="text" 
+                    required
                     name="shipLicense"
                     value={editedCaptain.shipLicense}
                     onChange={handleEditChange}
@@ -196,6 +207,7 @@ const CaptainList = ({ captains, fetchCaptains }) => {
             <label className="block text-sm font-bold text-gray-700">
                 Trạng thái:
                 <select
+                    required
                     name="status"
                     value={editedCaptain.status}
                     onChange={handleEditChange}

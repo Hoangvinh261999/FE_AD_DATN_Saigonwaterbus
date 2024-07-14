@@ -4,8 +4,9 @@ import CaptainList from './components/CaptainList';
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../common/headerSlice";
 import '../../app/css/indexcss.css';
-
+import AddCaptainForm from './components/CaptainForm';
 const CaptainIndex = () => {
+
     const [captains, setCaptains] = useState([]);
     const [filteredCaptains, setFilteredCaptains] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -13,6 +14,8 @@ const CaptainIndex = () => {
     const [searchKeyword, setSearchKeyword] = useState('');
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
+    const [openModal, setOpenModal] = useState(false);
+
 
     useEffect(() => {
         dispatch(setPageTitle({ title: "Thuyền trưởng" }));
@@ -70,7 +73,8 @@ const CaptainIndex = () => {
 
     return (
         <div className="my-4">
-            <div className="flex items-center justify-between">
+        {openModal &&<AddCaptainForm setOpenModal={setOpenModal} fetchCaptains={fetchCaptains} />}
+            <div className="flex items-center justify-between ">
                 <div className="flex items-center  w-3/5 p-2">
                     <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
                     <input
@@ -81,12 +85,21 @@ const CaptainIndex = () => {
                         className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
-                <a
-                    href="thuyen-truong/tao"
-                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                >
-                    Thêm Mới
-                </a>
+                                  <div className="">
+                    <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
+                    <select
+                        id="searchStatus"
+                        // value={searchStatus}
+                        // onChange={handleSearchStatusChange}
+                        className="p-2 border rounded "
+                    >
+                        <option value="">Tất cả</option>
+                        <option value="ACTIVE">Hoạt động</option>
+                        <option value="INACTIVE">Không hoạt động</option>
+                    </select>
+                </div>
+                <button className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                         onClick={()=>setOpenModal(!openModal)}>Thêm thuyền trưởng</button>
             </div>
             <CaptainList captains={filteredCaptains} fetchCaptains={fetchCaptains} />
             <div className="flex   mt-4 justify-center">
