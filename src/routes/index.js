@@ -8,7 +8,6 @@ const RoutePage = lazy(() => import('../pages/protected/Route'));
 const Calendar = lazy(() => import('../pages/protected/Calendar'));
 const Team = lazy(() => import('../pages/protected/Team'));
 const Ticket = lazy(() => import('../features/ticket/index.js'));
-const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'));
 const Staff = lazy(() => import('../pages/protected/Staff'));
 const Captain = lazy(() => import('../features/captain/index'));
 
@@ -81,10 +80,7 @@ const routes = [
     path: '/thuyen-truong/tao',
     component: ThemThuyenTruong,
   },
-  {
-    path: '/thong-tin-ca-nhan',
-    component: ProfileSettings,
-  },
+
   {
     path: '/ve-tau',
     component: Ticket,

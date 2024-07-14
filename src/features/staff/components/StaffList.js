@@ -2,17 +2,12 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import '../../../app/css/indexcss.css';
-
 import PopupDone from '../../../utils/popup/popupDone';
-const UserTable = ({ data, onDelete }) => {
+import usePopup from '../../../utils/popup/usePopup';
+const UserTable = ({ data, onDelete,fetAdmin}) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const token = localStorage.getItem("token")
-    const [showPopup, setShowPopup] = useState(false);
-
-        const togglePopup = () => {
-            setShowPopup(!showPopup);
-        };
-
+    const { isOpen, message, type, showPopup, closePopup } = usePopup();
     const [selectedUser, setSelectedUser] = useState({
         id: '',
         firstname: '',
@@ -27,8 +22,6 @@ const UserTable = ({ data, onDelete }) => {
     const openModal = (user) => {
         setSelectedUser(user);
         setModalIsOpen(true);
-                console.log(modalIsOpen)
-
     };
 
     const closeModal = () => {
@@ -45,29 +38,30 @@ const UserTable = ({ data, onDelete }) => {
         });
     };
 
-    const handleSave = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await axios.post(`http://localhost:8080/api/saigonwaterbus/admin/staff/update/${selectedUser.id}`, selectedUser,{
+const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await axios.post(
+            `http://localhost:8080/api/saigonwaterbus/admin/staff/update/${selectedUser.id}`,
+            selectedUser,
+            {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
-            });
-            if (response.status === 200) {
-                // alert('Cập nhật nhân viên thành công');
-                togglePopup();
-                // Refresh data or update state after successful edit
-                window.location.href = "http://localhost:3000/admin/Nhan-vien"
-            } else {
-                alert('Cập nhật nhân viên thất bại');
             }
-        } catch (error) {
-            console.error('Có lỗi xảy ra khi cập nhật nhân viên!', error);
+        );
+        if (response.data.code !==1004) {
+            fetAdmin(0);
+            closeModal();
+            showPopup('Cập nhật nhân viên thành công!', 'success');
+        } else {
+            showPopup(response.data.message, 'fail');
         }
-        closeModal();
-    };
+    } catch (error) {
+        showPopup('Cập nhật nhân viên thất bại !', 'fail');
+    }
+};
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -77,9 +71,9 @@ const UserTable = ({ data, onDelete }) => {
     const getStatus = (status) => {
         switch (status) {
             case "ACTIVE":
-                return "Kích hoạt";
+                return "Hoạt động";
             case "INACTIVE":
-                return "Chưa kích hoạt";
+                return "Ngưng hoạt động";
             case "DELETE":
                 return "Đã xóa";
             default:
@@ -104,23 +98,18 @@ const UserTable = ({ data, onDelete }) => {
 
     return (
         <div>
-{showPopup && (
-        <PopupDone
-          message="Thêm nhân viên thành công"
-          show={showPopup}
-          onClose={togglePopup}
-        />
-      )}
+      <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
+
 <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden border border-gray-300">
     <thead className="bg-gray-50 border-b border-gray-300">
-        <tr className='bg-sky-500 border-gray-300'>
-            <th className="py-3 px-6 text-left border-r border-gray-300">Stt</th>
-            <th className="py-3 px-6 text-left border-r border-gray-300">Họ</th>
-            <th className="py-3 px-6 text-left border-r border-gray-300">Tên</th>
-            <th className="py-3 px-6 text-left border-r border-gray-300">Số Điện Thoại</th>
-            <th className="py-3 px-6 text-left border-r border-gray-300">Quyền</th>
-            <th className="py-3 px-6 text-left border-r border-gray-300">Trạng Thái</th>
-            <th className="py-3 px-6 text-left">Hành Động</th>
+        <tr className='bg-sky-500 border-gray-300 text-center'>
+            <th className="py-3 px-6 border-r border-gray-300">Stt</th>
+            <th className="py-3 px-6 border-r border-gray-300">Họ</th>
+            <th className="py-3 px-6 border-r border-gray-300">Tên</th>
+            <th className="py-3 px-6 border-r border-gray-300">Số Điện Thoại</th>
+            <th className="py-3 px-6 border-r border-gray-300">Quyền</th>
+            <th className="py-3 px-6 border-r border-gray-300">Trạng Thái</th>
+            <th className="py-3 px-6 ">Tuỳ chọn</th>
         </tr>
     </thead>
     <tbody className="bg-white divide-y divide-gray-200">
@@ -132,14 +121,15 @@ const UserTable = ({ data, onDelete }) => {
                 <td className="py-4 px-6 cursor-pointer hover:text-blue-500 border-r border-gray-300" onClick={() => openModal(user)}>{user.phoneNumber || ''}</td>
                 <td className="py-4 px-6 cursor-pointer hover:text-blue-500 border-r border-gray-300" onClick={() => openModal(user)}>{getRole(user.role)}</td>
                 <td className="py-4 px-6 cursor-pointer hover:text-blue-500 border-r border-gray-300" onClick={() => openModal(user)}>{getStatus(user.status)}</td>
-                <td className="py-4 px-6">
-                    <button className="text-red-500 hover:text-red-700 focus:outline-none" onClick={() => onDelete(user.id)}>Xóa</button>
+                <td className="py-4 px-6 text-center">
+                    <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none" onClick={() => onDelete(user.id)}>
+                         <span role="img" aria-label="Delete">🗑️</span>
+                    </button>
                 </td>
             </tr>
         ))}
     </tbody>
 </table>
-
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}

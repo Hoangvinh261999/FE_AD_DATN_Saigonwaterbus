@@ -90,12 +90,25 @@ const TicketManagement = () => {
                         className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
-                <a
+                                <div>
+                    <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
+                    <select
+                        id="searchStatus"
+                        // value={searchStatus}
+                        // onChange={handleSearchStatusChange}
+                        className="p-2 border rounded"
+                    >
+                        <option value="">Tất cả</option>
+                        <option value="ACTIVE">Hoạt động</option>
+                        <option value="INACTIVE">Không hoạt động</option>
+                    </select>
+                </div>
+                {/* <a
                     href="/"
-                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    className="px-4 py-2 w-2/12 font-bold bg-blue-500 text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                 >
                     Thêm Mới
-                </a>
+                </a> */}
             </div>
       {isPopupVisible && (
         <Popup
