@@ -81,6 +81,14 @@ function Trip() {
          SearchTrip(searchDate);
       }
    };
+   const [searchStatus, setSearchStatus] = useState('');
+   const handleSearchStatusChange = (e) => {
+      setSearchStatus(e.target.value);
+   };
+   const filteredTrip = trips.filter(trip => {
+      const matchesStatus = searchStatus ? trip.status === searchStatus : true;
+      return matchesStatus;
+   });
 
    return (
        <div className="my-4">
@@ -99,13 +107,17 @@ function Trip() {
                         <button type="submit" className="ml-2  px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
                               Tìm kiếm
                         </button>
+                        <button
+                    className="px-4 py-2 mx-2 w-auto  bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    onClick={() => fetchTrips()}>Làm mới
+                </button>
                      </form>
                   <div className="">
                     <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
                     <select
                         id="searchStatus"
-                        // value={searchStatus}
-                        // onChange={handleSearchStatusChange}
+                        value={searchStatus}
+                        onChange={handleSearchStatusChange}
                         className="p-2 border rounded"
                     >
                         <option value="">Tất cả</option>
@@ -120,7 +132,7 @@ function Trip() {
 
                
       {openModal &&<AddTripForm setOpenModal={setOpenModal} fetchTrips={fetchTrips} showPopup={showPopup} />}
-          <TripList trip={trips} fetchTrips={fetchTrips} showPopup={showPopup}/>
+          <TripList trip={filteredTrip} fetchTrips={fetchTrips} showPopup={showPopup}/>
 
             <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
 

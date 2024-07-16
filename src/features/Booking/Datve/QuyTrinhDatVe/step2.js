@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { formatCurrencyVND } from '../../../../utils/formatVnd';
 const Step2 = ({ nextStep, prevStep,chuyenTau,clickedSeats }) => {
     localStorage.setItem('total', (clickedSeats.length * 15000).toString());
   return (
@@ -52,7 +52,7 @@ const Step2 = ({ nextStep, prevStep,chuyenTau,clickedSeats }) => {
     Quay lại
   </button>
   
-  <span className="text-sm">Tổng tiền: {clickedSeats.length * 15000}đ</span>
+  <span className="text-base font-semibold">Tổng tiền: {formatCurrencyVND(clickedSeats.length * 15000) }</span>
   
   <button
     className="text-sm bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center"

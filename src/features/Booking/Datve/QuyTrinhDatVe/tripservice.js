@@ -12,7 +12,7 @@ const apiClient = axios.create({
 
 const timGhe = async (chuyenId) => {
   try {
-    const response = await apiClient.get(`/trip/${chuyenId}`);
+    const response = await apiClient.get(`/booking-ticket/${chuyenId}`);
     return response.data.result;
   } catch (error) {
     console.error('Error fetching seat labels:', error);
@@ -42,6 +42,7 @@ const timChuyen = async (searchParams) => {
     throw error;
   }
 };
+
 
 const apiService = {
   timGhe,

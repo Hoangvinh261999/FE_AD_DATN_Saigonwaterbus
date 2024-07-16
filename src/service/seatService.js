@@ -39,8 +39,6 @@ const capNhatGhe = async (seat) => {
 
 const seatService = {
  dsGhe,capNhatGhe
-  
-  // Có thể thêm các hàm khác ở đây
-};
+  };
 
 export default seatService;
