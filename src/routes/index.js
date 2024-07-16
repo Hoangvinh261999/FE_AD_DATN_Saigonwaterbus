@@ -20,6 +20,8 @@ const Tau = lazy(() => import('../features/Ship/index'));
 const ChuyenTauTong = lazy(() => import('../features/trip/Trip'));
 const TaoChuyen = lazy(() => import('../features/trip/component/TripForm'));
 const TaoStaff = lazy(() => import('../features/staff/components/StaffForm'));
+const ThongTinCaNhan = lazy(() => import('../pages/protected/profile.js'));
+
 const HoaDon = lazy(() => import('../features/invoice/billing/index.js'));
 const GheTau = lazy(() => import('../features/seat/index.js'));
 const ThemNhanVien = lazy(() => import('../features/staff/components/StaffForm'));
@@ -125,6 +127,10 @@ const routes = [
   {
     path: '/nhan-vien/them-nhan-vien',
     component: TaoStaff,
+  },
+   {
+    path: '/thong-tin-ca-nhan',
+    component: ThongTinCaNhan,
   },
  
 ];

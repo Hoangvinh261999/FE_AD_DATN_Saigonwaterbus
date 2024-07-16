@@ -58,7 +58,10 @@ const Weather = () => {
             alt="Sunny Icon" 
           />
         ) : (
-          'Có mưa'
+                    <img className='flex'
+            src="/rain.png" 
+            alt="Rain Icon" 
+          />
         )}
       </span> 
     </div>

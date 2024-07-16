@@ -31,7 +31,6 @@ const [message1, setMessage1]= useState('')
 
 const fromRef = useRef();
 const toRef = useRef();
-
 const year = startDate.getFullYear();
 const month = String(startDate.getMonth() + 1).padStart(2, '0'); // Lưu ý rằng tháng trong JavaScript là từ 0 đến 11
 const day = String(startDate.getDate()).padStart(2, '0');
@@ -60,13 +59,22 @@ try {
 }    
 }
 
+const handleToggleOpenSeat = (event, chuyenId) => {
+    event.preventDefault();
+    setSeatLabels([]); // Đặt lại nhãn ghế khi mở form mới
+    timGhe(event, chuyenId); // Xử lý logic tìm ghế (nếu có)
+    setOpenTab(false); // Đóng tab nếu có
+    
+    // Cập nhật trạng thái mở đóng của chuyến tàu
+    setOpenSeat(prevState => ({
+        ...prevState,
+        [chuyenId]: !prevState[chuyenId] // Đảo ngược trạng thái cũ
+    }));
+};
 
 
 //tab chit iet chuyen
 const [openTab,setOpenTab]= useState(false);
-
-
-
     const [selectedOption, setSelectedOption] = useState('Giờ đi sớm nhất');
     const [openSeat, setOpenSeat] = useState({});
 
@@ -217,22 +225,9 @@ const sortedChuyen = useMemo(() => {
 </div>
 
             </form>
-            {/* <div className="flex items-center space-x-4 my-4">
-                <span className="font-semibold">Sắp xếp theo:</span>
-                {listChuyen&&options.map(option => (
-                    <button
-                        key={option}
-                        className={`px-4 py-2 rounded transition ${selectedOption === option ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                        onClick={() => setSelectedOption(option)}
-                    >
-                        {option}
-                    </button>
-                ))}
-            </div> */}
-
    {sortedChuyen.map(chuyen=> (
     <div className="block border  rounded-lg border-b border-gray-300 shadow-lg mb-2 p-2 pt-4">
-    <div key={chuyen.id} className="bg-white  w-full   pageChuyen gap-2 flex container mx-auto   mb-4">
+    <div key={chuyen.id} className=" w-full   pageChuyen gap-2 flex container mx-auto   mb-4">
         <div className="w-3/12">
             <img className="w-full h-full object-cover rounded-lg max-h-44 p-1" alt="" src="https://static.vexere.com/production/images/1675673512101.jpeg" />
         </div>
@@ -265,7 +260,7 @@ const sortedChuyen = useMemo(() => {
                 <span className="text-xl font-bold text-blue-600">15,000đ</span>
                             <span className="text-lg  mb-2">Còn {chuyen.availableSeats-2} chỗ trống</span>
                         <button 
-                            onClick={(event) => {setSeatLabels([]); timGhe(event, chuyen.id);setOpenTab(false) ; setOpenSeat(prevState => ({ ...prevState, [chuyen.id]: !prevState[chuyen.id] })) }}
+        onClick={(event) => handleToggleOpenSeat(event, chuyen.id)}
                             className="bg-blue-500 hover:bg-blue-700 w-28 text-white font-bold py-2 px-4 rounded transition" 
                         >
                             {openSeat[chuyen.id] ? 'Đóng lại' : 'Chọn chỗ'}
@@ -274,7 +269,7 @@ const sortedChuyen = useMemo(() => {
             </div> 
         </div>
     </div>
-{openSeat[chuyen.id] && <MultiStepForm chuyenTau={chuyen} seatLabels={seatLabels}/>}
+{openSeat[chuyen.id] && <MultiStepForm chuyenTau={chuyen} seatLabels={seatLabels} setOpenSeat={setOpenSeat}/>}
 <div className="bg-white">
 {openTab[chuyen.id] && <ChiTietChuyen/>}
 
