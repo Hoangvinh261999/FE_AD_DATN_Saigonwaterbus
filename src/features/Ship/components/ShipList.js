@@ -14,10 +14,10 @@ function ShipList() {
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedShip, setSelectedShip] = useState(null);
-        const { isOpen, message, type, showPopup, closePopup } = usePopup();
-const [searchQuery, setSearchQuery] = useState("");
-const [searchStatus, setSearchStatus] = useState("");
-
+    const { isOpen, message, type, showPopup, closePopup } = usePopup();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchStatus, setSearchStatus] = useState("");
+    const [searchKeyword, setSearchKeyword] = useState('');
     const [newShip, setNewShip] = useState({
         totalSeats: 0,
         status: "",
@@ -77,13 +77,7 @@ const getShips = async () => {
     const getStatus = (status) => {
         return status === "ACTIVE" ? "Đang hoạt động" : "Không hoạt động";
     };
-const handleSearchQueryChange = (e) => {
-    setSearchQuery(e.target.value);
-};
 
-const handleSearchStatusChange = (e) => {
-    setSearchStatus(e.target.value);
-};
 useEffect(() => {
     getShips();
 }, [currentPage, pageSize, searchQuery, searchStatus]);
@@ -230,18 +224,66 @@ var response='';
         }
     };
 
-    const paginationItems = [];
-    for (let i = 0; i < totalPages; i++) {
-        paginationItems.push(
-            <button
-                key={i}
-                onClick={() => handlePageChange(i)}
-                className={`px-3 py-1 ${currentPage === i ? 'bg-blue-500 text-white' : 'hover:bg-gray-300'} mx-1`}
-            >
-                {i + 1}
-            </button>
-        );
+const paginationItems = [];
+ paginationItems.push(
+        <button
+            key="first"
+            onClick={() => handlePageChange(0)} 
+            disabled={currentPage === 0} 
+            className={`px-3 py-1 mx-1 ${currentPage === 0 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            First
+        </button>
+    );
+    paginationItems.push(
+        <button
+            key="next"
+            onClick={() => handlePageChange(currentPage + 1)} // Go to next page
+            disabled={currentPage === totalPages - 1} // Disable if already on the last page
+            className={`px-3 py-1 mx-1 ${currentPage === totalPages - 1 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            Next
+        </button>
+    );
+    paginationItems.push(
+        <button
+            key="previous"
+            onClick={() => handlePageChange(currentPage - 1)} // Go to previous page
+            disabled={currentPage === 0} // Disable if already on the first page
+            className={`px-3 py-1 mx-1 ${currentPage === 0 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            Previous
+        </button>
+    );
+// Last button
+    paginationItems.push(
+        <button
+            key="last"
+            onClick={() => handlePageChange(totalPages - 1)} // Go to last page
+            disabled={currentPage === totalPages - 1} // Disable if already on the last page
+            className={`px-3 py-1 mx-1 ${currentPage === totalPages - 1 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            Last
+        </button>
+    );
+const handleSearchQueryChange = (e) => {
+    setSearchKeyword(e.target.value);
+};
+
+const handleSearchStatusChange = (e) => {
+    setSearchStatus(e.target.value);
+};
+const filteredShip = ships.filter(ship => {
+    if (!ship || !ship.numberPlate) {
+        return false;
     }
+    const matchesKeyword = ship.numberPlate.toLowerCase().includes(searchKeyword.toLowerCase());
+    const matchesStatus = searchStatus ? ship.status === searchStatus : true;
+    return matchesKeyword && matchesStatus;
+});
+
+
+
 
     return (
         <div className="my-4">
@@ -251,9 +293,10 @@ var response='';
                     <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
                     <input
                         type="text"
+                        name="searchQuery"
                         placeholder="Nhập từ khoá trong họ tên nhân viên"
-                        // value={searchQuery}
-                        // onChange={handleSearchChange}
+                        value={searchKeyword}
+                        onChange={handleSearchQueryChange}
                         className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
@@ -261,8 +304,8 @@ var response='';
                     <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
                     <select
                         id="searchStatus"
-                        // value={searchStatus}
-                        // onChange={handleSearchStatusChange}
+                        value={searchStatus}
+                        onChange={handleSearchStatusChange}
                         className="p-2 border rounded"
                     >
                         <option value="">Tất cả</option>
@@ -287,7 +330,7 @@ var response='';
                     </tr>
                     </thead>
                     <tbody className='bg-white divide-y divide-gray-200'>
-                    {ships.map((ship) => (
+                    {filteredShip.map((ship) => (
                         <tr key={ship.id} className="hover:bg-gray-100 cursor-pointer">
                             <td className="border  py-2 px-4 text-left" onClick={() => handleRowClick(ship)}>{ship.id}</td>
                             <td className="border py-2 px-4" onClick={() =>  handleRowClick(ship)}>{ship.totalSeats}</td>
