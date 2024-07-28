@@ -12,6 +12,7 @@ function ShipList() {
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedShip, setSelectedShip] = useState(null);
+    const [searchStatus, setSearchStatus] = useState("");
     const [newShip, setNewShip] = useState({
         totalSeats: 0,
         status: "ACTIVE",
@@ -205,37 +206,144 @@ function ShipList() {
         setSearchTerm(e.target.value);
     };
 
+    const handleSearchStatusChange = (e) => {
+        setSearchStatus(e.target.value);
+    };
+    // const filteredShip = ships.filter(ship => {
+    //     if (!ship || !ship.numberPlate) {
+    //         return false;
+    //     }
+    //     const matchesKeyword = ship.numberPlate.toLowerCase().includes(searchKeyword.toLowerCase());
+    //     const matchesStatus = searchStatus ? ship.status === searchStatus : true;
+    //     return matchesKeyword && matchesStatus;
+    // });
+
     const filteredShips = ships.filter((ship) =>
-        ship.numberPlate.toLowerCase().includes(searchTerm.toLowerCase())
+        ship.numberPlate.toLowerCase().includes(searchTerm.toLowerCase()) && searchStatus ? ship.status === searchStatus : true
     );
 
     const paginationItems = [];
-    for (let i = 0; i < totalPages; i++) {
-        paginationItems.push(
-            <button
-                key={i}
-                onClick={() => handlePageChange(i)}
-                className={`px-3 py-1 ${currentPage === i ? 'bg-blue-500 text-white' : 'hover:bg-gray-300'} mx-1`}
+
+// First button
+    paginationItems.push(
+        <button
+            key="first"
+            onClick={() => handlePageChange(0)} // Assuming page index starts from 0
+            disabled={currentPage === 0} // Disable if already on the first page
+            className={`px-3 py-1 mx-1 ${currentPage === 0 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                height="1em"
+                width="1em"
             >
-                {i + 1}
-            </button>
-        );
-    }
+                <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
+            </svg>
+        </button>
+    );
+    // Previous button
+    paginationItems.push(
+        <button
+            key="previous"
+            onClick={() => handlePageChange(currentPage - 1)} // Go to previous page
+            disabled={currentPage === 0} // Disable if already on the first page
+            className={`px-3 py-1 mx-1 ${currentPage === 0 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                height="1em"
+                width="1em"
+            >
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+    );
+// Next button
+    paginationItems.push(
+        <button
+            key="next"
+            onClick={() => handlePageChange(currentPage + 1)} // Go to next page
+            disabled={currentPage === totalPages - 1} // Disable if already on the last page
+            className={`px-3 py-1 mx-1 ${currentPage === totalPages - 1 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                height="1em"
+                width="1em"
+            >
+                <path d="M9 18l6-6-6-6" />
+            </svg>
+        </button>
+    );
+
+// Last button
+    paginationItems.push(
+        <button
+            key="last"
+            onClick={() => handlePageChange(totalPages - 1)} // Go to last page
+            disabled={currentPage === totalPages - 1} // Disable if already on the last page
+            className={`px-3 py-1 mx-1 ${currentPage === totalPages - 1 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 24 24"
+                height="1em"
+                width="1em"
+            >
+                <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
+            </svg>
+        </button>
+    );
     return (
         <div className="container mx-auto p-4">
 
-            <div className="flex justify-end mb-4">
-                <input
-                    type="text"
-                    placeholder="Tìm kiếm theo biển số"
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className="px-4 py-2 border rounded"
-                />
-                <button onClick={openAddModal}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
-                    Thêm tàu
-                </button>
+            <div className="flex justify-between">
+                <div className="">
+                    <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
+                    <select
+                        id="searchStatus"
+                        value={searchStatus}
+                        onChange={handleSearchStatusChange}
+                        className="p-2 border rounded"
+                    >
+                        <option value="">Tất cả</option>
+                        <option value="ACTIVE">Hoạt động</option>
+                        <option value="INACTIVE">Không hoạt động</option>
+                    </select>
+                </div>
+                <div className="">
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm theo biển số"
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        className="px-4 py-2 border rounded"
+                    />
+                    <button onClick={openAddModal}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
+                        Thêm tàu
+                    </button>
+                </div>
+
             </div>
 
             <div className="overflow-x-auto">
@@ -254,15 +362,15 @@ function ShipList() {
                     </thead>
                     <tbody>
                     {filteredShips.map((ship, index) => (
-                        <tr key={ship.id} className="bg-white border-b" onClick={() => handleRowClick(ship)}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ship.totalSeats}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getStatus(ship.status)}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ship.numberPlate}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(ship.createAt)}</td>
+                        <tr key={ship.id} className="bg-white border-b">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"  onClick={() => handleRowClick(ship)}>{index + 1}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{ship.totalSeats}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{getStatus(ship.status)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{ship.numberPlate}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{formatDate(ship.createAt)}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <button onClick={() => CreateSeat(ship.id)}
-                                        className="text-indigo-600 hover:text-indigo-900">
+                                        className={`text-indigo-600 hover:text-indigo-900 ${shipsWithSeats.includes(ship.id) && 'text-red-600 hover:text-red-900 cursor-not-allowed'}`}>
                                     Thêm ghế
                                 </button>
                             </td>

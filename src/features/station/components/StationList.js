@@ -13,11 +13,12 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
         delete_at: null
     });
     const [searchKeyword, setSearchKeyword] = useState('');
-    const [filteredStations, setFilteredStations] = useState([]);
+    // const [filteredStations, setFilteredStations] = useState([]);
+    const [searchStatus, setSearchStatus] = useState('');
 
-    useEffect(() => {
-        setFilteredStations(filterStations());
-    }, [stations, searchKeyword]);
+    // useEffect(() => {
+    //     setFilteredStations(filterStations());
+    // }, [stations, searchKeyword]);
 
     const getStatus = (status) => {
         switch (status) {
@@ -76,17 +77,28 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
         setSearchKeyword(e.target.value);
     };
 
-    const filterStations = () => {
-        return stations.filter(station => {
-            const searchableFields = [
-                station.name || '',
-                station.address || ''
-            ];
-            return searchableFields.some(field =>
-                field.toLowerCase().includes(searchKeyword.toLowerCase())
-            );
-        });
+
+    const handleSearchStatusChange = (e) => {
+        setSearchStatus(e.target.value);
     };
+
+    const filteredStations = stations.filter(station => {
+        const matchesKeyword = station.name.toLowerCase().includes(searchKeyword.toLowerCase());
+        const matchesStatus = searchStatus ? station.status === searchStatus : true;
+        return matchesKeyword && matchesStatus;
+    });
+    // const filterStations = () => {
+    //     return stations.filter(station => {
+    //         const searchableFields = [
+    //             station.name || '',
+    //             station.address || ''
+    //         ];
+    //         const matchesStatus = searchStatus ? station.status === searchStatus : true;
+    //         return searchableFields.some(field =>
+    //             field.toLowerCase().includes(searchKeyword.toLowerCase())
+    //         ) &&  matchesStatus;
+    //     });
+    // };
 
     return (
         <div className="container mx-auto my-4">
@@ -99,6 +111,19 @@ function StationList({ stations, onCreate, onUpdate, onDelete }) {
                         placeholder="Tìm kiếm bến tàu..."
                         className="border px-4 py-2 w-full"
                     />
+                </div>
+                <div>
+                    <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
+                    <select
+                        id="searchStatus"
+                        value={searchStatus}
+                        onChange={handleSearchStatusChange}
+                        className="p-2 border rounded"
+                    >
+                        <option value="">Tất cả</option>
+                        <option value="ACTIVE">Hoạt động</option>
+                        <option value="INACTIVE">Không hoạt động</option>
+                    </select>
                 </div>
                 <button
                     onClick={handleCreateClick}

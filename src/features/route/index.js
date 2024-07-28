@@ -12,7 +12,7 @@ const RouteManagement = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isCreating, setIsCreating] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
-    const pageSize = 2;
+    const pageSize = 10;
     const token = localStorage.getItem("token");
 
     const fetchRoutes = async (page = 1) => {

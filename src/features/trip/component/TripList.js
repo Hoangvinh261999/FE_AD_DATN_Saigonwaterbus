@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
 import { formatDate } from '../../../utils/formatDate';
-function TripList({ trip }) {
+
+
+function TripList({ trip ,fetchTrips,showPopup}) {
     const [selectedItem, setSelectedItem] = useState(null);
     const [stations, setStations] = useState([]);
     const token = localStorage.getItem("token");
@@ -21,11 +24,6 @@ function TripList({ trip }) {
         status: "",
         ship: {
             id: "",
-            name: "",
-            type: "",
-            capacity: "",
-            status: "",
-            // Add other relevant fields here
         }
     });
 
@@ -81,17 +79,13 @@ function TripList({ trip }) {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("Update successful", response.data);
-            window.alert("Cập nhật thành công")
-            window.location.href="http://localhost:3000/admin/chuyen-tau"
+            showPopup('Cập nhật chuyến thành công!', 'success');
             closeDetail();
-           
+            fetchTrips();
         } catch (error) {
-            window.alert("Cập nhật thất bại")
             if (error.response) {
-                console.error("Error response data:", error.response.data);
-                console.error("Error response status:", error.response.status);
-                console.error("Error response headers:", error.response.headers);
+                showPopup('Cập nhật chuyến thất bại!', 'success');
+                ;
             } else {
                 console.error("Error updating trip:", error);
             }
@@ -106,16 +100,11 @@ function TripList({ trip }) {
                 },
             });
             closeDetail();
-                        alert("Xóa chuyến tàu thành công");
+            showPopup('Cập nhật chuyến thành công!', 'success');
+
 
         } catch (error) {
-            if (error.response) {
-                console.error("Error response data:", error.response.data);
-                console.error("Error response status:", error.response.status);
-                console.error("Error response headers:", error.response.headers);
-            } else {
-                console.error("Error deleting trip:", error);
-            }
+
             alert("Xóa chuyến tàu thất bại");
         }
     };
@@ -156,44 +145,43 @@ function TripList({ trip }) {
     };
 
     return (
-        <div className="">
-           <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
-    <thead className="bg-sky-500">
-        <tr>
-            <th className="border text-left py-2 px-4">ID</th>
-            <th className="border text-left py-2 px-4">Ngày khởi hành</th>
-            <th className="border text-left py-2 px-4">Thời gian khởi hành</th>
-            <th className="border text-left py-2 px-4">Thời gian đến</th>
-            <th className="border text-left py-2 px-4">Số ghế trống</th>
-            <th className="border text-left py-2 px-4">Tuyến đường</th>
-            <th className="border text-left py-2 px-4">Trạng thái</th>
-             <th className="border text-left py-2 px-4">Hành động</th>
+        <>
+            <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
+                <thead className="bg-sky-500">
+                <tr className="text-center">
+                    <th className="border  py-2 px-4">ID</th>
+                    <th className="border  py-2 px-4">Ngày khởi hành</th>
+                    <th className="border  py-2 px-4">Thời gian khởi hành</th>
+                    <th className="border  py-2 px-4">Thời gian đến</th>
+                    <th className="border  py-2 px-4">Số ghế trống</th>
+                    <th className="border  py-2 px-4">Tuyến đường</th>
+                    <th className="border  py-2 px-4">Trạng thái</th>
+                    <th className="border  py-2 px-4">Hành động</th>
 
-        </tr>
-    </thead>
-    <tbody className="bg-white divide-y divide-gray-200">
-        {trip.map((item, index) => (
-            <tr
-                key={item.id}
-                className="hover:bg-gray-100 cursor-pointer"
-                
-            >
-                <td className="border py-2 px-4 " onClick={() => openDetail(item)}>{index + 1}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{formatDate(item.departureDate)}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.departureTime}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.arrivalTime}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.availableSeats}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.route.nameRoute}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{getStatus(item.status)}</td>
-<td>
-                        <button  onClick={() => handleDeleteTrip(item)}
-                                    className="px-4 py-2 bg-red-800 text-white rounded-md cursor-pointer text-sm mr-2">Xóa
+                </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                {trip.map((item, index) => (
+                    <tr
+                        key={item.id}
+                        className="hover:bg-gray-100 cursor-pointer"
+                    >
+                        <td className="border py-2 px-4 " onClick={() => openDetail(item)}>{index + 1}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{formatDate(item.departureDate)}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.departureTime}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.arrivalTime}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.availableSeats}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.route.nameRoute}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{getStatus(item.status)}</td>
+                        <td className="text-center">
+                            <button  onClick={() => handleDeleteTrip(item)} className=" px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none">
+                                <span role="img" aria-label="Delete">🗑️</span>
                             </button>
-</td>
-            </tr>
-        ))}
-    </tbody>
-</table>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
 
 
             {selectedItem && (
@@ -288,8 +276,7 @@ function TripList({ trip }) {
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="mt-1 p-2 w-full border rounded"
-                                >
+                                    className="mt-1 p-2 w-full border rounded">
                                     <option value="ACTIVE">Đang hoạt động</option>
                                     <option value="INACTIVE">Không hoạt động</option>
                                 </select>
@@ -299,6 +286,7 @@ function TripList({ trip }) {
                                 <select
                                     name="ship"
                                     onChange={handleShipChange}
+                                    value={formData.ship.id}
                                     className="mt-1 p-2 w-full border rounded"
                                 >
                                     <option value="">Chọn tàu</option>
@@ -315,7 +303,7 @@ function TripList({ trip }) {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }
 
