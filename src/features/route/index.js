@@ -13,7 +13,9 @@ const RouteManagement = () => {
     const [searchStatus, setSearchStatus] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const pageSize =20;
+
+    const pageSize = 10;
+
     const token = localStorage.getItem("token");
     const { isOpen, message, type, showPopup, closePopup } = usePopup();
     const [openAddForm, setOpenAddForm] = useState(false);

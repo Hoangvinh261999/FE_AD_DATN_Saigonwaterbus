@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function StationList({ stations, onCreate, onUpdate, onDelete, isModalOpen, setIsModalOpen }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -12,7 +12,14 @@ function StationList({ stations, onCreate, onUpdate, onDelete, isModalOpen, setI
         delete_at: null
     });
     const [searchKeyword, setSearchKeyword] = useState('');
+
+    // const [filteredStations, setFilteredStations] = useState([]);
     const [searchStatus, setSearchStatus] = useState('');
+
+    // useEffect(() => {
+    //     setFilteredStations(filterStations());
+    // }, [stations, searchKeyword]);
+
 
     const getStatus = (status) => {
         switch (status) {
@@ -81,17 +88,30 @@ function StationList({ stations, onCreate, onUpdate, onDelete, isModalOpen, setI
         return matchesKeyword && matchesStatus;
     });
 
+    // const filterStations = () => {
+    //     return stations.filter(station => {
+    //         const searchableFields = [
+    //             station.name || '',
+    //             station.address || ''
+    //         ];
+    //         const matchesStatus = searchStatus ? station.status === searchStatus : true;
+    //         return searchableFields.some(field =>
+    //             field.toLowerCase().includes(searchKeyword.toLowerCase())
+    //         ) &&  matchesStatus;
+    //     });
+    // };
+
     return (
-        <div className="my-4">
+        <div className="container mx-auto my-4">
             <div className="flex items-center justify-between">
                 <div className="flex items-center w-3/5 p-2">
-                    <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
                     <input
                         type="text"
-                        placeholder="Nhập từ khoá trong tên bến tàu..."
                         value={searchKeyword}
                         onChange={handleSearchChange}
-                        className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                        placeholder="Tìm kiếm bến tàu..."
+                        className="border px-4 py-2 w-full"
+
                     />
                 </div>
                 <div>
@@ -107,8 +127,11 @@ function StationList({ stations, onCreate, onUpdate, onDelete, isModalOpen, setI
                         <option value="INACTIVE">Không hoạt động</option>
                     </select>
                 </div>
-                <button onClick={handleCreateClick}
-                    className="px-4 py-2 w-2/12 font-bold bg-blue-500 text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+
+                <button
+                    onClick={handleCreateClick}
+                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+
                 >
                     Thêm bến tàu
                 </button>
@@ -124,78 +147,76 @@ function StationList({ stations, onCreate, onUpdate, onDelete, isModalOpen, setI
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredStations.map((station) => (
-                        <tr key={station.id} className="text-center">
-                            <td className="border px-4 py-2" onClick={() => handleEditClick(station)}>{station.id}</td>
-                            <td className="border px-4 py-2 text-left" onClick={() => handleEditClick(station)}>{station.name}</td>
-                            <td className="border px-4 py-2 text-left" onClick={() => handleEditClick(station)}>{station.address}</td>
-                            <td className="border px-4 py-2" onClick={() => handleEditClick(station)}>{getStatus(station.status)}</td>
-                            <td className="border px-4 py-2 flex justify-center space-x-2">
-                                <button
-                                    onClick={() => onDelete(station.id)}
-                                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
-                                >
-                                    <span role="img" aria-label="Delete">🗑️</span>
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+
+                {filteredStations.map((station) => (
+                    <tr key={station.id} className="text-center">
+                        <td className="border px-4 py-2 " onClick={() => handleEditClick(station)}>{station.id}</td>
+                        <td className="border px-4 py-2 text-left" onClick={() => handleEditClick(station)}>{station.name}</td>
+                        <td className="border px-4 py-2 text-left" onClick={() => handleEditClick(station)}>{station.address}</td>
+                        <td className="border px-4 py-2" onClick={() => handleEditClick(station)}>{getStatus(station.status)}</td>
+                        <td className="border px-4 py-2 flex justify-center space-x-2">
+                            <button
+                                onClick={() => onDelete(station.id)}
+                                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
+                            >
+                                <span role="img" aria-label="Delete">🗑️</span>
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+
                 </tbody>
             </table>
 
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
-                    <form onSubmit={handleSave}>
-                        <div className="bg-white p-6 rounded shadow-lg">
-                            <h2 className="text-xl font-bold mb-4">
-                                {isEditing ? 'Chỉnh sửa bến tàu' : 'Tạo bến tàu mới'}
-                            </h2>
-                            <div className="mb-4">
-                                <label className="block mb-2">Tên</label>
-                                <input
-                                    type="text"
-                                    value={stationData.name}
-                                    onChange={(e) => setStationData({ ...stationData, name: e.target.value })}
-                                    className="border px-4 py-2 w-full"
-                                    required={!isEditing}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block mb-2">Địa chỉ</label>
-                                <input
-                                    type="text"
-                                    required={!isEditing}
-                                    value={stationData.address || ''}
-                                    onChange={(e) => setStationData({ ...stationData, address: e.target.value || null })}
-                                    className="border px-4 py-2 w-full"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block mb-2">Trạng thái</label>
-                                <select
-                                    value={stationData.status}
-                                    onChange={(e) => setStationData({ ...stationData, status: e.target.value })}
-                                    className="border px-4 py-2 w-full"
-                                    required={!isEditing}
-                                >
-                                    <option value="" selected>Trạng thái</option>
-                                    <option value="ACTIVE">Đang hoạt động</option>
-                                    <option value="INACTIVE">Không hoạt động</option>
-                                </select>
-                            </div>
-                            <div className="flex justify-end">
-                                <button
-                                    onClick={handleCloseModal}
-                                    className="bg-gray-500 text-white py-2 px-4 rounded mr-2"
-                                >
-                                    Hủy
-                                </button>
-                                <button
-                                    className="bg-blue-500 text-white py-2 px-4 rounded"
-                                >
-                                    {isEditing ? 'Cập nhật' : 'Tạo mới'}
-                                </button>
-                            </div>
+
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50" style={{ 'ReactModal__Overlay ReactModal__Overlay--after-open': 'z-100' }}>
+                    <div className="bg-white p-6 rounded shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">
+                            {isEditing ? 'Chỉnh sửa bến tàu' : 'Tạo bến tàu mới'}
+                        </h2>
+                        <div className="mb-4">
+                            <label className="block mb-2">Tên</label>
+                            <input
+                                type="text"
+                                value={stationData.name}
+                                onChange={(e) => setStationData({ ...stationData, name: e.target.value })}
+                                className="border px-4 py-2 w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-2">Địa chỉ</label>
+                            <input
+                                type="text"
+                                value={stationData.address || ''}
+                                onChange={(e) => setStationData({ ...stationData, address: e.target.value || null })}
+                                className="border px-4 py-2 w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-2">Trạng thái</label>
+                            <select
+                                value={stationData.status}
+                                onChange={(e) => setStationData({ ...stationData, status: e.target.value })}
+                                className="border px-4 py-2 w-full"
+                            >
+                                <option value="ACTIVE">Đang hoạt động</option>
+                                <option value="INACTIVE">Không hoạt động</option>
+                            </select>
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={handleCloseModal}
+                                className="bg-gray-500 text-white py-2 px-4 rounded mr-2"
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                className="bg-blue-500 text-white py-2 px-4 rounded"
+                            >
+                                Cập nhật
+                            </button>
                         </div>
                     </form>
                 </div>

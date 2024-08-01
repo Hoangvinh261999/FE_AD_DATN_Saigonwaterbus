@@ -18,6 +18,7 @@ function ShipList() {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchStatus, setSearchStatus] = useState("");
     const [searchKeyword, setSearchKeyword] = useState('');
+
     const [newShip, setNewShip] = useState({
         totalSeats: 0,
         status: "",
@@ -25,6 +26,7 @@ function ShipList() {
         createAt: "", // Thêm trường ngày nhập
     });
     const [deleteShipId, setDeleteShipId] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         getShips();
@@ -88,7 +90,6 @@ useEffect(() => {
     };
 
     const openAddModal = () => {
-
         setIsAddModalOpen(true);
     };
 
@@ -122,7 +123,7 @@ useEffect(() => {
     const handleEditShip = async () => {
         let response=''
         try {
-            const data ={
+            const data = {
                 id: selectedShip.id,
                 totalSeats: selectedShip.totalSeats,
                 status: selectedShip.status,
@@ -131,7 +132,8 @@ useEffect(() => {
                 deleteAt: null,
                 numberPlate: selectedShip.numberPlate
             }
-             response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/ship/update`,data, {
+            const response = await axios.put(`http://localhost:8080/api/saigonwaterbus/admin/ship/update`, data, {
+
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -224,27 +226,45 @@ var response='';
         }
     };
 
-const paginationItems = [];
- paginationItems.push(
-        <button
-            key="first"
-            onClick={() => handlePageChange(0)} 
-            disabled={currentPage === 0} 
-            className={`px-3 py-1 mx-1 ${currentPage === 0 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
-        >
-            First
-        </button>
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearchStatusChange = (e) => {
+        setSearchStatus(e.target.value);
+    };
+
+
+    const filteredShips = ships.filter((ship) =>
+        ship.numberPlate.toLowerCase().includes(searchTerm.toLowerCase()) && searchStatus ? ship.status === searchStatus : true
     );
+
+    const paginationItems = [];
+
+// First button
     paginationItems.push(
         <button
-            key="next"
-            onClick={() => handlePageChange(currentPage + 1)} // Go to next page
-            disabled={currentPage === totalPages - 1} // Disable if already on the last page
-            className={`px-3 py-1 mx-1 ${currentPage === totalPages - 1 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+            key="first"
+            onClick={() => handlePageChange(0)} // Assuming page index starts from 0
+            disabled={currentPage === 0} // Disable if already on the first page
+            className={`px-3 py-1 mx-1 ${currentPage === 0 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
         >
-            Next
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                height="1em"
+                width="1em"
+            >
+                <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
+            </svg>
         </button>
     );
+    // Previous button
+
     paginationItems.push(
         <button
             key="previous"
@@ -252,9 +272,44 @@ const paginationItems = [];
             disabled={currentPage === 0} // Disable if already on the first page
             className={`px-3 py-1 mx-1 ${currentPage === 0 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
         >
-            Previous
+
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                height="1em"
+                width="1em"
+            >
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
         </button>
     );
+// Next button
+    paginationItems.push(
+        <button
+            key="next"
+            onClick={() => handlePageChange(currentPage + 1)} // Go to next page
+            disabled={currentPage === totalPages - 1} // Disable if already on the last page
+            className={`px-3 py-1 mx-1 ${currentPage === totalPages - 1 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
+        >
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                height="1em"
+                width="1em"
+            >
+                <path d="M9 18l6-6-6-6" />
+            </svg>
+        </button>
+    );
+
 // Last button
     paginationItems.push(
         <button
@@ -263,44 +318,27 @@ const paginationItems = [];
             disabled={currentPage === totalPages - 1} // Disable if already on the last page
             className={`px-3 py-1 mx-1 ${currentPage === totalPages - 1 ? 'bg-gray-300 text-gray-600' : 'hover:bg-gray-300'}`}
         >
-            Last
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 24 24"
+                height="1em"
+                width="1em"
+            >
+                <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
+            </svg>
         </button>
     );
-const handleSearchQueryChange = (e) => {
-    setSearchKeyword(e.target.value);
-};
-
-const handleSearchStatusChange = (e) => {
-    setSearchStatus(e.target.value);
-};
-const filteredShip = ships.filter(ship => {
-    if (!ship || !ship.numberPlate) {
-        return false;
-    }
-    const matchesKeyword = ship.numberPlate.toLowerCase().includes(searchKeyword.toLowerCase());
-    const matchesStatus = searchStatus ? ship.status === searchStatus : true;
-    return matchesKeyword && matchesStatus;
-});
-
-
-
-
     return (
-        <div className="my-4">
+        <div className="container mx-auto p-4">
                     <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
-            <div className="flex items-center justify-between">
-                <div className="flex items-center w-3/5 p-2">
-                    <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
-                    <input
-                        type="text"
-                        name="searchQuery"
-                        placeholder="Nhập từ khoá trong họ tên nhân viên"
-                        value={searchKeyword}
-                        onChange={handleSearchQueryChange}
-                        className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                    />
-                </div>
-                <div>
+
+            <div className="flex justify-between">
+                <div className="">
+
                     <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
                     <select
                         id="searchStatus"
@@ -313,9 +351,20 @@ const filteredShip = ships.filter(ship => {
                         <option value="INACTIVE">Không hoạt động</option>
                     </select>
                 </div>
-                <button onClick={openAddModal} className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-                    Thêm tàu
-                </button>
+
+                <div className="">
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm theo biển số"
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        className="px-4 py-2 border rounded"
+                    />
+                    <button onClick={openAddModal}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
+                        Thêm tàu
+                    </button>
+                </div>
             </div>
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
@@ -329,22 +378,20 @@ const filteredShip = ships.filter(ship => {
                         <th className="border  py-2 px-4">Tuỳ chọn</th>
                     </tr>
                     </thead>
-                    <tbody className='bg-white divide-y divide-gray-200'>
-                    {filteredShip.map((ship) => (
-                        <tr key={ship.id} className="hover:bg-gray-100 cursor-pointer">
-                            <td className="border  py-2 px-4 text-left" onClick={() => handleRowClick(ship)}>{ship.id}</td>
-                            <td className="border py-2 px-4" onClick={() =>  handleRowClick(ship)}>{ship.totalSeats}</td>
-                            <td className="border  py-2 px-4 text-left" onClick={() => {handleRowClick(ship)}}>{ship.status?'Đang hoạt động':'Không hoạt độn'}</td>
-                            <td className="border  py-2 px-4 text-left" onClick={() => handleRowClick(ship)}>{formatDate(ship.createAt)}</td>
-                            <td className="border  py-2 px-4 text-left" onClick={() => handleRowClick(ship)}>{ship.numberPlate}</td>
-                            <td className="border  py-2 px-4 text-center">
+
+                    <tbody>
+                    {filteredShips.map((ship, index) => (
+                        <tr key={ship.id} className="bg-white border-b">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"  onClick={() => handleRowClick(ship)}>{index + 1}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{ship.totalSeats}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{getStatus(ship.status)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{ship.numberPlate}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" onClick={() => handleRowClick(ship)}>{formatDate(ship.createAt)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+
                                 <button onClick={() => CreateSeat(ship.id)}
-                                        className={`bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded ${shipsWithSeats.includes(ship.id) && 'opacity-50 cursor-not-allowed'}`}>
+                                        className={`text-indigo-600 hover:text-indigo-900 ${shipsWithSeats.includes(ship.id) && 'text-red-600 hover:text-red-900 cursor-not-allowed'}`}>
                                     Thêm ghế
-                                </button>
-                                <button onClick={() => handleDeleteShip(ship.id)}
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                    Xóa tàu
                                 </button>
                             </td>
                         </tr>
@@ -364,7 +411,8 @@ const filteredShip = ships.filter(ship => {
                             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                         </div>
                         <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
-                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div
+                            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-start">
                                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">

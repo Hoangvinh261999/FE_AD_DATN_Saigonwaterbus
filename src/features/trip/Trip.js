@@ -10,7 +10,9 @@ import PopupDone from "../../utils/popup/popupDone";
 function Trip() {
    const [trips, setTrips] = useState([]);
    const [searchDate, setSearchDate] = useState("");
-   const [error, setError] = useState(""); 
+
+   const [error, setError] = useState("");
+
    const token = localStorage.getItem("token");
    const dispatch = useDispatch();
    const [openModal, setOpenModal] = useState(false);
@@ -18,7 +20,9 @@ function Trip() {
 
    useEffect(() => {
       dispatch(setPageTitle({ title: "Danh sách chuyến tàu" }));
-      fetchTrips(); 
+
+      fetchTrips();
+
    }, []);
 
    const fetchTrips = async () => {
@@ -34,6 +38,7 @@ function Trip() {
             setTrips(response.data.result.content);
          }
       } catch (error) {
+
       }
    };
 
@@ -92,49 +97,50 @@ function Trip() {
 
    return (
        <div className="my-4">
-                  <div className="flex items-center justify-between p-2">
-                     <form onSubmit={handleSearch} className="flex items-center ">
-                        <label htmlFor="searchDate" className="text-gray-700 mr-2  text-center font-bold">Tìm chuyến theo ngày:</label>
-                        <input
-                              type="date"
-                              id="searchDate"
-                              value={searchDate}
-                              onChange={(e) => setSearchDate(e.target.value)}
-                              min={getCurrentDate()}
-                              className="px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                        />
-                        
-                        <button type="submit" className="ml-2  px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-                              Tìm kiếm
-                        </button>
-                        <button
-                    className="px-4 py-2 mx-2 w-auto  bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                    onClick={() => fetchTrips()}>Làm mới
+          <div className="flex items-center justify-between p-2">
+             <form onSubmit={handleSearch} className="flex items-center ">
+                <label htmlFor="searchDate" className="text-gray-700 mr-2  text-center font-bold">Tìm chuyến theo ngày:</label>
+                <input
+                    type="date"
+                    id="searchDate"
+                    value={searchDate}
+                    onChange={(e) => setSearchDate(e.target.value)}
+                    min={getCurrentDate()}
+                    className="px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                />
+
+                <button type="submit" className="ml-2  px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                   Tìm kiếm
                 </button>
-                     </form>
-                  <div className="">
-                    <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
-                    <select
-                        id="searchStatus"
-                        value={searchStatus}
-                        onChange={handleSearchStatusChange}
-                        className="p-2 border rounded"
-                    >
-                        <option value="">Tất cả</option>
-                        <option value="ACTIVE">Hoạt động</option>
-                        <option value="INACTIVE">Không hoạt động</option>
-                    </select>
-                </div>
-                <button className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                         onClick={()=>setOpenModal(!openModal)}>Thêm chuyến</button>
-               </div>
+                <button
+                    className="px-4 py-2 mx-2 w-auto  bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    onClick={() => fetchTrips}>Làm mới
+                </button>
+             </form>
+             <div className="">
+                <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
+                <select
+                    id="searchStatus"
+                    value={searchStatus}
+                    onChange={handleSearchStatusChange}
+                    className="p-2 border rounded"
+                >
+                   <option value="">Tất cả</option>
+                   <option value="ACTIVE">Hoạt động</option>
+                   <option value="INACTIVE">Không hoạt động</option>
+                </select>
+             </div>
+             <button className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                     onClick={()=>setOpenModal(!openModal)}>Thêm chuyến</button>
+          </div>
 
 
-               
-      {openModal &&<AddTripForm setOpenModal={setOpenModal} fetchTrips={fetchTrips} showPopup={showPopup} />}
+
+          {openModal &&<AddTripForm setOpenModal={setOpenModal} fetchTrips={fetchTrips} showPopup={showPopup} />}
           <TripList trip={filteredTrip} fetchTrips={fetchTrips} showPopup={showPopup}/>
 
-            <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
+          <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
+
 
        </div>
    );

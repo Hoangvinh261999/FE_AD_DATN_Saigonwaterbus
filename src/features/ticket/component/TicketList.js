@@ -3,7 +3,7 @@ import axios from 'axios';
 import { formatDate } from '../../../utils/formatDate';
 import { formatCurrencyVND } from '../../../utils/formatVnd';
 
-const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, fetchTickets }) => {
+const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, fetchTickets, reset }) => {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -43,20 +43,28 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
         <div className="container mx-auto p-4">
 
 
-  <div className="flex items-center my-4">
-  <label className='mx-2'>Hiển thị vé theo ngày</label>
-                 <input
+            <div className="flex items-center my-4">
+                <label className='mx-2'>Hiển thị vé theo ngày</label>
+                <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className="border border-gray-300 px-2 py-1 mr-2"
                 />
-                <button onClick={fetchTickets} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Tìm</button>
+                <button onClick={fetchTickets}
+                        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Tìm
+                </button>
+                <button onClick={reset}
+                        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">reset
+                </button>
             </div>
 
 
-            <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden bg-white border-collapse">
-                <thead className="bg-sky-500 ">
+
+            <table
+                className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden bg-white border-collapse">
+                <thead className="bg-sky-500 text-white">
+
                 <tr>
                     <th className="border text-left py-2 px-4">STT</th>
                     <th className="border text-left py-2 px-4">Ngày Khởi Hành</th>

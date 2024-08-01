@@ -84,8 +84,10 @@ function TripList({ trip ,fetchTrips,showPopup}) {
             fetchTrips();
         } catch (error) {
             if (error.response) {
-            showPopup('Cập nhật chuyến thất bại!', 'success');
-;
+
+                showPopup('Cập nhật chuyến thất bại!', 'success');
+                ;
+
             } else {
                 console.error("Error updating trip:", error);
             }
@@ -100,7 +102,9 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                 },
             });
             closeDetail();
+
                         showPopup('Cập nhật chuyến thành công!', 'success');
+
 
 
         } catch (error) {
@@ -145,43 +149,45 @@ function TripList({ trip ,fetchTrips,showPopup}) {
     };
 
     return (
-<>
-    <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
-        <thead className="bg-sky-500">
-        <tr className="text-center">
-            <th className="border  py-2 px-4">ID</th>
-            <th className="border  py-2 px-4">Ngày khởi hành</th>
-            <th className="border  py-2 px-4">Thời gian khởi hành</th>
-            <th className="border  py-2 px-4">Thời gian đến</th>
-            <th className="border  py-2 px-4">Số ghế trống</th>
-            <th className="border  py-2 px-4">Tuyến đường</th>
-            <th className="border  py-2 px-4">Trạng thái</th>
-             <th className="border  py-2 px-4">Hành động</th>
 
-        </tr>
-    </thead>
-    <tbody className="bg-white divide-y divide-gray-200">
-        {trip.map((item, index) => (
-            <tr
-                key={item.id}
-                className="hover:bg-gray-100 cursor-pointer"
-            >
-                <td className="border py-2 px-4 " onClick={() => openDetail(item)}>{index + 1}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{formatDate(item.departureDate)}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.departureTime}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.arrivalTime}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.availableSeats}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.route.nameRoute}</td>
-                <td className="border py-2 px-4" onClick={() => openDetail(item)}>{getStatus(item.status)}</td>
-                <td className="text-center">
-                    <button  onClick={() => handleDeleteTrip(item)} className=" px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none">
-                        <span role="img" aria-label="Delete">🗑️</span>
-                    </button>
-                </td>
-            </tr>
-        ))}
-    </tbody>
-</table>
+        <>
+            <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
+                <thead className="bg-sky-500">
+                <tr className="text-center">
+                    <th className="border  py-2 px-4">ID</th>
+                    <th className="border  py-2 px-4">Ngày khởi hành</th>
+                    <th className="border  py-2 px-4">Thời gian khởi hành</th>
+                    <th className="border  py-2 px-4">Thời gian đến</th>
+                    <th className="border  py-2 px-4">Số ghế trống</th>
+                    <th className="border  py-2 px-4">Tuyến đường</th>
+                    <th className="border  py-2 px-4">Trạng thái</th>
+                    <th className="border  py-2 px-4">Hành động</th>
+
+                </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                {trip.map((item, index) => (
+                    <tr
+                        key={item.id}
+                        className="hover:bg-gray-100 cursor-pointer"
+                    >
+                        <td className="border py-2 px-4 " onClick={() => openDetail(item)}>{index + 1}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{formatDate(item.departureDate)}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.departureTime}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.arrivalTime}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.availableSeats}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{item.route.nameRoute}</td>
+                        <td className="border py-2 px-4" onClick={() => openDetail(item)}>{getStatus(item.status)}</td>
+                        <td className="text-center">
+                            <button  onClick={() => handleDeleteTrip(item)} className=" px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none">
+                                <span role="img" aria-label="Delete">🗑️</span>
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+
 
 
             {selectedItem && (

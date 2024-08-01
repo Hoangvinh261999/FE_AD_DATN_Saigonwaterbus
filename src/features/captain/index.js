@@ -26,6 +26,11 @@ const CaptainIndex = () => {
         filterCaptains(searchKeyword);
     }, [searchKeyword, captains]);
 
+    const [searchStatus, setSearchStatus] = useState('');
+    const handleSearchStatusChange = (e) => {
+        setSearchStatus(e.target.value);
+        filterCaptains(searchKeyword, e.target.value); // Gọi hàm lọc khi trạng thái thay đổi
+    };
     const fetchCaptains = async (page) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/captains`, {
@@ -56,7 +61,7 @@ const CaptainIndex = () => {
         setSearchKeyword(e.target.value);
     };
 
-    const filterCaptains = (query) => {
+    const filterCaptains = (query, status) => {
         const filtered = captains.filter(captain => {
             const fieldsToSearch = [
                 captain.firstname || '',
@@ -65,11 +70,14 @@ const CaptainIndex = () => {
                 captain.address || '',
                 captain.shipLicense || ''
             ];
-            return fieldsToSearch.some(field => field.toLowerCase().includes(query.toLowerCase()));
+            const matchesQuery = fieldsToSearch.some(field => field.toLowerCase().includes(query.toLowerCase()));
+            const matchesStatus = status ? captain.status === status : true;
+            return matchesQuery && matchesStatus;
         });
         console.log("Filtered Captains: ", filtered); // Debugging statement
         setFilteredCaptains(filtered);
     };
+
 
     return (
         <div className="my-4">
@@ -81,27 +89,33 @@ const CaptainIndex = () => {
                         type="text"
                         placeholder="Nhập từ khoá trong họ tên nhân viên"
                         value={searchKeyword}
-                                    onChange={handleSearchChange}
+                        onChange={handleSearchChange}
                         className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
-                                  <div className="">
+
+                <div className="">
                     <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
                     <select
                         id="searchStatus"
-                        // value={searchStatus}
-                        // onChange={handleSearchStatusChange}
-                        className="p-2 border rounded "
+                        value={searchStatus}
+                        onChange={handleSearchStatusChange}
+                        className="p-2 border rounded"
                     >
                         <option value="">Tất cả</option>
-                        <option value="ACTIVE">Hoạt động</option>
-                        <option value="INACTIVE">Không hoạt động</option>
+                        <option value="ACTIVE">Đang làm việc</option>
+                        <option value="INACTIVE">Ngưng làm việc</option>
                     </select>
                 </div>
-                <button className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                         onClick={()=>setOpenModal(!openModal)}>Thêm thuyền trưởng</button>
+                <a
+                    href="thuyen-truong/tao"
+                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                >
+                    Thêm Mới
+                </a>
+
             </div>
-            <CaptainList captains={filteredCaptains} fetchCaptains={fetchCaptains} />
+            <CaptainList captains={filteredCaptains} fetchCaptains={fetchCaptains}/>
             <div className="flex   mt-4 justify-center">
                 <div className="pagination-buttons space-x-5">
                     <button

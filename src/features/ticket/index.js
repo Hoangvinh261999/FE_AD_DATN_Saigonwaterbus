@@ -30,13 +30,24 @@ const TicketListContainer = () => {
             console.error('Error fetching tickets:', error);
         }
     };
-
-    useEffect(() => {
-        if (date) {
-            fetchTickets();
+    const getData = async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.get('http://localhost:8080/api/saigonwaterbus/admin/ticketAlls', {
+                params: { page, size },
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setTickets(response.data.result.content);
+            setTotalPages(response.data.result.totalPages);
+            console.log(response.data.result.content);
+        } catch (error) {
+            console.error('Error fetching tickets:', error);
         }
-    }, [date, page, size]);
+    };
 
+    useEffect(()=>{
+        getData()
+    },[])
     return (
         <TicketList
             tickets={tickets}
@@ -48,6 +59,7 @@ const TicketListContainer = () => {
             setSize={setSize}
             totalPages={totalPages}
             fetchTickets={fetchTickets}
+            reset={getData}
         />
     );
 };
