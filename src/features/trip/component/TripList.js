@@ -206,6 +206,16 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                                     readOnly
                                 />
                             </div>
+                                                        <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Số ghế trống</label>
+                                <input
+                                    type="number"
+                                    name="availableSeats"
+                                    value={formData.availableSeats}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 w-full border rounded"
+                                />
+                            </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Ngày khởi hành</label>
                                 <input
@@ -236,16 +246,7 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                                     className="mt-1 p-2 w-full border rounded"
                                 />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Số ghế trống</label>
-                                <input
-                                    type="number"
-                                    name="availableSeats"
-                                    value={formData.availableSeats}
-                                    onChange={handleChange}
-                                    className="mt-1 p-2 w-full border rounded"
-                                />
-                            </div>
+
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Tuyến đường</label>
                                 <input

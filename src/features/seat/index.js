@@ -41,20 +41,31 @@ const TicketManagement = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedSeat, setSelectedSeat] = useState(null); // State to hold the selected seat for confirmation
 
-  const handleConfirm = async () => {
-    if (selectedSeat) {
-      try {
-        selectedSeat.status = selectedSeat.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-        // Call the service to update seat status
-        await seatService.capNhatGhe(selectedSeat);
-      } catch (error) {
-        console.error('Error toggling seat status:', error);
-      } finally {
-        setIsPopupVisible(false);
-      }
+const handleConfirm = async () => {
+  if (selectedSeat) {
+    try {
+      selectedSeat.status = selectedSeat.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+
+      // Lấy ngày hiện tại và chuyển về định dạng yyyy-mm-dd
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+      const day = String(now.getDate()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day}`;
+      
+      selectedSeat.updateAt = formattedDate; // Gán ngày hiện tại vào selectedSeat
+
+      await seatService.capNhatGhe(selectedSeat);
+    } catch (error) {
+      console.error('Error toggling seat status:', error);
+    } finally {
+      setIsPopupVisible(false);
     }
-    console.log('Confirmed action');
-  };
+  }
+  console.log('Confirmed action');
+};
+
 
   const handleCancel = () => {
     setIsPopupVisible(false);

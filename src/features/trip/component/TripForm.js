@@ -122,18 +122,19 @@ const AddTripForm = ({ setOpenModal, fetchTrips,showPopup }) => {
                     <h2 className="text-center font-bold text-2xl my-4">Thêm chuyến tàu</h2>
                 </div>
                 <div className="col-span-1">
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Ngày khởi hành:</label>
+                                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Số ghế trống:</label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="date"
-                            name="departureDate"
+                            type="number"
                             required
-                            value={formData.departureDate}
+                            name="availableSeats"
+                            value={formData.availableSeats}
                             onChange={handleChange}
-                            placeholder="Chọn ngày khởi hành"
+                            placeholder="Số ghế trống"
                         />
                     </div>
+
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">Thời gian khởi hành:</label>
                         <input
@@ -149,6 +150,18 @@ const AddTripForm = ({ setOpenModal, fetchTrips,showPopup }) => {
                 </div>
 
                 <div className="col-span-1">
+                                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Ngày khởi hành:</label>
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="date"
+                            name="departureDate"
+                            required
+                            value={formData.departureDate}
+                            onChange={handleChange}
+                            placeholder="Chọn ngày khởi hành"
+                        />
+                    </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">Thời gian đến:</label>
                         <input
@@ -161,18 +174,7 @@ const AddTripForm = ({ setOpenModal, fetchTrips,showPopup }) => {
                             placeholder="Chọn thời gian đến"
                         />
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Số ghế trống:</label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="number"
-                            required
-                            name="availableSeats"
-                            value={formData.availableSeats}
-                            onChange={handleChange}
-                            placeholder="Số ghế trống"
-                        />
-                    </div>
+
                 </div>
 
                 <div className="col-span-2 mb-4">

@@ -144,8 +144,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 <input
                     type="text" 
                     required
-                    name="firstname"
-                    value={editedCaptain.firstname}
+                    name="lastname"
+                    value={editedCaptain.lastname}
                     onChange={handleEditChange}
                     className="mt-1 block w-full p-2 border font-normal border-gray-300 rounded-md outline-none"
                 />
@@ -157,8 +157,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 <input
                     type="text" 
                     required
-                    name="lastname"
-                    value={editedCaptain.lastname}
+                    name="firstname"
+                    value={editedCaptain.firstname}
                     onChange={handleEditChange}
                     className="mt-1 block w-full font-normal p-2 border border-gray-300 rounded-md outline-none"
                 />
