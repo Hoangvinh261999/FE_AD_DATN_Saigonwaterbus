@@ -105,12 +105,12 @@ function StationManager() {
                 setIsModalOpen={setIsModalOpen}
             />
             <div>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center space-x-5">
                     <button
                         onClick={handlePrevPage}
-                        disabled={page === 0}
-                        className={`bg-blue-500 text-white py-2 px-4 rounded flex items-center mr-2
-                    ${page === 0 ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-600'}`}
+                        // disabled={page === 0}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+
                     >
                         <svg
                             fill="none"
@@ -150,7 +150,7 @@ function StationManager() {
                         disabled={page === totalPages - 1}
                         className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
                     >
-                        <svg
+                <svg
                             fill="none"
                             stroke="currentColor"
                             strokeLinecap="round"
@@ -160,26 +160,25 @@ function StationManager() {
                             height="1em"
                             width="1em"
                         >
-                            <path d="M9 18l6-6-6-6" />
+                            <path d="M9 5l7 7-7 7"/>
                         </svg>
                     </button>
                     <button
                         onClick={handleNextPage}
                         disabled={page === totalPages - 1}
-                        className={`bg-blue-500 text-white py-2 px-4 rounded flex items-center ml-2
-                    ${page === totalPages - 1 ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-600'}`}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
                     >
-                        <svg
+                                       <svg
                             fill="none"
                             stroke="currentColor"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            viewBox="0 24 24"
+                            viewBox="0 0 24 24"
                             height="1em"
                             width="1em"
                         >
-                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
+                            <path d="M13 7l5 5-5 5M6 7l5 5-5 5"/>
                         </svg>
                     </button>
 

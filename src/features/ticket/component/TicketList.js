@@ -3,7 +3,7 @@ import axios from 'axios';
 import { formatDate } from '../../../utils/formatDate';
 import { formatCurrencyVND } from '../../../utils/formatVnd';
 
-const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, fetchTickets, reset }) => {
+const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, fetchTickets }) => {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -43,28 +43,20 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
         <div className="container mx-auto p-4">
 
 
-            <div className="flex items-center my-4">
-                <label className='mx-2'>Hiển thị vé theo ngày</label>
-                <input
+  <div className="flex items-center my-4">
+  <label className='mx-2'>Hiển thị vé theo ngày</label>
+                 <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className="border border-gray-300 px-2 py-1 mr-2"
                 />
-                <button onClick={fetchTickets}
-                        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Tìm
-                </button>
-                <button onClick={reset}
-                        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">reset
-                </button>
+                <button onClick={fetchTickets} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Tìm</button>
             </div>
 
 
-
-            <table
-                className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden bg-white border-collapse">
-                <thead className="bg-sky-500 text-white">
-
+            <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden bg-white border-collapse">
+                <thead className="bg-sky-500 ">
                 <tr>
                     <th className="border text-left py-2 px-4">STT</th>
                     <th className="border text-left py-2 px-4">Ngày Khởi Hành</th>
@@ -89,7 +81,7 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
 <div className="mt-4 flex justify-center">
     <button
         onClick={() => setPage(0)}
-        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded`}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
         disabled={page === 0}
     >
         <svg
@@ -108,7 +100,7 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
 
     <button
         onClick={() => setPage(page - 1)}
-        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded `}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
         disabled={page === 0}
     >
         <svg
@@ -127,7 +119,7 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
 
     <button
         onClick={() => setPage(page + 1)}
-        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded `}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
         disabled={page + 1 >= totalPages}
     >
         <svg
@@ -146,7 +138,7 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
 
     <button
         onClick={() => setPage(totalPages - 1)}
-        className={`px-4 py-2 mx-1 bg-sky-500 text-white rounded `}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
         disabled={page === totalPages - 1}
     >
         <svg

@@ -105,7 +105,7 @@ const CaptainList = ({ captains, fetchCaptains }) => {
     </thead>
     <tbody className="bg-white divide-y divide-gray-200">
         {captains.map((captain, index) => (
-            <tr key={index}  className="cursor-pointer hover:bg-gray-100">
+            <tr key={index}  className="bg-white border-b">
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.firstname}</td>
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.lastname}</td>
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.phoneNumber}</td>

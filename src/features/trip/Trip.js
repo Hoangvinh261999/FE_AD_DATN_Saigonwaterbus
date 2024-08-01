@@ -141,7 +141,89 @@ function Trip() {
 
           <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
 
+<div className="flex mt-4 justify-center">
+                <div className="pagination-buttons space-x-5">
+                    <button
+                        // onClick={() => handlePageChange(0)}
+                        // disabled={page === 0}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+                        </svg>
+                    </button>
+                    <button
+                        // onClick={() => handlePageChange(page - 1)}
+                        // disabled={page === 0}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
 
+                            <path d="M15 19l-7-7 7-7" />
+
+                        </svg>
+                    </button>
+                    <span className="px-3 py-2">
+                        {/* {page + 1} / {totalPages} */}
+                    </span>
+                    <button
+                        // onClick={() => handlePageChange(page + 1)}
+                        // disabled={page === totalPages - 1}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M9 5l7 7-7 7" />
+
+                        </svg>
+                    </button>
+                    <button
+                        // onClick={() => handlePageChange(totalPages - 1)}
+                        // disabled={page === totalPages - 1}
+                        className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
+                    >
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M13 7l5 5-5 5M6 7l5 5-5 5" />
+
+                        </svg>
+                    </button>
+                </div>
+            </div>
        </div>
    );
 }

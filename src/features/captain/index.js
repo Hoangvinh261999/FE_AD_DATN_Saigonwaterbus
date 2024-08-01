@@ -107,12 +107,9 @@ const CaptainIndex = () => {
                         <option value="INACTIVE">Ngưng làm việc</option>
                     </select>
                 </div>
-                <a
-                    href="thuyen-truong/tao"
-                    className="ml-2 px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                >
-                    Thêm Mới
-                </a>
+                <button className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                         onClick={()=>setOpenModal(!openModal)}>Thêm thuyền trưởng</button>
+         
 
             </div>
             <CaptainList captains={filteredCaptains} fetchCaptains={fetchCaptains}/>
