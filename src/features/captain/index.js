@@ -4,8 +4,9 @@ import CaptainList from './components/CaptainList';
 import { useDispatch } from "react-redux";
 import { setPageTitle } from "../common/headerSlice";
 import '../../app/css/indexcss.css';
-
+import AddCaptainForm from './components/CaptainForm';
 const CaptainIndex = () => {
+
     const [captains, setCaptains] = useState([]);
     const [filteredCaptains, setFilteredCaptains] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -13,6 +14,8 @@ const CaptainIndex = () => {
     const [searchKeyword, setSearchKeyword] = useState('');
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
+    const [openModal, setOpenModal] = useState(false);
+
 
     useEffect(() => {
         dispatch(setPageTitle({ title: "Thuyền trưởng" }));
@@ -78,7 +81,8 @@ const CaptainIndex = () => {
 
     return (
         <div className="my-4">
-            <div className="flex items-center justify-between">
+        {openModal &&<AddCaptainForm setOpenModal={setOpenModal} fetchCaptains={fetchCaptains} />}
+            <div className="flex items-center justify-between ">
                 <div className="flex items-center  w-3/5 p-2">
                     <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
                     <input
@@ -89,6 +93,7 @@ const CaptainIndex = () => {
                         className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
+
                 <div className="">
                     <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
                     <select
@@ -108,6 +113,7 @@ const CaptainIndex = () => {
                 >
                     Thêm Mới
                 </a>
+
             </div>
             <CaptainList captains={filteredCaptains} fetchCaptains={fetchCaptains}/>
             <div className="flex   mt-4 justify-center">

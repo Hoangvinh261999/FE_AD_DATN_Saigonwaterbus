@@ -1,8 +1,13 @@
 import React from 'react';
 import SeatingChart from '../ghetau';
 
-const Step1 = ({ nextStep, clickedSeats, setClickedSeats, chuyenTau, seatLabels }) => {
-  // Trong Step1, bạn có thể sử dụng clickedSeats để hiển thị các ghế đã được chọn.
+const Step1 = ({ nextStep, clickedSeats, setClickedSeats, chuyenTau, seatLabels,userInfor  }) => {
+  if(userInfor){
+    console.log(userInfor)
+  }else{
+        console.log("loidata")
+
+  }
   return (
     <div className='container mx-auto'>
       <SeatingChart seatLabels={seatLabels} clickedSeats={clickedSeats} setClickedSeats={setClickedSeats} chuyenTau={chuyenTau} />

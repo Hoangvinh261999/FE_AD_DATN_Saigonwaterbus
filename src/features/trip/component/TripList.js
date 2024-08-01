@@ -84,8 +84,10 @@ function TripList({ trip ,fetchTrips,showPopup}) {
             fetchTrips();
         } catch (error) {
             if (error.response) {
+
                 showPopup('Cập nhật chuyến thất bại!', 'success');
                 ;
+
             } else {
                 console.error("Error updating trip:", error);
             }
@@ -100,7 +102,9 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                 },
             });
             closeDetail();
-            showPopup('Cập nhật chuyến thành công!', 'success');
+
+                        showPopup('Cập nhật chuyến thành công!', 'success');
+
 
 
         } catch (error) {
@@ -145,6 +149,7 @@ function TripList({ trip ,fetchTrips,showPopup}) {
     };
 
     return (
+
         <>
             <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
                 <thead className="bg-sky-500">
@@ -182,6 +187,7 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                 ))}
                 </tbody>
             </table>
+
 
 
             {selectedItem && (

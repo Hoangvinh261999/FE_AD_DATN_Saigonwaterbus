@@ -3,14 +3,18 @@ import { useDispatch } from "react-redux";
 import { setPageTitle } from "../common/headerSlice";
 import axios from "axios";
 import StationList from './components/StationList';
+import usePopup from "../../utils/popup/usePopup";
+import PopupDone from "../../utils/popup/popupDone";
 
 function StationManager() {
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [stations, setStations] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Thêm trạng thái modal
     const token = localStorage.getItem("token");
     const dispatch = useDispatch();
+    const { isOpen, message, type, showPopup, closePopup } = usePopup();
 
     useEffect(() => {
         dispatch(setPageTitle({ title: " Bến tàu " }));
@@ -26,7 +30,7 @@ function StationManager() {
             });
             setStations(response.data.result.content);
             setTotalPages(response.data.result.totalPages);
-            console.log(response.data.result.content)
+            console.log(response.data.result.content);
         } catch (error) {
             console.error("Error fetching stations:", error);
         }
@@ -39,12 +43,12 @@ function StationManager() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data.code);
             getStations();
-            window.alert('Tạo bến tàu mới thành công!');
+                        setIsModalOpen(false)
+
+            showPopup("Tạo bến tàu mới thành công!", "success");
         } catch (error) {
-            console.error("Error creating station:", error);
-            window.alert('Tạo bến tàu mới thất bại!');
+            showPopup("Tạo bến tàu mới thất bại!", "fail");
         }
     };
 
@@ -55,11 +59,11 @@ function StationManager() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            window.alert('cập nhật bến tàu thành công ');
+            showPopup("Cập nhật bến tàu thành công!", "success");
+            setIsModalOpen(false)
             getStations();
         } catch (error) {
-            window.alert('cập nhật bến tàu thất bại!');
-            console.error("Error updating station:", error);
+            showPopup("Cập nhật bến tàu thất bại!", "fail");
         }
     };
 
@@ -71,10 +75,9 @@ function StationManager() {
                 },
             });
             getStations();
-            window.alert('Xóa bến tàu thành công!');
+            showPopup("Xoá bến tàu thành công!", "success");
         } catch (error) {
-            console.error("Error deleting station:", error);
-            window.alert('Xóa bến tàu thất bại!');
+            showPopup("Xóa bến tàu thất bại!", "fail");
         }
     };
 
@@ -92,14 +95,17 @@ function StationManager() {
 
     return (
         <div>
+            <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
             <StationList
                 stations={stations}
                 onCreate={handleCreate}
                 onUpdate={handleUpdate}
                 onDelete={handleDelete}
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
             />
             <div>
-                <div className="flex items-center justify-center mt-4">
+                <div className="flex items-center justify-center">
                     <button
                         onClick={handlePrevPage}
                         disabled={page === 0}
@@ -116,12 +122,12 @@ function StationManager() {
                             height="1em"
                             width="1em"
                         >
-                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
+                            <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
                         </svg>
                     </button>
                     <button
                         onClick={handlePrevPage}
-                        disabled={page === page-1}
+                        disabled={page === page - 1}
                         className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
                     >
                         <svg
@@ -134,14 +140,14 @@ function StationManager() {
                             height="1em"
                             width="1em"
                         >
-                            <path d="M15 18l-6-6 6-6"/>
-                        </svg>          
+                            <path d="M15 18l-6-6 6-6" />
+                        </svg>
                     </button>
-                                        <span className="text-lg">{page + 1} / {totalPages}</span>
+                    <span className="text-lg">{page + 1} / {totalPages}</span>
 
-                     <button
+                    <button
                         onClick={handleNextPage}
-                        disabled={page=== totalPages-1}
+                        disabled={page === totalPages - 1}
                         className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none"
                     >
                         <svg
@@ -154,7 +160,7 @@ function StationManager() {
                             height="1em"
                             width="1em"
                         >
-                            <path d="M9 18l6-6-6-6"/>
+                            <path d="M9 18l6-6-6-6" />
                         </svg>
                     </button>
                     <button
@@ -163,20 +169,20 @@ function StationManager() {
                         className={`bg-blue-500 text-white py-2 px-4 rounded flex items-center ml-2
                     ${page === totalPages - 1 ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-600'}`}
                     >
-                            <svg
+                        <svg
                             fill="none"
                             stroke="currentColor"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            viewBox="0 0 24 24"
+                            viewBox="0 24 24"
                             height="1em"
                             width="1em"
                         >
-                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
+                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
                         </svg>
                     </button>
-                    
+
                 </div>
             </div>
         </div>

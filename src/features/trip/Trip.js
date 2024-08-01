@@ -10,7 +10,9 @@ import PopupDone from "../../utils/popup/popupDone";
 function Trip() {
    const [trips, setTrips] = useState([]);
    const [searchDate, setSearchDate] = useState("");
+
    const [error, setError] = useState("");
+
    const token = localStorage.getItem("token");
    const dispatch = useDispatch();
    const [openModal, setOpenModal] = useState(false);
@@ -18,7 +20,9 @@ function Trip() {
 
    useEffect(() => {
       dispatch(setPageTitle({ title: "Danh sách chuyến tàu" }));
+
       fetchTrips();
+
    }, []);
 
    const fetchTrips = async () => {
@@ -34,7 +38,7 @@ function Trip() {
             setTrips(response.data.result.content);
          }
       } catch (error) {
-         console.log(error)
+
       }
    };
 
@@ -136,6 +140,7 @@ function Trip() {
           <TripList trip={filteredTrip} fetchTrips={fetchTrips} showPopup={showPopup}/>
 
           <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
+
 
        </div>
    );

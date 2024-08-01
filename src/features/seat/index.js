@@ -166,6 +166,7 @@ const TicketManagement = () => {
         )}
         <table className="w-full bg-white">
           <thead>
+
           <tr className="bg-sky-400 text-center">
             <th className="py-2">STT</th>
             <th className="py-2">Tàu</th>

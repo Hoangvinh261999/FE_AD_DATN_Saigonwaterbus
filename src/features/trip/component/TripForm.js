@@ -107,7 +107,9 @@ const AddTripForm = ({ setOpenModal, fetchTrips,showPopup }) => {
             // setOpenModal(false);
             showPopup('Tạo chuyến thành công !', 'success');
             fetchTrips();
+
             setOpenModal(false);
+
         } else {
             showPopup(response.data.message, 'fail');
         }
@@ -246,7 +248,9 @@ const AddTripForm = ({ setOpenModal, fetchTrips,showPopup }) => {
                     >
                         Thêm chuyến
                     </button>
+
                     <button className="bg-gray-300 mx-2 text-black px-4 py-2 rounded" onClick={()=>setOpenModal(false)}>Đóng</button>
+
 
                 </div>
             </form>
