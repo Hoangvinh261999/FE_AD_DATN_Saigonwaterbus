@@ -128,9 +128,9 @@ const sortedChuyen = useMemo(() => {
         ref={fromRef}
       >
         <option value="nơi đến" selected disabled hidden>Nhập nơi đi</option>
-        <option value="1">Bạch đằng</option>
-        <option value="2">Bình an</option>
-        <option value="3">Thanh đa</option>
+        <option value="1">Bạch Đằng</option>
+        <option value="2">Bình An</option>
+        <option value="3">Thanh Đa</option>
         <option value="4">Hiệp Bình Chánh</option>
         <option value="5">Linh Đông</option>
       </select>
@@ -161,9 +161,9 @@ const sortedChuyen = useMemo(() => {
         ref={toRef}
       >
         <option value="nơi đến" selected disabled hidden>Nhập nơi đến</option>
-        <option value="1" name='bạch đằng'>Bạch đằng</option>
-        <option value="2" name='bình an'>Bình an</option>
-        <option value="3" name='thanh đa'>Thanh đa</option>
+        <option value="1" name='bạch đằng'>Bạch Đằng</option>
+        <option value="2" name='bình an'>Bình An</option>
+        <option value="3" name='thanh đa'>Thanh Đa</option>
         <option value="4" name='hệp bình chánh'>Hiệp Bình Chánh</option>
         <option value="5" name='linh đông'>Linh Đông</option>
       </select>

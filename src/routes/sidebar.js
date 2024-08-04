@@ -79,17 +79,17 @@ const routes = [
   {
     path: '', //no url needed as this has submenu
     icon: <img src='/icon/bar-chart.png' alt=''/>,
-    name: 'Thống Kê', // name that appear in Sidebar
+    name: 'Thống Kê - Báo Cáo',
     submenu : [
       {
-        path: '/admin/dat-ve', //url
+        path: '/admin/thong-ke', //url
         icon: <img src='/icon/business-planning.png' alt=''/>,
-        name: 'Thống Kê Doanh Số Theo Ngày', // name that appear in Sidebar
+        name: 'Thống Kê', // name that appear in Sidebar
       },
       {
-        path: '/admin/hoa-don',
+        path: '/admin/bao-cao',
         icon: <img src='/icon/pie-chart.png' alt=''/>,
-        name: 'Thống Kê Báo Cáo',
+        name: 'Báo Cáo',
       },
     ]
   },
