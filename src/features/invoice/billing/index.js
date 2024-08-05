@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../common/headerSlice';
 import { formatDate } from '../../../utils/formatDate';
 import { formatCurrencyVND } from '../../../utils/formatVnd';
-
+import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 const InvoiceTable = () => {
     const [loading, setLoading] = useState(true);
     const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -12,18 +12,21 @@ const InvoiceTable = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [size, setsize] = useState(1);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(setPageTitle({ title: 'Hóa đơn' }));
-        fetchInvoices(new Date().toISOString().split('T')[0]);
+        console.log(new Date().toISOString().split('T')[0]);
+        const date = new Date().toISOString().split('T')[0];
+        fetchInvoices(date, 0);
     }, [dispatch]);
 
     const token = localStorage.getItem('token');
 
     const fetchInvoices = async (date, page) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/invoices/${date}?page=${page}&size=10`, {
+            const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/invoices/${date}?page=${page}&size=${size}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -47,7 +50,7 @@ const InvoiceTable = () => {
 
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/invoices/${searchDate}`, {
+            const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/invoices/${searchDate}?page=0&size=${size}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -63,6 +66,7 @@ const InvoiceTable = () => {
     };
 
     const handleChangeDate = (event) => {
+        console.log(event.target.value)
         setSearchDate(event.target.value);
     };
 
@@ -97,65 +101,115 @@ const InvoiceTable = () => {
                         <>
                             <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
                                 <thead className="">
-                                    <tr className='bg-sky-500 text-center'>
-                                        <th className="border  py-2 px-4">STT</th>
-                                        <th className="border  py-2 px-4">Mã Thanh Toán</th>
-                                        <th className="border  py-2 px-4">Ngày Tạo</th>
-                                        <th className="border  py-2 px-4">Người đặt</th>
-                                        <th className="border  py-2 px-4">Phương thức thanh toán</th>
-                                        <th className="border  py-2 px-4">Tổng tiền</th>
-                                    </tr>
+                                <tr className='bg-sky-500 text-center'>
+                                    <th className="border  py-2 px-4">STT</th>
+                                    <th className="border  py-2 px-4">Mã Thanh Toán</th>
+                                    <th className="border  py-2 px-4">Ngày Tạo</th>
+                                    <th className="border  py-2 px-4">Người đặt</th>
+                                    <th className="border  py-2 px-4">Phương thức thanh toán</th>
+                                    <th className="border  py-2 px-4">Tổng tiền</th>
+                                </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {searchResults.map((invoice, index) => (
-                                        <tr
-                                            key={invoice.id}
-                                            onClick={() => handleRowClick(invoice)}
-                                            className="border  py-2 px-4 cursor-pointer"
-                                        >
-                                            <td className="border  py-2 px-4">{index + 1}</td>
-                                            <td className="border  py-2 px-4">{invoice.id}</td>
-                                            <td className="border  py-2 px-4">{formatDate(invoice.createAt)}</td>
-                                            <td className="border  py-2 px-4">{invoice.email ? invoice.email : 'Tài khoản khách'}</td>
-                                            <td className="border  py-2 px-4">{invoice.payMethod === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'Tiền mặt'}</td>
-                                            <td className="border  py-2 px-4">{formatCurrencyVND(invoice.totalAmount)}</td>
-                                        </tr>
-                                    ))}
+                                {searchResults.map((invoice, index) => (
+                                    <tr
+                                        key={invoice.id}
+                                        onClick={() => handleRowClick(invoice)}
+                                        className="border  py-2 px-4 cursor-pointer"
+                                    >
+                                        <td className="border  py-2 px-4">{index + 1}</td>
+                                        <td className="border  py-2 px-4">{invoice.id}</td>
+                                        <td className="border  py-2 px-4">{formatDate(invoice.createAt)}</td>
+                                        <td className="border  py-2 px-4">{invoice.email ? invoice.email : 'Tài khoản khách'}</td>
+                                        <td className="border  py-2 px-4">{invoice.payMethod === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'Tiền mặt'}</td>
+                                        <td className="border  py-2 px-4">{formatCurrencyVND(invoice.totalAmount)}</td>
+                                    </tr>
+                                ))}
                                 </tbody>
                             </table>
-                            <div className="flex justify-end mt-4">
-                                {totalPages > 1 && (
-                                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                        <button
-                                            onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
-                                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                        >
-                                            <span className="sr-only">Previous</span>
-                                            <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fillRule="evenodd" d="M9.707 4.293a1 1 0 0 1 1.414 1.414L7.414 10l3.707 3.293a1 1 0 1 1-1.414 1.414l-4-4a1 1 0 0 1 0-1.414l4-4z" clipRule="evenodd" />
-                                            </svg>
-                                        </button>
-                                        {[...Array(totalPages).keys()].map((pageNumber) => (
-                                            <button
-                                                key={pageNumber + 1}
-                                                onClick={() => handlePageChange(pageNumber + 1)}
-                                                className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage === pageNumber + 1 ? 'z-10 bg-blue-500 text-white border-blue-500' : ''}`}
-                                            >
-                                                {pageNumber + 1}
-                                            </button>
-                                        ))}
-                                        <button
-                                            onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)}
-                                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                                        >
-                                            <span className="sr-only">Next</span>
-                                            <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fillRule="evenodd" d="M10.293 15.707a1 1 0 0 1-1.414-1.414L12.586 10 8.293 6.707a1 1 0 0 1 1.414-1.414l4 4a1 1 0 0 1 0 1.414l-4 4z" clipRule="evenodd" />
-                                            </svg>
-                                        </button>
-                                    </nav>
-                                )}
-                            </div>
+                            <div className="flex justify-center mt-4">
+                                <button
+                                    key="first"
+                                    onClick={() => handlePageChange(0)} // Assuming page index starts from 0
+                                    disabled={currentPage === 0} // Disable if already on the first page
+                                    className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
+                                >
+                                    <svg
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        height="1em"
+                                        width="1em"
+                                    >
+                                        <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
+                                    </svg>
+                                </button>
+
+                                <button
+                                    key="previous"
+                                    onClick={() => handlePageChange(currentPage - 1)} // Go to previous page
+                                    disabled={currentPage === 0} // Disable if already on the first page
+                                    className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
+                                >
+                                    <svg
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        height="1em"
+                                        width="1em"
+                                    >
+                                        <path d="M15 18l-6-6 6-6"/>
+                                    </svg>
+                                </button>
+                                    <span className="flex items-center px-4 py-2">
+                                    {currentPage} / {totalPages}
+                                </span>
+                                <button
+                                    key="next"
+                                    onClick={() => handlePageChange(currentPage + 1)} // Go to next page
+                                    disabled={currentPage === totalPages - 1} // Disable if already on the last page
+                                    className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
+                                >
+                                    <svg
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        height="1em"
+                                        width="1em"
+                                    >
+                                        <path d="M9 18l6-6-6-6"/>
+                                    </svg>
+                                </button>
+                                <button
+                                    key="last"
+                                    onClick={() => handlePageChange(totalPages - 1)} // Go to last page
+                                    disabled={currentPage === totalPages - 1} // Disable if already on the last page
+                                    className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
+                                >
+                                    <svg
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        height="1em"
+                                        width="1em"
+                                    >
+                                        <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
+                                    </svg>
+                                </button>
+
+                                </div>
                         </>
                     )}
                 </div>
@@ -166,9 +220,15 @@ const InvoiceTable = () => {
                         <h2 className="text-xl font-semibold mb-4 text-center">Chi Tiết Hóa Đơn</h2>
                         <p><strong>ID:</strong> {selectedInvoice.id}</p>
                         <p><strong>Ngày Tạo:</strong> {formatDate(selectedInvoice.createAt)}</p>
-                        <p><strong>Ngày Cập Nhật:</strong> {selectedInvoice.updateAt ? formatDate(selectedInvoice.updateAt) : 'Không có dữ liệu'}</p>
-                        <p><strong>Ngày Xóa:</strong> {selectedInvoice.deleteAt ? formatDate(selectedInvoice.deleteAt) : 'Không có dữ liệu'}</p>
-                        <p><strong>Tổng tiền:</strong> {selectedInvoice.totalAmount ? formatCurrencyVND(selectedInvoice.totalAmount) : 'Không có dữ liệu'}</p>
+                        <p><strong>Ngày Cập
+                            Nhật:</strong> {selectedInvoice.updateAt ? formatDate(selectedInvoice.updateAt) : 'Không có dữ liệu'}
+                        </p>
+                        <p><strong>Ngày
+                            Xóa:</strong> {selectedInvoice.deleteAt ? formatDate(selectedInvoice.deleteAt) : 'Không có dữ liệu'}
+                        </p>
+                        <p><strong>Tổng
+                            tiền:</strong> {selectedInvoice.totalAmount ? formatCurrencyVND(selectedInvoice.totalAmount) : 'Không có dữ liệu'}
+                        </p>
                         <button
                             onClick={handleCloseModal}
                             className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
@@ -178,7 +238,6 @@ const InvoiceTable = () => {
                     </div>
                 </div>
             )}
-            
         </div>
     );
 };
