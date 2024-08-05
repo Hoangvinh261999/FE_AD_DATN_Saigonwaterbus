@@ -10,7 +10,7 @@ const Step3 = ({ prevStep, clickedSeats, chuyenTau, setUserInfor, userInfor,setO
     name: '',
     email: '',
     phone: '',
-    payment: '',
+    payment: 'BANK_TRANSFER',
     trip:{
       id:''
     },

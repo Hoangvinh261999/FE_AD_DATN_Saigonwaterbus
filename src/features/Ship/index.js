@@ -5,11 +5,11 @@ import { setPageTitle } from '../../features/common/headerSlice'
 import ShipList from "./components/ShipList";
 
 function ShipManagerment() {
-        const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
-        useEffect(() => {
+    useEffect(() => {
         dispatch(setPageTitle({ title : "Tàu"}))
-      }, [])
+    }, [])
 
     return (
         <>
