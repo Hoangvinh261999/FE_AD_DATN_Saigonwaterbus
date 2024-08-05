@@ -105,7 +105,7 @@ const CaptainList = ({ captains, fetchCaptains }) => {
     </thead>
     <tbody className="bg-white divide-y divide-gray-200">
         {captains.map((captain, index) => (
-            <tr key={index}  className="cursor-pointer hover:bg-gray-100">
+            <tr key={index}  className="bg-white border-b">
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.firstname}</td>
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.lastname}</td>
                 <td className="border py-2 px-4" onClick={() => handleRowClick(captain)}>{captain.phoneNumber}</td>
@@ -144,8 +144,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 <input
                     type="text" 
                     required
-                    name="firstname"
-                    value={editedCaptain.firstname}
+                    name="lastname"
+                    value={editedCaptain.lastname}
                     onChange={handleEditChange}
                     className="mt-1 block w-full p-2 border font-normal border-gray-300 rounded-md outline-none"
                 />
@@ -157,8 +157,8 @@ const CaptainList = ({ captains, fetchCaptains }) => {
                 <input
                     type="text" 
                     required
-                    name="lastname"
-                    value={editedCaptain.lastname}
+                    name="firstname"
+                    value={editedCaptain.firstname}
                     onChange={handleEditChange}
                     className="mt-1 block w-full font-normal p-2 border border-gray-300 rounded-md outline-none"
                 />
