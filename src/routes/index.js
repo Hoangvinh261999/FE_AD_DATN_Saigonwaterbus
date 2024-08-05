@@ -27,6 +27,8 @@ const GheTau = lazy(() => import('../features/seat/index.js'));
 const ThemNhanVien = lazy(() => import('../features/staff/components/StaffForm'));
 const ThemThuyenTruong = lazy(() => import('../features/captain/components/CaptainForm'));
 const Bentau = lazy(() => import('../features/station/index'));
+const ThongKe = lazy(() => import('../pages/protected/Dashboard'));
+const BaoCao = lazy(() => import('../features/report/index'));
 
 const routes = [
   {
@@ -132,7 +134,14 @@ const routes = [
     path: '/thong-tin-ca-nhan',
     component: ThongTinCaNhan,
   },
- 
+  {
+    path: '/thong-ke',
+    component: ThongKe,
+  },
+  {
+    path: '/bao-cao',
+    component: BaoCao,
+  },
 ];
 
 export default routes;

@@ -22,9 +22,8 @@ function Staff() {
         setSearchStatus(e.target.value);
     };
 
-    const getAdmin = async (page = 0, status = '') => {
-        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staff1?page=${page}&size=10&status=${status}`, {
-
+    const getAdmin = async (page = 0) => {
+        const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staff1?page=${page}&size=10`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
