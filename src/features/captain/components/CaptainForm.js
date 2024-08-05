@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {useDispatch} from "react-redux";
 import {setPageTitle} from "../../common/headerSlice";
+import PopupDone from '../../../utils/popup/popupDone';
+import usePopup from '../../../utils/popup/usePopup';
 
-const AddCaptainForm = () => {
+const AddCaptainForm = ({setOpenModal,fetchCaptains}) => {
     const token = localStorage.getItem("token");
     const [ships, setShips] = useState([]);
     const dispatch = useDispatch();
+    const { isOpen, message, type, showPopup, closePopup } = usePopup();
+
 
     useState(() => {
         dispatch(setPageTitle({ title: 'Thêm thuyền trưởng' }));
@@ -47,6 +51,7 @@ const AddCaptainForm = () => {
         });
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -56,23 +61,28 @@ const AddCaptainForm = () => {
                 },
             });
 
-            if (response.status === 200 || response.status === 201) {
-                alert('Thêm thành công');
-                console.log('Captain added:', response.data);
-                window.location.href="http://localhost:3000/admin/thuyen-truong"
+            if (response.data.code !==1004) {
+                console.log(response.data.code)
+                showPopup('Thêm thuyền trưởng thành công', 'success');
+                 setTimeout(() => {
+                setOpenModal(false);
+                fetchCaptains()
+              }, 3000);
             } else {
-                alert('Thêm thất bại');
-                console.error('Unexpected response code:', response.status);
+                  showPopup(response.data.message, 'fail');
             }
         } catch (error) {
-            alert('Thêm thất bại');
-            console.error('Error adding captain:', error);
-        }
+            showPopup('Thêm thuyền trưởng thất bại!', 'fail');}
     };
 
 
     return (
-    <form onSubmit={handleSubmit} className="add-captain-form z-50 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10'>
+    
+             <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
+        <form onSubmit={handleSubmit} className="add-captain-form z-50 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 className='text-center font-bold text-2xl my-4'>Thêm thuyền trưởng</h2>
+
     <div className="flex flex-wrap -mx-3 mb-6">
         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="firstname">
@@ -187,11 +197,12 @@ const AddCaptainForm = () => {
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Thêm Thuyền Trưởng
         </button>
-        <a href="http://localhost:3000/admin/thuyen-truong" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-            Quay lại
-        </a>
+              <button onClick={() => setOpenModal(false)} className="w-46 px-4 py-2 font-bold text-center text-white bg-gray-500 rounded hover:bg-gray-700 focus:outline-none focus:shadow-outline">
+        Đóng
+      </button>
     </div>
 </form>
+    </div>
 
 
     );

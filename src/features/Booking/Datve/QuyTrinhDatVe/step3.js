@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-const Step3 = ({ prevStep }) => {
-  let paymentWindow = null;
-  const [submitted, setSubmitted] = useState(false);
+import { formatDate } from '../../../../utils/formatDate';
+import { formatCurrencyVND } from '../../../../utils/formatVnd';
+import usePopup from '../../../../utils/popup/usePopup';
+import PopupDone from '../../../../utils/popup/popupDone';
+const Step3 = ({ prevStep, clickedSeats, chuyenTau, setUserInfor, userInfor,setOpenSeat}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userDetails, setUserDetails] = useState({
     name: '',
     email: '',
     phone: '',
-    message: '',
-    trip: JSON.parse(localStorage.getItem('chuyenData')) || {},
-    seat: JSON.parse(localStorage.getItem('seatData')) || [],
-    total: localStorage.getItem('total')
+    payment: '',
+    trip:{
+      id:''
+    },
+    seat:{},
   });
+
+  useEffect(() => {
+    // Initialize userDetails only once when the component mounts
+    setUserDetails(userInfor);
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -22,267 +30,265 @@ const Step3 = ({ prevStep }) => {
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const { name, email, message, phone, trip, seat, total } = userDetails;
-    const orderData = { name, email, message, phone, trip, seat, total };
-    localStorage.setItem('orderData', JSON.stringify(orderData)); // Lưu thông tin đơn hàng vào localStorage
-
-    try {
-      const response = await axios.post('http://localhost:8080/api/saigonwaterus/payment/vnpay', {
-        orderId: new Date().getTime().toString(), // Sử dụng timestamp làm orderId
-        amount: total,
-        returnUrl: 'http://localhost:8080/api/saigonwaterus/payment/vnpay/return'
-      });
-      // Mở cửa sổ popup khi nhận được URL từ server
-      paymentWindow = window.open(response.data, 'Payment', 'width=600,height=600');
-      setSubmitted(true);
-    } catch (error) {
-      console.error('Error sending payment request:', error);
-    }
-  };
-
-  const sendLocalStorageToServer = async () => {
-    const localStorageData = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      localStorageData[key] = localStorage.getItem(key);
-    }
-    try {
-      await axios.post('http://localhost:8080/api/saigonwaterbus/saveLocalStorageData', { localStorageData });
-    } catch (error) {
-      console.error('Error sending localStorage data to server:', error);
-    }
-  };
-
   useEffect(() => {
-    const handlePaymentMessage = (event) => {
-      if (event.data === 'payment_success') {
-        closePaymentPopup();
-        sendEmail();
-      }
-    };
-
-    window.addEventListener('message', handlePaymentMessage);
-    return () => {
-      window.removeEventListener('message', handlePaymentMessage);
-    };
-  }, []);
-
-  function formatDate(dateString) {
-    const [year, month, day] = dateString.split('-');
-    return `${day}-${month}-${year}`;
-  }
-
-  const sendEmail = async () => {
-    setIsLoading(true); // Show loading indicator
-    const chuyenMail = JSON.parse(localStorage.getItem('orderData'));
-    const chuyenData = JSON.parse(localStorage.getItem('chuyenData'));
-    const seatData = JSON.parse(localStorage.getItem('seatData'));
-    if (!seatData) {
-      console.error('Seat data is not available');
-      setIsLoading(false); // Hide loading indicator if seat data is not available
-      return;
+    // Only update userInfor if there are actual changes
+    if (JSON.stringify(userInfor) !== JSON.stringify(userDetails)) {
+      setUserInfor(userDetails);
     }
+  }, [userDetails, setUserInfor]);
 
-    const seatNames = seatData.map(seat => seat.seatName).join(', ');
-    const to = chuyenMail.email;
-    const subject = "Thanh toán thành công đặt vé Saigonwaterbus";
-    const body = `
-    <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #87CEEB;">
-        <img src="https://saigonwaterbus.com/wp-content/uploads/2022/06/logo-swb-v-white.png" alt="" style="width: 200px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
-        <h2 style="color: #007bff; margin-bottom: 20px; font-size: 24px;">Thông tin vé Saigonwaterbus</h2>
-        <p style="font-size: 18px;"><strong>Ngày khởi hành:</strong> ${formatDate(chuyenData.departureDate)}</p>
-        <p style="font-size: 18px;"><strong>Bến khởi hành:</strong> ${chuyenData.startTerminal}</p>
-        <p style="font-size: 18px;"><strong>Bến kết thúc:</strong> ${chuyenData.endTerminal}</p>
-        <p style="font-size: 18px;"><strong>Thời gian khởi hành:</strong> ${chuyenData.departureTime}</p>
-        <p style="font-size: 18px;"><strong>Số ghế đã đặt:</strong> ${seatNames}</p>
-        <hr style="border-top: 1px solid #ddd; margin-top: 20px; margin-bottom: 20px;">
-        <p style="font-size: 16px; color: #FF3300;">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi. Vui lòng giữ mã QR này lại khi tới bến.</p>
-    </div>
+    const handlePrint = () => {
+        const printContent = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Print</title>
+            <style>
+              @media print {
+                body, html {
+                  margin: 0;
+                  padding: 0;
+                  width: 80mm;
+                  height: auto;
+                  font-family: Arial, sans-serif;
+                  background-color: #fff;
+                }
+                .container {
+                  width: 100%;
+                  padding: 10px;
+                  box-sizing: border-box;
+                }
+                h1 {
+                  font-size: 24px;
+                  color: #4CAF50;
+                  text-align: center;
+                  border-bottom: 2px solid #4CAF50;
+                  padding-bottom: 10px;
+                  margin: 0;
+                }
+                .ticket-info {
+                  padding: 10px;
+                }
+                .ticket-info label {
+                  font-weight: bold;
+                  display: block;
+                  margin: 5px 0;
+                  font-size: 14px;
+                }
+                .ticket-info span {
+                  margin-left: 10px;
+                  font-weight: normal;
+                  color: #555;
+                  font-size: 14px;
+                }
+                .total {
+                  font-size: 16px;
+                  color: #e74c3c;
+                  font-weight: bold;
+                  text-align: right;
+                  margin-top: 10px;
+                }
+              }
+               body, html {
+                  margin: 0;
+                  padding: 0;
+                  width: 80mm;
+                  height: auto;
+                  font-family: Arial, sans-serif;
+                  background-color: #fff;
+                }
+                .container {
+                  width: 100%;
+                  padding: 10px;
+                  box-sizing: border-box;
+                }
+                h1 {
+                  font-size: 24px;
+                  color: #4CAF50;
+                  text-align: center;
+                  border-bottom: 2px solid #4CAF50;
+                  padding-bottom: 10px;
+                  margin: 0;
+                }
+                .ticket-info {
+                  padding: 10px;
+                }
+                .ticket-info label {
+                  font-weight: bold;
+                  display: block;
+                  margin: 5px 0;
+                  font-size: 14px;
+                }
+                .ticket-info span {
+                  margin-left: 10px;
+                  font-weight: normal;
+                  color: #555;
+                  font-size: 14px;
+                }
+                .total {
+                  font-size: 16px;
+                  color: #e74c3c;
+                  font-weight: bold;
+                  text-align: right;
+                  margin-top: 10px;
+                }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Thông tin vé</h1>
+              <div class="ticket-info">
+                <label>Họ tên: <span>${userDetails.name}</span></label>
+                <label>Email: <span>${userDetails.email}</span></label>
+                <label>Số điện thoại: <span>${userDetails.phone}</span></label>
+                <label>Phương thức thanh toán: <span>${userDetails.payment}</span></label>
+                <label>Chuyến tàu: <span>${chuyenTau.fromTerminal} - ${chuyenTau.toTerminal}</span></label>
+                <label>Thời gian khởi hành: <span>${chuyenTau.departureTime} ${formatDate(chuyenTau.departureDate)}</span></label>
+                <label>Số ghế: <span>${seatNamesString}</span></label>
+                <div class="total">Tổng tiền: <span>${formatCurrencyVND(clickedSeats.length * 15000)}</span></div>
+              </div>
+            </div>
+          </body>
+        </html>
     `;
-    const emailContent = `Ngày khởi hành: ${chuyenData.departureDate} \nBến khởi hành: ${chuyenData.startTerminal} \nBến kết thúc: ${chuyenData.endTerminal} \nThời gian khởi hành: ${chuyenData.departureTime} \nSố ghế: ${seatNames}`;
 
-    const emailData = {
-      to: to,
-      subject: subject,
-      body: body,
-      contentForQR: emailContent
+        const printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+        printWindow.print();
     };
 
-    try {
-      const response = await axios.post('http://localhost:8080/api/saigonwaterbus/send-mail', emailData);
-      console.log(response.data); // Handle response data from the API if needed
-      sendLocalStorageToServer();
-      window.location.href = 'http://localhost:4141/dat-ve/thanh-toan-thanh-cong'; // Redirect after email is sent
-    } catch (error) {
-      console.error('Error calling the send-mail API:', error);
-    } finally {
-      setIsLoading(false); // Hide loading indicator
-    }
+
+    const seatNamesString = clickedSeats.map(seat => seat.seatName).join(', ');
+  const { isOpen, message, type, showPopup, closePopup } = usePopup();
+  const handleBookingTicket =async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+    userDetails.trip=chuyenTau.id;
+    userDetails.seat=clickedSeats;
+    console.log(userDetails);
+    let response='';
+        try {
+          response=  await axios.post(`http://localhost:8080/api/saigonwaterbus/admin/sell-ticket`, userDetails, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+          if(response.data.code===200){
+            setIsLoading(false);
+            showPopup("Đã in vé!", "success");
+            setOpenSeat(false)
+          }else{
+                  setIsLoading(false);
+                  showPopup(response.data.message, "fail");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            showPopup(response.data.message, "fail");
+        }
+
   };
 
-  const closePaymentPopup = () => {
-    // Đóng cửa sổ popup khi hoàn thành thanh toán hoặc người dùng hủy bỏ
-    if (paymentWindow) {
-      paymentWindow.close();
-    }
-  };
-  const [showPayment,setShowPayment]=useState(false);
-  const thanhToanTienMat=()=>{
-  setShowPayment(true)
-}
-  const handleClosePopup = () => {
-    setShowPayment(false);
-  };
   return (
     <div className="container mx-auto max-w-md mt-10">
-    {
-      showPayment && 
-      (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded shadow-lg w-1/3">
-        <h2 className="text-2xl mb-4 font-bold">Thông tin vé</h2>
-        <form>
-          <div className="mb-4">
-            <label className="block text-gray-700">Họ Tên</label>
-            <input type="text" className="w-full border border-gray-300 p-2 rounded" />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Số tiền</label>
-            <input type="number" className="w-full border border-gray-300 p-2 rounded" />
-          </div>
-                    <div className="mb-4">
-            <label className="block text-gray-700">Tuyến tàu</label>
-            <input type="text" className="w-full border border-gray-300 p-2 rounded" />
-          </div>
-                    <div className="mb-4">
-            <label className="block text-gray-700">Số ghế</label>
-            <input type="number" className="w-full border border-gray-300 p-2 rounded" />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Ghi chú</label>
-            <textarea className="w-full border border-gray-300 p-2 rounded"></textarea>
-          </div>
-                      <label className="block text-red-500">* Đảm bảo khách hàng đã thanh toán , thông tin vé chính xác trước khi in vé</label>
-
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-                  onClick={handleClosePopup}
-            >
-              Hủy
-            </button>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-              In vé
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-      )
-    }
+            <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
 
       {isLoading && (
-<div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-  <div class="flex items-center space-x-2 text-white text-lg">
-    <svg class="animate-spin h-6 w-6 text-white" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V2.5"></path>
-    </svg>
-    <span className='text-base'>Đang tiến hành ghi nhận thông tin đặt vé. Quý khách vui lòng đợi trong ít phút trước khi chuyển trang!</span>
-  </div>
-</div>
-
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="flex items-center space-x-2 text-white text-lg">
+            <svg className="animate-spin h-6 w-6 text-white" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V2.5"></path>
+            </svg>
+            <span className='text-base'>Đang tiến hành ghi nhận thông tin đặt vé.Nhân viên lòng đợi trong ít phút trước khi chuyển trang!</span>
+          </div>
+        </div>
       )}
-      <div id="loadingIndicator" className={isLoading ? '' : 'hidden'}>Đang gửi email...</div>
+      <h2 className="text-2xl font-bold text-center">Thông tin người đặt</h2>
+      <div className="mb-4">
+        <label className="block text-gray-700 mb-2 font-semibold">Họ tên *</label>
+        <input
+          type="text"
+          name="name"
+          value={userDetails.name}
+          onChange={handleInputChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
+          required
+        />
+      </div>
 
-      <h2 className="text-2xl font-bold text-center">Liên hệ</h2>
+<form onSubmit={handleBookingTicket}>
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Họ tên *</label>
-          <input
-            type="text"
-            name="name"
-            value={userDetails.name}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
-            required
-          />
-        </div>
+        <label className="block text-gray-700 mb-2 font-semibold">Số điện thoại</label>
+        <input
+          type="tel"
+          name="phone"
+          value={userDetails.phone}
+          onChange={handleInputChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 mb-2 font-semibold">Email *</label>
+        <input
+          type="email"
+          name="email"
+          value={userDetails.email}
+          onChange={handleInputChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 mb-2 font-semibold">Phương thức thanh toán</label>
+        <select
+          name="payment"
+          value={userDetails.payment}
+          onChange={handleInputChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
+          required
+        >
+          <option value="BANK_TRANSFER">Chuyển khoản</option>
+          <option value="CASH">Tiền mặt </option>
+        </select>
+      </div>
 
+      <h2 className="text-2xl font-bold text-center mb-2">Thông tin chi tiết vé</h2>
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Số điện thoại</label>
-          <input
-            type="tel"
-            name="phone"
-            value={userDetails.phone}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
-          />
+          <label className="block text-gray-700 mb-2 font-semibold" value={userDetails.trip}>Chuyến tàu: <span className='text-red-500'>{chuyenTau.fromTerminal} - {chuyenTau.toTerminal}</span></label>
+          <label className="block text-gray-700 mb-2 font-semibold">Thời gian khởi hành: {chuyenTau.departureTime} {formatDate(chuyenTau.departureDate)}</label>
+          <label className="block text-gray-700 mb-2 font-semibold" value={userDetails.seat}>Số ghế: {seatNamesString}</label>
+          <label className="block text-gray-700 mb-2 font-semibold">Tổng tiền: {formatCurrencyVND(clickedSeats.length * 15000)}</label>
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Email *</label>
-          <input
-            type="email"
-            name="email"
-            value={userDetails.email}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Ghi chú</label>
-          <textarea
-            name="message"
-            value={userDetails.message}
-            onChange={handleInputChange}
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:ring-2"
-          />
-        </div>
-
-<div className="mt-4 flex flex-wrap justify-between items-center space-x-4">
-  <button
-    className="text-sm bg-green-500 hover:bg-green-700 text-white flex-grow font-bold py-2 rounded flex items-center justify-center"
-    onClick={prevStep}
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth="1.5"
-      stroke="currentColor"
-      className="w-6 h-6 mr-2"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-    </svg>
-    Quay lại
-  </button>
-  
-  <button
-      onClick={thanhToanTienMat}
-    className="text-sm bg-blue-500 hover:bg-blue-600 text-white flex-grow font-bold py-2 rounded flex items-center justify-center focus:outline-none focus:ring-blue-500 focus:ring-2"
-  >
-    <img src='/icon/money.png' alt='' className="w-6 h-6 mr-2"/>
-    Thanh toán tiền mặt
-  </button>
-  
-  <button
-    type="submit"
-    className="text-sm bg-blue-500 hover:bg-blue-600 text-white flex-grow font-bold py-2 rounded flex items-center justify-center focus:outline-none focus:ring-blue-500 focus:ring-2"
-  >
-    <img src='/icon/credit-card.png' alt='' className="w-6 h-6 mr-2"/>
-    Chuyển khoản
-  </button>
-</div>
-
-
-
-        {submitted && (
-          <div className="mt-4 text-green-500">Yêu cầu của bạn đã được gửi đi!</div>
-        )}
+      </div>
+      <div className="mt-4 flex flex-wrap justify-between items-center space-x-4">
+        <button
+          className="text-sm bg-green-500 hover:bg-green-700 text-white flex-grow font-bold py-2 rounded flex items-center justify-center"
+          onClick={prevStep}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6 mr-2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+          Quay lại
+        </button>
+        
+        <button
+          className="text-sm bg-blue-400 hover:bg-blue-600 text-white flex-grow font-bold py-2 rounded flex items-center justify-center focus:outline-none focus:ring-blue-500 focus:ring-2"
+          onClick={handlePrint}
+        >
+          <img src='/icon/print.png' alt='' className="w-6 h-6 mr-2" />
+          In vé
+        </button>
+      </div>
+      </form>
     </div>
   );
 };

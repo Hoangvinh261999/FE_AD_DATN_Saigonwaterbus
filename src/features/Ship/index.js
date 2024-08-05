@@ -1,7 +1,9 @@
 import { useEffect} from "react";
-import ShipList from "./components/ShipList";
+
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../features/common/headerSlice'
+import ShipList from "./components/ShipList";
+
 function ShipManagerment() {
         const dispatch = useDispatch()
 
@@ -10,9 +12,9 @@ function ShipManagerment() {
       }, [])
 
     return (
-        <div className="container mx-auto p-4">
+        <>
             <ShipList/>
-        </div>
+        </>
     );
 }
 

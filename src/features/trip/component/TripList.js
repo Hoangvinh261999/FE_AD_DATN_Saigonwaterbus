@@ -84,8 +84,10 @@ function TripList({ trip ,fetchTrips,showPopup}) {
             fetchTrips();
         } catch (error) {
             if (error.response) {
+
                 showPopup('Cập nhật chuyến thất bại!', 'success');
                 ;
+
             } else {
                 console.error("Error updating trip:", error);
             }
@@ -100,7 +102,9 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                 },
             });
             closeDetail();
-            showPopup('Cập nhật chuyến thành công!', 'success');
+
+                        showPopup('Cập nhật chuyến thành công!', 'success');
+
 
 
         } catch (error) {
@@ -124,12 +128,12 @@ function TripList({ trip ,fetchTrips,showPopup}) {
 
     const getStations = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/saigonwaterbus/admin/station", {
+            const response = await axios.get("http://localhost:8080/api/saigonwaterbus/admin/stations", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setStations(response.data.result);
+            setStations(response.data.result.content);
         } catch (error) {
             console.error("Error fetching stations:", error);
         }
@@ -145,6 +149,7 @@ function TripList({ trip ,fetchTrips,showPopup}) {
     };
 
     return (
+
         <>
             <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden ">
                 <thead className="bg-sky-500">
@@ -184,6 +189,7 @@ function TripList({ trip ,fetchTrips,showPopup}) {
             </table>
 
 
+
             {selectedItem && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-8 w-auto">
@@ -198,6 +204,16 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                                     onChange={handleChange}
                                     className="mt-1 p-2 w-full border rounded"
                                     readOnly
+                                />
+                            </div>
+                                                        <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Số ghế trống</label>
+                                <input
+                                    type="number"
+                                    name="availableSeats"
+                                    value={formData.availableSeats}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 w-full border rounded"
                                 />
                             </div>
                             <div className="mb-4">
@@ -230,16 +246,7 @@ function TripList({ trip ,fetchTrips,showPopup}) {
                                     className="mt-1 p-2 w-full border rounded"
                                 />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Số ghế trống</label>
-                                <input
-                                    type="number"
-                                    name="availableSeats"
-                                    value={formData.availableSeats}
-                                    onChange={handleChange}
-                                    className="mt-1 p-2 w-full border rounded"
-                                />
-                            </div>
+
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Tuyến đường</label>
                                 <input

@@ -1,188 +1,173 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from "axios";
 
-const RouteForm = ({ route, onSave, setIsCreating, setEditingRoute, stations }) => {
-    const { id } = useParams();
-    const [nameRoute, setNameRoute] = useState('');
-    const [fromStationId, setFromStationId] = useState('');
-    const [toStationId, setToStationId] = useState('');
-    const [selectedWaypoints, setSelectedWaypoints] = useState([]);
-    const [status, setStatus] = useState('ACTIVE');
-       const token = localStorage.getItem("token");
+const RouteForm = ({ stations, handleSaveRoute, setOpenAddForm }) => {
+    const [formDataAddRoute, setFormDataAddRoute] = useState({
+        nameRoute: '',
+        fromTerminal: {
+            id: ''
+        },
+        toTerminal: {
+            id: ''
+        },
+        waypoints: [],
+        status: '',
+        createAt: '',
+        updateAt: '',
+        deleteAt: ''
+    });
+
+    const [reversedWaypoints, setReversedWaypoints] = useState(false);
 
     useEffect(() => {
-        if (route) {
-            setNameRoute(route.nameRoute);
-            setFromStationId(route.fromTerminal.id);
-            setToStationId(route.toTerminal.id);
-            setSelectedWaypoints(route.waypoints.map(wp => ({
-                id: wp.station.id,
-                stopOrder: wp.stopOrder
-            })));
-            setStatus(route.status);
-        } else if (id) {
-            // Fetch route by ID if route not provided and id exists in URL
-            fetchRouteById(id);
-        }
-    }, [route, id]);
+        if (formDataAddRoute.fromTerminal.id) {
+            const selectedStation = stations.find(station => station.id === parseInt(formDataAddRoute.fromTerminal.id));
+            const linhDongIndex = stations.findIndex(station => station.name === 'Linh Đông');
+            const selectedIndex = stations.findIndex(station => station.id === parseInt(formDataAddRoute.fromTerminal.id));
 
-    const fetchRouteById = async (routeId) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/admin/route/${routeId}`, {
-   headers: {
-               Authorization: `Bearer ${token}`,
-            }
+            // Reverse if the selected station is Linh Đông or any station after Linh Đông
+            setReversedWaypoints(selectedIndex >= linhDongIndex);
+        }
+    }, [formDataAddRoute.fromTerminal.id, stations]);
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        if (type === 'checkbox') {
+            setFormDataAddRoute((prevState) => {
+                let updatedWaypoints;
+                if (checked) {
+                    updatedWaypoints = [...prevState.waypoints, { station: { id: parseInt(value) }, stopOrder: prevState.waypoints.length + 1 }];
+                } else {
+                    updatedWaypoints = prevState.waypoints
+                        .filter(waypoint => waypoint.station.id !== parseInt(value))
+                        .map((waypoint, index) => ({
+                            station: waypoint.station,
+                            stopOrder: index + 1
+                        }));
+                }
+                return {
+                    ...prevState,
+                    waypoints: updatedWaypoints
+                };
             });
-            const routeData = response.data;
-            setNameRoute(routeData.nameRoute);
-            setFromStationId(routeData.fromTerminal.id);
-            setToStationId(routeData.toTerminal.id);
-            setSelectedWaypoints(routeData.waypoints.map(wp => ({
-                id: wp.station.id,
-                stopOrder: wp.stopOrder
-            })));
-            setStatus(routeData.status);
-        } catch (error) {
-            console.error('Error fetching route:', error);
+        } else {
+            setFormDataAddRoute((prevState) => ({
+                ...prevState,
+                [name]: name.includes('Terminal') ? { id: parseInt(value) } : value
+            }));
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSave = (e) => {
         e.preventDefault();
         const formData = {
-            id, // Include ID if available
-            nameRoute,
-            fromTerminal: { id: fromStationId },
-            toTerminal: { id: toStationId },
-            waypoints: selectedWaypoints.map(wp => ({
-                station: { id: wp.id },
-                stopOrder: wp.stopOrder
-            })),
-            status,
+            ...formDataAddRoute,
+            waypoints: formDataAddRoute.waypoints.map((waypoint, index) => ({
+                station: { id: waypoint.station.id },
+                stopOrder: index + 1
+            }))
         };
-        console.log(formData);
-        onSave(formData);
-    };
-
-    const handleWaypointChange = (e, stationId) => {
-        const { name, value, checked } = e.target;
-        setSelectedWaypoints(prevWaypoints => {
-            if (name === 'waypoint') {
-                if (checked) {
-                    return [...prevWaypoints, { id: stationId, stopOrder: prevWaypoints.length + 1 }];
-                } else {
-                    return prevWaypoints.filter(wp => wp.id !== stationId);
-                }
-            } else if (name.startsWith('stopOrder-')) {
-                return prevWaypoints.map(wp => wp.id === stationId ? { ...wp, stopOrder: Number(value) } : wp);
-            }
-            return prevWaypoints;
-        });
+        handleSaveRoute(formData);
+        console.log("data la " + JSON.stringify(formData));
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-4 border rounded">
-            <div className="mb-4">
-                <label htmlFor="nameRoute" className="block text-gray-700">Tên tuyến:</label>
-                <input
-                    id="nameRoute"
-                    type="text"
-                    value={nameRoute}
-                    onChange={(e) => setNameRoute(e.target.value)}
-                    className="w-full p-2 border rounded"
-                />
-            </div>
-            <div className="mb-4">
-                <label htmlFor="fromStation" className="block text-gray-700">Bến đi:</label>
-                <select
-                    id="fromStation"
-                    value={fromStationId}
-                    onChange={(e) => setFromStationId(e.target.value)}
-                    className="w-full p-2 border rounded"
-                >
-                    <option value="">Chọn bến đi</option>
-                    {stations.map(station => (
-                        <option key={station.id} value={station.id}>
-                            {station.name}
-                        </option>
+        <div className="fixed inset-0 flex z-10 items-center justify-center bg-black bg-opacity-50">
+            <form onSubmit={handleSave} className="p-4 bg-white border rounded w-1/2">
+                <h2 className="text-center font-bold text-2xl my-4">Thêm tuyến tàu</h2>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Tên tuyến:</label>
+                    <input
+                        required
+                        name="nameRoute"
+                        type="text"
+                        value={formDataAddRoute.nameRoute}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="fromStation" className="block text-gray-700 text-sm font-bold mb-2">Bến đi:</label>
+                    <select
+                        name="fromTerminal"
+                        required
+                        value={formDataAddRoute.fromTerminal.id}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                    >
+                        <option value="">Chọn bến đi</option>
+                        {stations.map(station => (
+                            <option key={station.id} value={station.id}>
+                                {station.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Bến đến:</label>
+                    <select
+                        name="toTerminal"
+                        value={formDataAddRoute.toTerminal.id}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                    >
+                        <option value="">Chọn bến đến</option>
+                        {stations.map(station => (
+                            <option key={station.id} value={station.id}>
+                                {station.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Bến dừng:</label>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">* Các bến dừng đang được hiển thị theo chiều đi từ Bạch Đằng đến Linh Đông</label>
+                    {(reversedWaypoints ? [...stations].reverse() : stations).map((station, index) => (
+                        (index !== 0 && index !== stations.length - 1) ? (
+                            <div key={station.id} className="flex items-center mb-2">
+                                <input
+                                    type="checkbox"
+                                    name={`waypoints-${station.id}`}
+                                    value={station.id}
+                                    checked={formDataAddRoute.waypoints.some(waypoint => waypoint.station.id === station.id)}
+                                    onChange={handleChange}
+                                    className="mr-2"
+                                />
+                                <label className="mr-2 text-gray-700">{station.name}</label>
+                            </div>
+                        ) : null
                     ))}
-                </select>
-            </div>
-            <div className="mb-4">
-                <label htmlFor="toStation" className="block text-gray-700">Bến đến:</label>
-                <select
-                    id="toStation"
-                    value={toStationId}
-                    onChange={(e) => setToStationId(e.target.value)}
-                    className="w-full p-2 border rounded"
-                >
-                    <option value="">Chọn bến đến</option>
-                    {stations.map(station => (
-                        <option key={station.id} value={station.id}>
-                            {station.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700">Bến dừng:</label>
-                {stations.map(station => (
-                    <div key={station.id} className="flex items-center mb-2">
-                        <input
-                            type="checkbox"
-                            id={`waypoint-${station.id}`}
-                            name="waypoint"
-                            value={station.id}
-                            checked={selectedWaypoints.some(wp => wp.id === station.id)}
-                            onChange={(e) => handleWaypointChange(e, station.id)}
-                            className="mr-2"
-                        />
-                        <label htmlFor={`waypoint-${station.id}`} className="mr-2 text-gray-700">{station.name}</label>
-                        {selectedWaypoints.some(wp => wp.id === station.id) && (
-                            <input
-                                type="number"
-                                name={`stopOrder-${station.id}`}
-                                value={selectedWaypoints.find(wp => wp.id === station.id)?.stopOrder || ''}
-                                onChange={(e) => handleWaypointChange(e, station.id)}
-                                className="w-16 p-2 border rounded"
-                                min="1"
-                            />
-                        )}
-                    </div>
-                ))}
-            </div>
-            <div className="mb-4">
-                <label htmlFor="status" className="block text-gray-700">Trạng thái:</label>
-                <select
-                    id="status"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="w-full p-2 border rounded"
-                >
-                    <option value="ACTIVE">Hoạt động</option>
-                    <option value="INACTIVE">Không hoạt động</option>
-                </select>
-            </div>
-            <div className="flex justify-end">
-                <button
-                    type="button"
-                    onClick={() => {
-                        setIsCreating(false);
-                        setEditingRoute(null);
-                    }}
-                    className="px-4 py-2 mr-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-                >
-                    Hủy
-                </button>
-                <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                    Lưu
-                </button>
-            </div>
-        </form>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Trạng thái:</label>
+                    <select
+                        id="status"
+                        name="status"
+                        required
+                        value={formDataAddRoute.status}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                    >
+                        <option value="ACTIVE">Hoạt động</option>
+                        <option value="INACTIVE">Không hoạt động</option>
+                    </select>
+                </div>
+                <div className="flex justify-end">
+                    <button
+                        type="button"
+                        onClick={() => { setOpenAddForm(false) }}
+                        className="px-4 py-2 mr-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                    >
+                        Hủy
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
     );
 };
 

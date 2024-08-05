@@ -3,12 +3,13 @@ import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
 
-const MultiStepForm = ({chuyenTau,dateTrip,seatLabels}) => {
+const MultiStepForm = ({chuyenTau,dateTrip,seatLabels,setOpenSeat}) => {
   localStorage.setItem('chuyenData', JSON.stringify(chuyenTau));
   const [step, setStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [clickedSeats, setClickedSeats] = useState([]);
-const [userInfor, setUserInfor] = useState({});
+  const [userInfor, setUserInfor] = useState({});
+
   const nextStep = () => {
     setStep(prevStep => prevStep + 1);
     setCompletedSteps([...completedSteps, step]);
@@ -24,15 +25,15 @@ const [userInfor, setUserInfor] = useState({});
       case 1:
         return <Step1 nextStep={nextStep} chuyenTau={chuyenTau} seatLabels={seatLabels} setClickedSeats={setClickedSeats} clickedSeats={clickedSeats} />;
       case 2:
-        return <Step2 nextStep={nextStep} prevStep={prevStep} clickedSeats={clickedSeats} chuyenTau={chuyenTau}/>;
+        return <Step2 nextStep={nextStep} prevStep={prevStep} clickedSeats={clickedSeats}  chuyenTau={chuyenTau}/>;
       case 3:
-        return <Step3 prevStep={prevStep} chuyenTau={chuyenTau} clickedSeats={clickedSeats} userInfor={userInfor} setUserInfor={setUserInfor}/>;
+        return <Step3 prevStep={prevStep} chuyenTau={chuyenTau} clickedSeats={clickedSeats} userInfor={userInfor} setOpenSeat={setOpenSeat} setUserInfor={setUserInfor}/>;
       default:
         return null;
     }
   }, [step, clickedSeats,userInfor,seatLabels]);
 
-  const stepTitles = ['Chọn Chỗ', 'Điểm đón, trả', 'Nhập thông tin khách hàng'];
+  const stepTitles = ['Chọn Chỗ', 'Điểm đón, trả', 'Nhập thông tin khách hàng,kiểm tra vé'];
   return (
     <div className="container mx-auto p-4 h-full">
       <div className="flex justify-center mb-4">

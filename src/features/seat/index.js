@@ -41,20 +41,31 @@ const TicketManagement = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedSeat, setSelectedSeat] = useState(null); // State to hold the selected seat for confirmation
 
-  const handleConfirm = async () => {
-    if (selectedSeat) {
-      try {
-        selectedSeat.status = selectedSeat.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-        // Call the service to update seat status
-        await seatService.capNhatGhe(selectedSeat);
-      } catch (error) {
-        console.error('Error toggling seat status:', error);
-      } finally {
-        setIsPopupVisible(false);
-      }
+const handleConfirm = async () => {
+  if (selectedSeat) {
+    try {
+      selectedSeat.status = selectedSeat.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+
+      // Lấy ngày hiện tại và chuyển về định dạng yyyy-mm-dd
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+      const day = String(now.getDate()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day}`;
+      
+      selectedSeat.updateAt = formattedDate; // Gán ngày hiện tại vào selectedSeat
+
+      await seatService.capNhatGhe(selectedSeat);
+    } catch (error) {
+      console.error('Error toggling seat status:', error);
+    } finally {
+      setIsPopupVisible(false);
     }
-    console.log('Confirmed action');
-  };
+  }
+  console.log('Confirmed action');
+};
+
 
   const handleCancel = () => {
     setIsPopupVisible(false);
@@ -166,6 +177,7 @@ const TicketManagement = () => {
         )}
         <table className="w-full bg-white">
           <thead>
+
           <tr className="bg-sky-400 text-center">
             <th className="py-2">STT</th>
             <th className="py-2">Tàu</th>
@@ -213,39 +225,54 @@ const TicketManagement = () => {
         </table>
         <div className="mt-4 flex justify-center">
           <button
-              className="px-4 py-2 mx-1 bg-blue-500 text-white rounded"
+              className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
               onClick={() => handlePageChange(0)}
               disabled={currentPage === 0}
           >
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" height="1em" width="1em">
-              <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                 viewBox="0 0 24 24" height="1em" width="1em">
+              <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
             </svg>
           </button>
           <button
-              className="px-4 py-2 mx-1 bg-blue-500 text-white rounded"
+              className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 0}
           >
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" height="1em" width="1em">
-              <path d="M15 18l-6-6 6-6" />
+            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                 viewBox="0 0 24 24" height="1em" width="1em">
+              <path d="M15 18l-6-6 6-6"/>
             </svg>
           </button>
+          <span className="flex items-center px-4 py-2">
+            {currentPage + 1} / {totalPages}
+          </span>
           <button
-              className="px-4 py-2 mx-1 bg-blue-500 text-white rounded"
+              className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages - 1}
           >
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" height="1em" width="1em">
-              <path d="M9 18l6-6-6-6" />
+            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                 viewBox="0 0 24 24" height="1em" width="1em">
+              <path d="M9 18l6-6-6-6"/>
             </svg>
           </button>
           <button
-              className="px-4 py-2 mx-1 bg-blue-500 text-white rounded"
+              className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
               onClick={() => handlePageChange(totalPages - 1)}
               disabled={currentPage === totalPages - 1}
           >
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 24 24" height="1em" width="1em">
-              <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
+            <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                height="1em"
+                width="1em"
+            >
+              <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
             </svg>
           </button>
         </div>

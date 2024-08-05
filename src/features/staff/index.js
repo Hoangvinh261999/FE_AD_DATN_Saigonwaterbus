@@ -16,6 +16,7 @@ function Staff() {
     const [openModal, setOpenModal] = useState(false);
     const { isOpen, message, type, showPopup, closePopup } = usePopup();
 
+
     const [searchStatus, setSearchStatus] = useState('');
     const handleSearchStatusChange = (e) => {
         setSearchStatus(e.target.value);
@@ -23,6 +24,7 @@ function Staff() {
 
     const getAdmin = async (page = 0, status = '') => {
         const response = await axios.get(`http://localhost:8080/api/saigonwaterbus/admin/staff1?page=${page}&size=10&status=${status}`, {
+
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -42,7 +44,9 @@ function Staff() {
             });
             if (response.status === 200 && response.data.code === 200) {
                 alert("Sửa thành công");
+
                 getAdmin(page, searchStatus);  // Fetch updated list of employees
+
             } else {
                 alert("Sửa thất bại");
             }
@@ -62,11 +66,13 @@ function Staff() {
             if (response.status === 200 && response.data.code === 200) {
                 setEmployees(employees.filter(user => user.id !== id));
                 setFilteredEmployees(filteredEmployees.filter(user => user.id !== id));
+
                 getAdmin(page, searchStatus);
                 showPopup('Xoá nhân viên thành công!', 'success');
             } else {
                 console.error('Failed to delete user', response.data.message);
                 showPopup('Xoá nhân viên thất bại!', 'fail');
+
             }
         } catch (error) {
             showPopup('Xoá nhân viên thất bại!', 'fail');
@@ -99,6 +105,7 @@ function Staff() {
     }, [page, searchStatus]);
 
     useEffect(() => {
+
         filterEmployees(searchQuery, searchStatus);
     }, [employees, searchQuery, searchStatus]);
 
@@ -106,6 +113,7 @@ function Staff() {
         <div className="my-4">
             <PopupDone isOpen={isOpen} message={message} type={type} onClose={closePopup} />
             {openModal && <AddStaffForm setOpenModal={setOpenModal} />}
+
             <div className="flex items-center justify-between">
                 <div className="flex items-center w-3/5 p-2">
                     <span className="text-gray-700 mr-2 w-1/5 text-center font-bold">Tìm kiếm</span>
@@ -117,12 +125,14 @@ function Staff() {
                         className="px-3 py-2 text-gray-700 border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
+
                 <div className="">
                     <label htmlFor="searchStatus" className="mr-2">Chọn trạng thái:</label>
                     <select
                         id="searchStatus"
                         value={searchStatus}
                         onChange={handleSearchStatusChange}
+
                         className="p-2 border rounded"
                     >
                         <option value="">Tất cả</option>
@@ -131,7 +141,9 @@ function Staff() {
                     </select>
                 </div>
                 <button className="px-4 py-2 w-2/12 font-bold bg-blue-500  text-center text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+
                         onClick={() => setOpenModal(!openModal)}>Thêm nhân viên</button>
+
             </div>
             <UserTable data={filteredEmployees} onDelete={handleDelete} fetAdmin={getAdmin} onEdit={handleEdit} />
             <div className="flex mt-4 justify-center">
@@ -169,7 +181,9 @@ function Staff() {
                             height="1em"
                             width="1em"
                         >
+
                             <path d="M15 19l-7-7 7-7" />
+
                         </svg>
                     </button>
                     <span className="px-3 py-2">
@@ -191,6 +205,7 @@ function Staff() {
                             width="1em"
                         >
                             <path d="M9 5l7 7-7 7" />
+
                         </svg>
                     </button>
                     <button
@@ -209,6 +224,7 @@ function Staff() {
                             width="1em"
                         >
                             <path d="M13 7l5 5-5 5M6 7l5 5-5 5" />
+
                         </svg>
                     </button>
                 </div>

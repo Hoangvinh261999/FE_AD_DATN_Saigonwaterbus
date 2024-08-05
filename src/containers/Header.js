@@ -7,7 +7,7 @@ import SunIcon from '@heroicons/react/24/outline/SunIcon';
 import { useAuth } from '../AuthContext';
 import Weather from '../service/weather';
 function Header() {
-      const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const dispatch = useDispatch();
   const { pageTitle } = useSelector(state => state.header);
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem('theme'));
@@ -23,8 +23,6 @@ function Header() {
       }
     }
   }, [currentTheme]);
-
- 
 
   function logoutUser() {
     localStorage.clear();
@@ -51,7 +49,7 @@ function Header() {
         </label>
                  {isLoggedIn ? (
         <div className="flex items-center px-4">
-          <a className="flex items-center hover:text-gray-200" href="/profile">
+          <a className="flex items-center hover:text-gray-200" href="/admin/thong-tin-ca-nhan">
           <img alt='' src='/icon/profile.png'/>
            {username}
           </a>
