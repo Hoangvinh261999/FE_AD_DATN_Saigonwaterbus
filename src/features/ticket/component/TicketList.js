@@ -64,9 +64,11 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
             </div>
 
 
+
             <table
                 className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden bg-white border-collapse">
                 <thead className="bg-sky-500 text-white">
+
                 <tr>
                     <th className="border text-left py-2 px-4">STT</th>
                     <th className="border text-left py-2 px-4">Ngày Khởi Hành</th>
@@ -81,7 +83,7 @@ const TicketList = ({ tickets, date, setDate, page, setPage, size, totalPages, f
                         className="cursor-pointer hover:bg-gray-100">
                         <td className="border py-2 px-4">{index + 1}</td>
                         <td className="border py-2 px-4">{ticket.departureDate ? formatDate(ticket.departureDate) : 'Không có'}</td>
-                        <td className="border py-2 px-4">{ticket.price}</td>
+                        <td className="border py-2 px-4">{formatCurrencyVND(ticket.price)}</td>
                         <td className="border py-2 px-4">{getStatus(ticket.status)}</td>
                         <td className="border py-2 px-4">{formatDate(ticket.createAt)}</td>
                     </tr>
