@@ -33,7 +33,7 @@ const MultiStepForm = ({chuyenTau,dateTrip,seatLabels,setOpenSeat}) => {
     }
   }, [step, clickedSeats,userInfor,seatLabels]);
 
-  const stepTitles = ['Chọn Chỗ', 'Điểm đón, trả', 'Nhập thông tin khách hàng,kiểm tra vé'];
+  const stepTitles = ['Chọn chỗ', 'Điểm đón, trả', 'Nhập thông tin khách hàng, kiểm tra vé'];
   return (
     <div className="container mx-auto p-4 h-full">
       <div className="flex justify-center mb-4">
