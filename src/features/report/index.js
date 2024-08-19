@@ -1,54 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { formatDate } from "../../utils/formatDate";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format, formatDate } from "../../utils/formatDate";
 import { saveAs } from 'file-saver';
 
 const Report = () => {
     const token = localStorage.getItem("token");
     const [data, setData] = useState([]);
-    const [endpoint, setEndpoint] = useState('http://localhost:8080/api/saigonwaterbus/admin/invoice/getlistdoanhthutheongay');
-    const [buttonLabel, setButtonLabel] = useState('Xuất file Excel theo ngày');
-    const [currentPeriod, setCurrentPeriod] = useState('day');
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [error, setError] = useState("");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(endpoint, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setData(response.data.result);
-            } catch (error) {
-                console.error("Error fetching data: ", error);
-            }
-        };
-        fetchData();
-    }, [endpoint, token]);
+    const handleSearch = async () => {
+        if (startDate > endDate) {
+            setError("Ngày bắt đầu không thể lớn hơn ngày kết thúc.");
+            return;
+        }
 
-    const handleButtonClick = (newEndpoint, label, period) => {
-        setEndpoint(newEndpoint);
-        setButtonLabel(label);
-        setCurrentPeriod(period);
+        setError("");
+
+        try {
+            const formattedStartDate = format(startDate);
+            const formattedEndDate = format(endDate);
+
+            const response = await axios.get('http://localhost:8080/api/saigonwaterbus/admin/invoice/getlistdoanhthu', {
+                params: {
+                    startDate: formattedStartDate,
+                    endDate: formattedEndDate
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setData(response.data.result);
+        } catch (error) {
+            console.error("Error fetching data: ", error);
+            setError("Có lỗi xảy ra khi lấy dữ liệu.");
+        }
     };
 
     const handleExportClick = async () => {
         try {
             const response = await axios({
-                url: `http://localhost:8080/api/saigonwaterbus/admin/invoice/export?period=${currentPeriod}`,
+                url: `http://localhost:8080/api/saigonwaterbus/admin/invoice/export`,
                 method: 'GET',
-                responseType: 'blob', // This is important
+                responseType: 'blob',
+                params: {
+                    startDate: format(startDate),
+                    endDate: format(endDate)
+                },
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
             const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, `invoices_${currentPeriod}.xlsx`);
+            saveAs(blob, `invoices_${format(startDate)}_${format(endDate)}.xlsx`);
         } catch (error) {
             console.error("Error exporting data: ", error);
         }
-    };
+    }
 
     const formatCurrency = (amount) => {
         return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -60,28 +73,45 @@ const Report = () => {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex flex-row justify-center gap-2 pt-3 pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row gap-4 items-center">
+                    <div className="flex flex-col">
+                        <label htmlFor="startDate" className="text-lg font-medium mb-1">Chọn ngày bắt đầu</label>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            placeholderText="Chọn ngày bắt đầu"
+                            dateFormat="yyyy-MM-dd"
+                            className="border rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="endDate" className="text-lg font-medium mb-1">Chọn ngày kết thúc</label>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            placeholderText="Chọn ngày kết thúc"
+                            dateFormat="yyyy-MM-dd"
+                            className="border rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                    </div>
+                </div>
                 <button
-                    className="btn btn-primary font-bold text-lg text-white"
-                    onClick={() => handleButtonClick('http://localhost:8080/api/saigonwaterbus/admin/invoice/getlistdoanhthutheongay', 'Xuất file Excel theo ngày', 'day')}
+                    className="btn btn-primary mt-4 sm:mt-0 px-6 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onClick={handleSearch}
                 >
-                    Doanh thu theo ngày
-                </button>
-                <button
-                    className="btn btn-primary font-bold text-lg text-white"
-                    onClick={() => handleButtonClick('http://localhost:8080/api/saigonwaterbus/admin/invoice/getlistdoanhthutheotuan', 'Xuất file Excel theo tuần', 'week')}
-                >
-                    Doanh thu theo tuần
-                </button>
-                <button
-                    className="btn btn-primary font-bold text-lg text-white"
-                    onClick={() => handleButtonClick('http://localhost:8080/api/saigonwaterbus/admin/invoice/getlistdoanhthutheothang', 'Xuất file Excel theo tháng', 'month')}
-                >
-                    Doanh thu theo tháng
+                    Tìm kiếm
                 </button>
             </div>
+            {error && <div className="text-red-500 mb-4">{error}</div>}
             <div className="overflow-x-auto">
-                <table className="table-auto w-full mt-6">
+                <table className="table-auto w-full mt-6 border-separate border-spacing-0">
                     <thead className="bg-gray-200">
                     <tr>
                         <th className="px-4 py-2 border">Thành tiền</th>
@@ -90,8 +120,8 @@ const Report = () => {
                     </tr>
                     </thead>
                 </table>
-                <div className="overflow-y-auto h-[500px]">
-                    <table className="table-auto w-full">
+                <div className="overflow-y-auto h-[400px]">
+                    <table className="table-auto w-full mt-2 border-separate border-spacing-0">
                         <tbody>
                         {data.map((invoice, index) => (
                             <tr key={index} className="bg-white border-b hover:bg-gray-100">
@@ -104,20 +134,20 @@ const Report = () => {
                     </table>
                 </div>
             </div>
-            <div className="bg-gray-200 p-2">
+            <div className="bg-gray-200 p-4 mt-6 rounded-md">
                 <div className="flex justify-between items-center">
                     <span className="text-lg font-bold">Tổng cộng</span>
                     <span className="text-lg font-bold">{formatCurrency(calculateTotalAmount())}</span>
                     <button
-                        className="btn btn-warning font-bold text-lg"
+                        className="btn btn-warning px-6 py-2 bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                         onClick={handleExportClick}
                     >
-                        {buttonLabel}
+                        Xuất file Excel
                     </button>
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default Report;
