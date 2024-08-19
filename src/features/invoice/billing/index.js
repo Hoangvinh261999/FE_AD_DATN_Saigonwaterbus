@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../common/headerSlice';
 import { formatDate } from '../../../utils/formatDate';
 import { formatCurrencyVND } from '../../../utils/formatVnd';
-import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
+
 const InvoiceTable = () => {
     const [loading, setLoading] = useState(true);
     const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -12,15 +12,14 @@ const InvoiceTable = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [size, setsize] = useState(1);
+    const [size, setSize] = useState(10); // Set size to a reasonable default value
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(setPageTitle({ title: 'Hóa đơn' }));
-        console.log(new Date().toISOString().split('T')[0]);
         const date = new Date().toISOString().split('T')[0];
         fetchInvoices(date, 0);
-    }, [dispatch]);
+    }, [dispatch, size]); // Add size to dependencies to trigger fetch when size changes
 
     const token = localStorage.getItem('token');
 
@@ -57,22 +56,22 @@ const InvoiceTable = () => {
             });
             setSearchResults(response.data.result.content);
             setTotalPages(response.data.result.totalPages);
+            setCurrentPage(0); // Reset to the first page when search is performed
         } catch (error) {
             console.error('Error searching invoices:', error);
             setSearchResults([]);
             setTotalPages(1);
         }
-        setSearchDate('');
     };
 
     const handleChangeDate = (event) => {
-        console.log(event.target.value)
         setSearchDate(event.target.value);
     };
 
     const handlePageChange = async (page) => {
+        const dateToUse = searchDate || new Date().toISOString().split('T')[0];
         setCurrentPage(page);
-        fetchInvoices(searchDate, page - 1); // page - 1 because backend uses zero-based indexing
+        fetchInvoices(dateToUse, page); 
     };
 
     return (
@@ -100,14 +99,14 @@ const InvoiceTable = () => {
                     ) : (
                         <>
                             <table className="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
-                                <thead className="">
-                                <tr className='bg-sky-500 text-center'>
-                                    <th className="border  py-2 px-4">STT</th>
-                                    <th className="border  py-2 px-4">Mã Thanh Toán</th>
-                                    <th className="border  py-2 px-4">Ngày Tạo</th>
-                                    <th className="border  py-2 px-4">Người đặt</th>
-                                    <th className="border  py-2 px-4">Phương thức thanh toán</th>
-                                    <th className="border  py-2 px-4">Tổng tiền</th>
+                                <thead className="bg-sky-500 text-center">
+                                <tr>
+                                    <th className="border py-2 px-4">STT</th>
+                                    <th className="border py-2 px-4">Mã Thanh Toán</th>
+                                    <th className="border py-2 px-4">Ngày Tạo</th>
+                                    <th className="border py-2 px-4">Người đặt</th>
+                                    <th className="border py-2 px-4">Phương thức thanh toán</th>
+                                    <th className="border py-2 px-4">Tổng tiền</th>
                                 </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
@@ -115,26 +114,25 @@ const InvoiceTable = () => {
                                     <tr
                                         key={invoice.id}
                                         onClick={() => handleRowClick(invoice)}
-                                        className="border  py-2 px-4 cursor-pointer"
+                                        className="border py-2 px-4 cursor-pointer"
                                     >
-                                        <td className="border  py-2 px-4">{index + 1}</td>
-                                        <td className="border  py-2 px-4">{invoice.id}</td>
-                                        <td className="border  py-2 px-4">{formatDate(invoice.createAt)}</td>
-                                        <td className="border  py-2 px-4">{invoice.email ? invoice.email : 'Tài khoản khách'}</td>
-                                        <td className="border  py-2 px-4">{invoice.payMethod === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'Tiền mặt'}</td>
-                                        <td className="border  py-2 px-4">{formatCurrencyVND(invoice.totalAmount)}</td>
+                                        <td className="border py-2 px-4">{index + 1 + currentPage * size}</td>
+                                        <td className="border py-2 px-4">{invoice.id}</td>
+                                        <td className="border py-2 px-4">{formatDate(invoice.createAt)}</td>
+                                        <td className="border py-2 px-4">{invoice.email ? invoice.email : 'Tài khoản khách'}</td>
+                                        <td className="border py-2 px-4">{invoice.payMethod === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'Tiền mặt'}</td>
+                                        <td className="border py-2 px-4">{formatCurrencyVND(invoice.totalAmount)}</td>
                                     </tr>
                                 ))}
                                 </tbody>
                             </table>
                             <div className="flex justify-center mt-4">
                                 <button
-                                    key="first"
-                                    onClick={() => handlePageChange(0)} // Assuming page index starts from 0
-                                    disabled={currentPage === 0} // Disable if already on the first page
+                                    onClick={() => handlePageChange(0)}
+                                    disabled={currentPage === 0}
                                     className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
                                 >
-                                    <svg
+                                     <svg
                                         fill="none"
                                         stroke="currentColor"
                                         strokeLinecap="round"
@@ -144,72 +142,76 @@ const InvoiceTable = () => {
                                         height="1em"
                                         width="1em"
                                     >
-                                        <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/>
+                                        <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
                                     </svg>
                                 </button>
 
                                 <button
-                                    key="previous"
-                                    onClick={() => handlePageChange(currentPage - 1)} // Go to previous page
-                                    disabled={currentPage === 0} // Disable if already on the first page
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 0}
                                     className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
                                 >
                                     <svg
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        viewBox="0 0 24 24"
-                                        height="1em"
-                                        width="1em"
-                                    >
-                                        <path d="M15 18l-6-6 6-6"/>
-                                    </svg>
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                    height="1em"
+                                    width="1em"
+                                >
+
+                                    <path d="M15 19l-7-7 7-7" />
+
+                                </svg>
                                 </button>
-                                    <span className="flex items-center px-4 py-2">
-                                    {currentPage} / {totalPages}
+
+                                <span className="flex items-center px-4 py-2">
+                                    {currentPage + 1} / {totalPages}
                                 </span>
+
                                 <button
-                                    key="next"
-                                    onClick={() => handlePageChange(currentPage + 1)} // Go to next page
-                                    disabled={currentPage === totalPages - 1} // Disable if already on the last page
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages - 1}
                                     className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
                                 >
-                                    <svg
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        viewBox="0 0 24 24"
-                                        height="1em"
-                                        width="1em"
-                                    >
-                                        <path d="M9 18l6-6-6-6"/>
-                                    </svg>
-                                </button>
-                                <button
-                                    key="last"
-                                    onClick={() => handlePageChange(totalPages - 1)} // Go to last page
-                                    disabled={currentPage === totalPages - 1} // Disable if already on the last page
-                                    className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
-                                >
-                                    <svg
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        viewBox="0 0 24 24"
-                                        height="1em"
-                                        width="1em"
-                                    >
-                                        <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
-                                    </svg>
+                                  <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M9 5l7 7-7 7" />
+
+                        </svg>
+                                
                                 </button>
 
-                                </div>
+                                <button
+                                    onClick={() => handlePageChange(totalPages - 1)}
+                                    disabled={currentPage === totalPages - 1}
+                                    className="px-3 py-2 bg-sky-500 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none mx-2"
+                                >
+                                    <svg
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                        >
+                            <path d="M13 7l5 5-5 5M6 7l5 5-5 5" />
+
+                             </svg>
+                                </button>
+                            </div>
                         </>
                     )}
                 </div>
@@ -220,15 +222,9 @@ const InvoiceTable = () => {
                         <h2 className="text-xl font-semibold mb-4 text-center">Chi Tiết Hóa Đơn</h2>
                         <p><strong>ID:</strong> {selectedInvoice.id}</p>
                         <p><strong>Ngày Tạo:</strong> {formatDate(selectedInvoice.createAt)}</p>
-                        <p><strong>Ngày Cập
-                            Nhật:</strong> {selectedInvoice.updateAt ? formatDate(selectedInvoice.updateAt) : 'Không có dữ liệu'}
-                        </p>
-                        <p><strong>Ngày
-                            Xóa:</strong> {selectedInvoice.deleteAt ? formatDate(selectedInvoice.deleteAt) : 'Không có dữ liệu'}
-                        </p>
-                        <p><strong>Tổng
-                            tiền:</strong> {selectedInvoice.totalAmount ? formatCurrencyVND(selectedInvoice.totalAmount) : 'Không có dữ liệu'}
-                        </p>
+                        <p><strong>Ngày Cập Nhật:</strong> {selectedInvoice.updateAt ? formatDate(selectedInvoice.updateAt) : 'Không có dữ liệu'}</p>
+                        <p><strong>Ngày Xóa:</strong> {selectedInvoice.deleteAt ? formatDate(selectedInvoice.deleteAt) : 'Không có dữ liệu'}</p>
+                        <p><strong>Tổng tiền:</strong> {selectedInvoice.totalAmount ? formatCurrencyVND(selectedInvoice.totalAmount) : 'Không có dữ liệu'}</p>
                         <button
                             onClick={handleCloseModal}
                             className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
