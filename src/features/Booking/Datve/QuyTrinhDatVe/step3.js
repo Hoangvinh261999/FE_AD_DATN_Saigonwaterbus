@@ -4,6 +4,7 @@ import { formatDate } from '../../../../utils/formatDate';
 import { formatCurrencyVND } from '../../../../utils/formatVnd';
 import usePopup from '../../../../utils/popup/usePopup';
 import PopupDone from '../../../../utils/popup/popupDone';
+import QRious from 'qrious';
 const Step3 = ({ prevStep, clickedSeats, chuyenTau, setUserInfor, userInfor,setOpenSeat}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -37,129 +38,171 @@ const Step3 = ({ prevStep, clickedSeats, chuyenTau, setUserInfor, userInfor,setO
     }
   }, [userDetails, setUserInfor]);
 
-    const handlePrint = () => {
-  if (!userDetails.payment || userDetails.payment === '') {
-    return;
-  }
-        const printContent = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Print</title>
-            <style>
-              @media print {
-                body, html {
-                  margin: 0;
-                  padding: 0;
-                  width: 80mm;
-                  height: auto;
-                  font-family: Arial, sans-serif;
-                  background-color: #fff;
-                }
-                .container {
-                  width: 100%;
-                  padding: 10px;
-                  box-sizing: border-box;
-                }
-                h1 {
-                  font-size: 24px;
-                  color: #4CAF50;
-                  text-align: center;
-                  border-bottom: 2px solid #4CAF50;
-                  padding-bottom: 10px;
-                  margin: 0;
-                }
-                .ticket-info {
-                  padding: 10px;
-                }
-                .ticket-info label {
-                  font-weight: bold;
-                  display: block;
-                  margin: 5px 0;
-                  font-size: 14px;
-                }
-                .ticket-info span {
-                  margin-left: 10px;
-                  font-weight: normal;
-                  color: #555;
-                  font-size: 14px;
-                }
-                .total {
-                  font-size: 16px;
-                  color: #e74c3c;
-                  font-weight: bold;
-                  text-align: right;
-                  margin-top: 10px;
-                }
+  const handlePrint = () => {
+    if (!userDetails.payment || userDetails.payment === '') {
+      return;
+    }
+  
+    // Chuẩn bị dữ liệu văn bản đơn giản cho mã QR
+    const qrData = `
+      Họ tên: ${userDetails.name}
+      Email: ${userDetails.email}
+      Số điện thoại: ${userDetails.phone}
+      Phương thức thanh toán: ${userDetails.payment}
+      Chuyến tàu: ${chuyenTau.fromTerminal} - ${chuyenTau.toTerminal}
+      Thời gian khởi hành: ${chuyenTau.departureTime} ${formatDate(chuyenTau.departureDate)}
+      Số ghế: ${seatNamesString}
+      Tổng tiền: ${formatCurrencyVND(clickedSeats.length * 15000)}
+    `.trim();
+  
+    const qr = new QRious({
+      value: qrData,
+      size: 100,
+    });
+  
+    const printContent = `
+      <!DOCTYPE html>
+      <html lang="vi">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Print</title>
+          <style>
+           body, html {
+                margin: 0;
+                padding: 0;
+                width: 80mm;
+                height: auto;
+                font-family: Arial, sans-serif;
+                background-color: #fff;
               }
-               body, html {
-                  margin: 0;
-                  padding: 0;
-                  width: 80mm;
-                  height: auto;
-                  font-family: Arial, sans-serif;
-                  background-color: #fff;
-                }
-                .container {
-                  width: 100%;
-                  padding: 10px;
-                  box-sizing: border-box;
-                }
-                h1 {
-                  font-size: 24px;
-                  color: #4CAF50;
-                  text-align: center;
-                  border-bottom: 2px solid #4CAF50;
-                  padding-bottom: 10px;
-                  margin: 0;
-                }
-                .ticket-info {
-                  padding: 10px;
-                }
-                .ticket-info label {
-                  font-weight: bold;
-                  display: block;
-                  margin: 5px 0;
-                  font-size: 14px;
-                }
-                .ticket-info span {
-                  margin-left: 10px;
-                  font-weight: normal;
-                  color: #555;
-                  font-size: 14px;
-                }
-                .total {
-                  font-size: 16px;
-                  color: #e74c3c;
-                  font-weight: bold;
-                  text-align: right;
-                  margin-top: 10px;
-                }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <h1>Thông tin vé</h1>
-              <div class="ticket-info">
-                <label>Họ tên: <span>${userDetails.name}</span></label>
-                <label>Email: <span>${userDetails.email}</span></label>
-                <label>Số điện thoại: <span>${userDetails.phone}</span></label>
-                <label>Phương thức thanh toán: <span>${userDetails.payment}</span></label>
-                <label>Chuyến tàu: <span>${chuyenTau.fromTerminal} - ${chuyenTau.toTerminal}</span></label>
-                <label>Thời gian khởi hành: <span>${chuyenTau.departureTime} ${formatDate(chuyenTau.departureDate)}</span></label>
-                <label>Số ghế: <span>${seatNamesString}</span></label>
-                <div class="total">Tổng tiền: <span>${formatCurrencyVND(clickedSeats.length * 15000)}</span></div>
+              .container {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+              }
+              h1 {
+                font-size: 24px;
+                color: #4CAF50;
+                text-align: center;
+                border-bottom: 2px solid #4CAF50;
+                padding-bottom: 10px;
+                margin: 0;
+              }
+              .ticket-info {
+                padding: 10px;
+              }
+              .ticket-info label {
+                font-weight: bold;
+                display: block;
+                margin: 5px 0;
+                font-size: 14px;
+              }
+              .ticket-info span {
+                margin-left: 10px;
+                font-weight: normal;
+                color: #555;
+                font-size: 14px;
+              }
+              .total {
+                font-size: 16px;
+                color: #e74c3c;
+                font-weight: bold;
+                text-align: right;
+                margin-top: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              }
+              .qr-code {
+                width: 100px;
+                height: 100px;
+                margin-left: 10px;
+              }
+            @media print {
+              body, html {
+                margin: 0;
+                padding: 0;
+                width: 80mm;
+                height: auto;
+                font-family: Arial, sans-serif;
+                background-color: #fff;
+              }
+              .container {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+              }
+              h1 {
+                font-size: 24px;
+                color: #4CAF50;
+                text-align: center;
+                border-bottom: 2px solid #4CAF50;
+                padding-bottom: 10px;
+                margin: 0;
+              }
+              .ticket-info {
+                padding: 10px;
+              }
+              .ticket-info label {
+                font-weight: bold;
+                display: block;
+                margin: 5px 0;
+                font-size: 14px;
+              }
+              .ticket-info span {
+                margin-left: 10px;
+                font-weight: normal;
+                color: #555;
+                font-size: 14px;
+              }
+              .total {
+                font-size: 16px;
+                color: #e74c3c;
+                font-weight: bold;
+                text-align: right;
+                margin-top: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              }
+              .qr-code {
+                width: 100px;
+                height: 100px;
+                margin-left: 10px;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Thông tin vé</h1>
+            <div class="ticket-info">
+              <label>Họ tên: <span>${userDetails.name}</span></label>
+              <label>Email: <span>${userDetails.email}</span></label>
+              <label>Số điện thoại: <span>${userDetails.phone}</span></label>
+              <label>Phương thức thanh toán: <span>${userDetails.payment}</span></label>
+              <label>Chuyến tàu: <span>${chuyenTau.fromTerminal} - ${chuyenTau.toTerminal}</span></label>
+              <label>Thời gian khởi hành: <span>${chuyenTau.departureTime} ${formatDate(chuyenTau.departureDate)}</span></label>
+              <label>Số ghế: <span>${seatNamesString}</span></label>
+              <div class="total">
+                <span>Tổng tiền: <span>${formatCurrencyVND(clickedSeats.length * 15000)}</span></span>
+                <img src="${qr.toDataURL()}" alt="QR code" class="qr-code" />
               </div>
             </div>
-          </body>
-        </html>
+          </div>
+        </body>
+      </html>
     `;
-
-        const printWindow = window.open('', '', 'height=400,width=800');
-        printWindow.document.write(printContent);
-        printWindow.document.close();
-        printWindow.print();
-    };
+  
+    const printWindow = window.open('', '', 'height=400,width=800');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+  
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  };
 
 
     const seatNamesString = clickedSeats.map(seat => seat.seatName).join(', ');
